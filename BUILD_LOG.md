@@ -31,7 +31,7 @@ CommuteKind is a completely new application created for OpenAI Build Week. Exist
 - Public repository: https://github.com/Destr0yering/commutekind
 - Deployed no-login demo: https://destr0yering.github.io/commutekind/
 - Add the final Android artifact path if produced.
-- Add the `/feedback` session ID.
+- Codex `/feedback` Session ID: `019f6d4f-803b-78f2-977d-a07a1dae9a79`
 - Link the public under-three-minute YouTube demo.
 
 ## Local verification — July 17, 2026

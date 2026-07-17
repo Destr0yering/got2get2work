@@ -8,6 +8,7 @@ CommuteKind is a standalone Expo / React Native hackathon prototype for schedule
 
 - **Live no-login demo:** https://destr0yering.github.io/commutekind/
 - **Public source repository:** https://github.com/Destr0yering/commutekind
+- **Primary Codex `/feedback` Session ID:** `019f6d4f-803b-78f2-977d-a07a1dae9a79`
 - **License:** MIT
 
 ## What the demo proves
@@ -38,7 +39,7 @@ CommuteKind was designed, implemented, reviewed, and tested in the primary Codex
 
 The important decisions remained human-owned: the app category and purpose, the no-billing judged path, privacy posture, product tradeoffs, and every consequential ride choice. Runtime matching, expense facts, consent, blocks, accessibility, and state transitions stay deterministic. The optional GPT adapter can normalize a minimized schedule projection or explain allowlisted facts, but it cannot approve a match, calculate a route, determine safety, or make a payment.
 
-The required Codex `/feedback` Session ID should be generated from the primary build task and recorded in the Devpost submission before entry.
+The primary build task was shared through Codex `/feedback`; its Session ID is `019f6d4f-803b-78f2-977d-a07a1dae9a79`.
 
 ## Run
 

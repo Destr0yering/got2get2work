@@ -19,7 +19,7 @@
 - [x] README setup and test instructions.
 - [x] New-work build log and architecture decisions.
 - [x] Public MIT-licensed repository: https://github.com/Destr0yering/commutekind
-- [ ] `/feedback` Codex session ID from the task where most core functionality was built.
+- [x] `/feedback` Codex Session ID from the primary build task: `019f6d4f-803b-78f2-977d-a07a1dae9a79`
 
 ## Required submission fields
 
@@ -28,7 +28,7 @@
 - [x] Category: Apps for Your Life.
 - [x] Repository URL: https://github.com/Destr0yering/commutekind
 - [x] Hosted-project URL and no-login judge path: https://destr0yering.github.io/commutekind/
-- [ ] `/feedback` session ID.
+- [x] `/feedback` Session ID: `019f6d4f-803b-78f2-977d-a07a1dae9a79`
 
 ## Demo video
 

@@ -75,4 +75,4 @@ Codex with GPT-5.6, deferred OpenAI Responses API adapter, Structured Outputs, E
 - **Repository:** https://github.com/Destr0yering/commutekind
 - **Live demo:** https://destr0yering.github.io/commutekind/
 - **Video:** TODO
-- **Codex `/feedback` session ID:** TODO
+- **Codex `/feedback` Session ID:** `019f6d4f-803b-78f2-977d-a07a1dae9a79`
