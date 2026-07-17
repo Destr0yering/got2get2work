@@ -1,15 +1,15 @@
-# CommuteKind UX benchmark
+# Got2Get2Work UX benchmark
 
 Reviewed July 2026 for the **Apps for Your Life** hackathon category. Product behavior is drawn from official help/listing material; reported friction is treated as directional user evidence, not a universal claim about every trip.
 
 ## Four relevant products
 
-| Product | UX strengths worth carrying forward | Friction CommuteKind should avoid |
+| Product | UX strengths worth carrying forward | Friction Got2Get2Work should avoid |
 |---|---|---|
-| [Scoop Commute scheduling](https://support.scoopcommute.com/hc/en-us/articles/207092107-How-do-I-schedule-a-carpool) | Commute-first scheduling, separate inbound/outbound trips, ride/drive/either choice, matching deadlines, and explicit cancellation/feedback paths. | Supply can remain uncertain; user reviews report late matches, cancellation stress, and excessive driver detours. CommuteKind must show an honest no-match state, next check time, and driver boundaries. |
+| [Scoop Commute scheduling](https://support.scoopcommute.com/hc/en-us/articles/207092107-How-do-I-schedule-a-carpool) | Commute-first scheduling, separate inbound/outbound trips, ride/drive/either choice, matching deadlines, and explicit cancellation/feedback paths. | Supply can remain uncertain; user reviews report late matches, cancellation stress, and excessive driver detours. Got2Get2Work must show an honest no-match state, next check time, and driver boundaries. |
 | [BlaBlaCar Daily](https://play.google.com/store/apps/details?id=com.blablalines) | Short-notice requests, inspectable profiles, and editable proposed meeting/drop-off points. | Pickup accuracy, messaging clarity, and unpredictable itinerary details are recurring risks. Both coworkers should see the same selected public pickup, times, and detour before acceptance. |
-| [Quick Ride help](https://quickride.in/help.php) | Route-fit information, recurring rides, workplace communities, chat, confirmation, and cashless settlement patterns. | Reviews report uneditable/poor pickup selection and price-distance disagreement. CommuteKind therefore makes pickup proposals editable and keeps passenger contribution equal to displayed driver reimbursement. |
-| [Pave Commute feature changelog](https://pave-commute-changelog-en.noticeable.news/labels/new-features) | Recurring coworker groups, join-or-drive decisions by day, chat/invites, and visible impact. | Employer/reward dependence can create dead ends, and permission language can overstate what is connected. CommuteKind labels fictional membership, simulated preferences, and seeded impact explicitly. |
+| [Quick Ride help](https://quickride.in/help.php) | Route-fit information, recurring rides, workplace communities, chat, confirmation, and cashless settlement patterns. | Reviews report uneditable/poor pickup selection and price-distance disagreement. Got2Get2Work therefore makes pickup proposals editable and keeps passenger contribution equal to displayed driver reimbursement. |
+| [Pave Commute feature changelog](https://pave-commute-changelog-en.noticeable.news/labels/new-features) | Recurring coworker groups, join-or-drive decisions by day, chat/invites, and visible impact. | Employer/reward dependence can create dead ends, and permission language can overstate what is connected. Got2Get2Work labels fictional membership, simulated preferences, and seeded impact explicitly. |
 
 ## Resulting product requirements
 
@@ -25,7 +25,7 @@ Reviewed July 2026 for the **Apps for Your Life** hackathon category. Product be
 10. **Controlled recovery:** cancellation can reveal only an already opted-in standing offer; no backup is auto-confirmed.
 11. **Mobile accessibility:** essential text is at least 10–11 px, route meaning has a text alternative, cards wrap on narrow screens, and modal controls remain scrollable at large text sizes.
 
-## CommuteKind implementation mapping
+## Got2Get2Work implementation mapping
 
 - `src/domain/matcher.ts`: hard gates and balanced two-leg ranking.
 - `src/domain/schedule.ts`: deterministic local schedule parser that rejects ambiguous prose.

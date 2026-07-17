@@ -1,10 +1,10 @@
-# CommuteKind demo script (target 2:50)
+# Got2Get2Work demo script (target 2:50)
 
 ## 0:00-0:15 — The human problem
 
 “Driving on ride-hail platforms, I keep meeting people spending money just to reach the same workplace at the same time. Often, the ride they need is already passing nearby.”
 
-Show the CommuteKind welcome screen.
+Show the Got2Get2Work welcome screen.
 
 ## 0:15-0:40 — Policies, trust, and privacy
 

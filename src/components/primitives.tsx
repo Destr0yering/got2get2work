@@ -30,15 +30,15 @@ export function AppScreen({ children, wide = false, testID, backgroundColor = co
 
 export function Brand({ compact = false, dark = false }: { compact?: boolean; dark?: boolean }) {
   return (
-    <View accessible accessibilityRole="image" style={styles.brandRow} accessibilityLabel="CommuteKind logo">
+    <View accessible accessibilityRole="image" style={styles.brandRow} accessibilityLabel="Got2Get2Work logo">
       <View style={[styles.brandMark, compact && styles.brandMarkCompact]}>
         <View style={[styles.routeStem, styles.routeStemLeft]} />
         <View style={[styles.routeStem, styles.routeStemRight]} />
         <View style={styles.routeDot} />
       </View>
       <View>
-        <Text style={[styles.brandName, compact && styles.brandNameCompact, dark && styles.brandNameDark]}>CommuteKind</Text>
-        {!compact ? <Text style={[styles.brandTagline, dark && styles.brandTaglineDark]}>Your shift has a way there.</Text> : null}
+        <Text style={[styles.brandName, compact && styles.brandNameCompact, dark && styles.brandNameDark]}>Got2Get2Work</Text>
+        {!compact ? <Text style={[styles.brandTagline, dark && styles.brandTaglineDark]}>For when you’ve got to get to work!</Text> : null}
       </View>
     </View>
   );

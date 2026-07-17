@@ -60,7 +60,7 @@ export function MatchDetailScreen() {
       <Card tone="amber">
         <Pill label="Transparent estimate" tone="amber" />
         <Text style={styles.costTitle}>{match.suggestedShare} per leg · {match.suggestedRoundTripShare} round trip</Text>
-        <Text style={styles.costText}>Driver reimbursement equals the passenger contribution: incremental fuel/tolls plus half of the shared-route operating cost, capped below the estimated trip and comparable solo costs. This is not a fare, and CommuteKind does not process payment.</Text>
+        <Text style={styles.costText}>Driver reimbursement equals the passenger contribution: incremental fuel/tolls plus half of the shared-route operating cost, capped below the estimated trip and comparable solo costs. This is not a fare, and Got2Get2Work does not process payment.</Text>
       </Card>
       <Button label={canRequest ? `Request a round trip with ${match.personName}` : match.id === "match-avery" ? "Reserved for standing backup demo" : "A request or ride is already active"} disabled={!canRequest} onPress={() => dispatch({ type: "SEND_REQUEST" })} />
       <Text style={styles.disclaimer}>Sending shares the approximate pickup area and match facts. The meeting point unlocks only after the driver accepts.</Text>

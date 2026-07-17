@@ -26,7 +26,7 @@ export function RideThreadScreen() {
         {revealed ? <Text style={styles.body}>Return: leave work {match.departureTime} · arrive back about {match.returnArrivalTime}</Text> : null}
       </Card>
       {revealed && match.id === "match-jordan" && state.trip.status === "confirmed" ? <Button label="Open pickup map & proximity" variant="secondary" onPress={() => dispatch({ type: "NAVIGATE", route: "pickup-tracker" })} /> : null}
-      <Message sender="CommuteKind" text={revealed ? "Both coworkers agreed. The public meeting point is now available." : "Request sent using approximate area and compatibility facts."} system />
+      <Message sender="Got2Get2Work" text={revealed ? "Both coworkers agreed. The public meeting point is now available." : "Request sent using approximate area and compatibility facts."} system />
       <Message sender="Maya" text={match.id === "match-avery" ? "Thanks for offering a backup. Tuesday works for me." : "Hi! Tuesday morning works for me. I can be ready a few minutes early."} own={state.actorId === "maya"} />
       {revealed ? <Message sender={match.personName} text={`Sounds good. I’ll meet you at ${match.meetingPoint} at ${match.pickupTime}.`} own={state.actorId === "jordan" && match.id === "match-jordan"} /> : null}
       {state.rideMessages.filter((item) => item.matchId === match.id).map((item) => <Message key={item.id} sender={personas[item.senderId].firstName} text={item.text} own={item.senderId === state.actorId} />)}

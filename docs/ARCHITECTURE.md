@@ -1,4 +1,4 @@
-# CommuteKind architecture
+# Got2Get2Work architecture
 
 ## Trust boundary
 

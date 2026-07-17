@@ -1,4 +1,4 @@
-# CommuteKind MVP terms
+# Got2Get2Work MVP terms
 
 Last updated: July 17, 2026
 
@@ -6,7 +6,7 @@ These terms are a prototype for demonstration and are not a substitute for juris
 
 ## Coordination service
 
-CommuteKind helps coworkers discover and coordinate potential carpools. It does not provide transportation, employ drivers, act as a transportation carrier, guarantee a ride, or verify that a person is safe to ride with.
+Got2Get2Work helps coworkers discover and coordinate potential carpools. It does not provide transportation, employ drivers, act as a transportation carrier, guarantee a ride, or verify that a person is safe to ride with.
 
 ## Eligibility
 
@@ -30,7 +30,7 @@ Accepting these Terms is separate from the schedule-connection and commute-notif
 
 ## Safety
 
-Users must follow traffic laws, use seat belts, meet only at agreed locations, and avoid harassment and discrimination. The hackathon’s block, report, and trusted-contact controls are nonfunctional previews; production must enforce them before a pilot. In an emergency, contact local emergency services; do not rely on CommuteKind as an emergency-response service.
+Users must follow traffic laws, use seat belts, meet only at agreed locations, and avoid harassment and discrimination. The hackathon’s block, report, and trusted-contact controls are nonfunctional previews; production must enforce them before a pilot. In an emergency, contact local emergency services; do not rely on Got2Get2Work as an emergency-response service.
 
 ## No warranty
 

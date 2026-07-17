@@ -6,7 +6,7 @@ import { useApp } from "../../state/AppContext";
 import { colors } from "../../theme/tokens";
 
 const termsSections = [
-  ["Coordination service", "CommuteKind coordinates possible coworker carpools. It is not a carrier, employer, emergency service, ride guarantee, or driver-safety verification service."],
+  ["Coordination service", "Got2Get2Work coordinates possible coworker carpools. It is not a carrier, employer, emergency service, ride guarantee, or driver-safety verification service."],
   ["Eligibility and workplace badge", "The MVP is for adults in a participating workplace group. A work-email badge represents fictional demo affiliation only; it is not an identity, background, license, insurance, driving-record, or vehicle-safety check."],
   ["Driving responsibilities", "Drivers remain responsible for licenses, registration, insurance, vehicle condition, seat belts, and local law. Each person independently decides whether to participate."],
   ["Expense sharing", "Amounts are suggested expense shares—not fares—and this prototype processes no payment."],
@@ -34,7 +34,7 @@ export function LegalScreen({ kind }: { kind: "terms" | "privacy" }) {
       <BackButton label="Privacy choices" onPress={() => dispatch({ type: "NAVIGATE", route: "privacy" })} />
       <PageHeader
         eyebrow="Hackathon prototype · July 17, 2026"
-        title={kind === "terms" ? "CommuteKind MVP Terms" : "CommuteKind MVP Privacy Notice"}
+        title={kind === "terms" ? "Got2Get2Work MVP Terms" : "Got2Get2Work MVP Privacy Notice"}
         subtitle="Plain-language demo copy. A real pilot requires counsel-reviewed policies and production controls."
       />
       {sections.map(([title, body]) => (

@@ -1,12 +1,12 @@
-# CommuteKind product brief
+# Got2Get2Work product brief
 
 ## Positioning
 
 **Track:** Apps for Your Life
 
-**Promise:** Your shift has a way there.
+**Promise:** For when you’ve got to get to work!
 
-CommuteKind is an AI commute coordinator for coworkers in the same workplace group. It turns shift schedules into private, explainable carpool options, lets both people approve the arrangement, and proposes a backup when plans change. Production would verify workplace membership; the MVP uses fictional seeded work-email affiliation.
+Got2Get2Work is an AI commute coordinator for coworkers in the same workplace group. It turns shift schedules into private, explainable carpool options, lets both people approve the arrangement, and proposes a backup when plans change. Production would verify workplace membership; the MVP uses fictional seeded work-email affiliation.
 
 The product is a consumer transportation and personal-finance safety net. Workplace verification is the trust boundary, not an employer surveillance feature.
 
@@ -36,7 +36,7 @@ Many employees pay for individual ride-hail trips to and from the same workplace
 
 ## What is novel
 
-Existing commuter products already automate basic matching. CommuteKind differentiates through:
+Existing commuter products already automate basic matching. Got2Get2Work differentiates through:
 
 - Shift ingestion and separate arrival/departure matching.
 - Cross-street and public-meeting-point privacy.
@@ -67,4 +67,4 @@ Existing commuter products already automate basic matching. CommuteKind differen
 - [BlaBlaCar Daily](https://www.blablacardaily.com/): recurring daily carpooling and meeting-point patterns.
 - [Commute with Enterprise](https://www.commutewithenterprise.com/): managed commute groups and schedule coordination.
 
-These references inform the problem space; CommuteKind's source, flows, identity, and implementation are newly created for OpenAI Build Week.
+These references inform the problem space; Got2Get2Work's source, flows, identity, and implementation are newly created for OpenAI Build Week.

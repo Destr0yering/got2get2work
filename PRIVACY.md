@@ -1,8 +1,8 @@
-# CommuteKind MVP privacy notice
+# Got2Get2Work MVP privacy notice
 
 Last updated: July 17, 2026
 
-This hackathon notice describes the CommuteKind MVP. It is a product prototype, not a final production privacy policy or legal opinion.
+This hackathon notice describes the Got2Get2Work MVP. It is a product prototype, not a final production privacy policy or legal opinion.
 
 ## Data the prototype uses
 

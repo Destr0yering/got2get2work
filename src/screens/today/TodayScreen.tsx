@@ -75,7 +75,7 @@ export function TodayScreen() {
         <Card tone="red">
           <Pill label="Ride changed" tone="red" />
           <Text style={styles.cardTitle}>Jordan had to cancel</Text>
-          <Text style={styles.cardBody}>Your Tuesday shift is not stranded. CommuteKind found Avery as a compatible backup and kept transit ready.</Text>
+          <Text style={styles.cardBody}>Your Tuesday shift is not stranded. Got2Get2Work found Avery as a compatible backup and kept transit ready.</Text>
           <Button label="Review backup plan" variant="danger" onPress={() => dispatch({ type: "OPEN_RECOVERY" })} />
         </Card>
       ) : null}
@@ -112,7 +112,7 @@ function MixedPlanToday() {
   const { state, dispatch } = useApp();
   return (
     <AppScreen testID="today-screen">
-      <PageHeader eyebrow="Tuesday · split commute" title="Each commute leg has its own role" subtitle="CommuteKind keeps the trip to work separate from the trip home." />
+      <PageHeader eyebrow="Tuesday · split commute" title="Each commute leg has its own role" subtitle="Got2Get2Work keeps the trip to work separate from the trip home." />
       <Card tone="blue">
         <Pill label="Two independent plans" tone="blue" />
         <Text style={styles.cardTitle}>To work · {state.profile.toWorkRole === "passenger" ? "Need a ride" : "Can drive"}</Text>

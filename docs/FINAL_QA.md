@@ -1,4 +1,4 @@
-# CommuteKind final QA gate
+# Got2Get2Work final QA gate
 
 Date: July 17, 2026
 

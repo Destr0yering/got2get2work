@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "CommuteKind",
+    "name": "Got2Get2Work",
     "slug": "commutekind",
     "version": "0.1.0",
     "orientation": "portrait",
@@ -26,8 +26,8 @@
       "output": "single"
     },
     "extra": {
-      "product": "CommuteKind",
-      "tagline": "Your shift has a way there."
+      "product": "Got2Get2Work",
+      "tagline": "For when you’ve got to get to work!"
     }
   }
 }

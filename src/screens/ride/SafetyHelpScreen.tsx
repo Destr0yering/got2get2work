@@ -10,7 +10,7 @@ export function SafetyHelpScreen() {
   return (
     <AppScreen>
       <BackButton label="Ride" onPress={() => dispatch({ type: "NAVIGATE", route: "ride-thread" })} />
-      <PageHeader eyebrow="Safety & help" title="Support stays within reach" subtitle="Use emergency services for immediate danger. CommuteKind’s prototype does not dispatch emergency assistance." />
+      <PageHeader eyebrow="Safety & help" title="Support stays within reach" subtitle="Use emergency services for immediate danger. Got2Get2Work’s prototype does not dispatch emergency assistance." />
       {state.notice ? <Notice message={state.notice} tone="amber" /> : null}
       <Card tone="red"><Pill label="Emergency" tone="red" /><Text style={styles.title}>Call local emergency services</Text><Text style={styles.body}>Use your phone’s emergency calling feature if you or someone else is in immediate danger.</Text></Card>
       <SectionTitle title="Ride controls" />

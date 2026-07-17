@@ -1,8 +1,8 @@
-# CommuteKind
+# Got2Get2Work
 
-> Your shift has a way there.
+> For when you’ve got to get to work!
 
-CommuteKind is a standalone Expo / React Native hackathon prototype for schedule-aware coworker carpools. It helps employees in the same workplace group find compatible trips to work and home while using approximate pickup areas instead of home addresses. All identities, workplace membership, routes, and history in the demo are fictional seed data.
+Got2Get2Work is a standalone Expo / React Native hackathon prototype for schedule-aware coworker carpools. It helps employees in the same workplace group find compatible trips to work and home while using approximate pickup areas instead of home addresses. All identities, workplace membership, routes, and history in the demo are fictional seed data.
 
 ## Judge links
 
@@ -29,7 +29,7 @@ The local demo is the default and requires no backend, API key, API billing, com
 
 ## How Codex and GPT-5.6 accelerated the build
 
-CommuteKind was designed, implemented, reviewed, and tested in the primary Codex build task with `gpt-5.6-sol`, as recorded in that task's local session metadata. The work was substantive across the project rather than a decorative runtime call:
+Got2Get2Work was designed, implemented, reviewed, and tested in the primary Codex build task with `gpt-5.6-sol`, as recorded in that task's local session metadata. The work was substantive across the project rather than a decorative runtime call:
 
 - **Research and product framing:** Codex reviewed the Build Week rules, benchmarked four commute and ride-coordination products, and translated the findings into explicit UX requirements.
 - **Architecture and privacy:** GPT-5.6 helped define the deterministic matching boundary, progressive location disclosure, mutual-consent state machine, cancellation recovery, and the minimized future Responses API contract.
@@ -160,4 +160,4 @@ The client never asks GPT to calculate routes, determine safety, approve a match
 
 ## Third-party software
 
-CommuteKind is distributed under the [MIT License](LICENSE). Its main open-source dependencies are Expo (MIT), React (MIT), React Native (MIT), React Native Web (MIT), and TypeScript (Apache-2.0). Their versions are pinned in `package-lock.json`; each package retains its own copyright and license terms.
+Got2Get2Work is distributed under the [MIT License](LICENSE). Its main open-source dependencies are Expo (MIT), React (MIT), React Native (MIT), React Native Web (MIT), and TypeScript (Apache-2.0). Their versions are pinned in `package-lock.json`; each package retains its own copyright and license terms.

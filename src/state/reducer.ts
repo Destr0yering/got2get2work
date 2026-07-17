@@ -162,7 +162,7 @@ export function appReducer(state: AppState, action: AppAction): AppState {
         proximityOptIn: { maya: false, jordan: false },
         vehicleApproachStatus: "waiting",
         passengerAtPickup: false,
-        notice: "Jordan cancelled. CommuteKind found a compatible backup."
+        notice: "Jordan cancelled. Got2Get2Work found a compatible backup."
       };
     case "OPEN_RECOVERY":
       return {

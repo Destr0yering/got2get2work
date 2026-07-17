@@ -1,6 +1,13 @@
-# CommuteKind Build Week log
+# Got2Get2Work Build Week log
 
-CommuteKind is a completely new application created for OpenAI Build Week. Existing We Work Together and WorkRoute code was reviewed only for broad product lessons and visual preferences. No existing application was renamed or submitted as this project.
+Got2Get2Work is a completely new application created for OpenAI Build Week. Existing We Work Together and WorkRoute code was reviewed only for broad product lessons and visual preferences. No existing application was renamed or submitted as this project.
+
+## July 17, 2026 — Brand refinement
+
+- Changed the public product name from the working name CommuteKind to **Got2Get2Work**.
+- Changed the public tagline to **For when you’ve got to get to work!**
+- Preserved the established `commutekind` repository, Pages path, Expo slug, URL scheme, and native package identifiers so judge links and build identity remain stable.
+- Re-ran typecheck, all 43 automated tests, and both production exports after the rebrand; every gate passed.
 
 ## July 17, 2026 — Pickup recognition extension
 
@@ -13,7 +20,7 @@ CommuteKind is a completely new application created for OpenAI Build Week. Exist
 ## New-work boundary
 
 - New isolated project: `hackathon/cowork-carpool`.
-- New CommuteKind name, product framing, information architecture, source code, tests, API contract, state machine, and documentation.
+- New Got2Get2Work product framing, information architecture, source code, tests, API contract, state machine, and documentation; CommuteKind was used only as the initial working name during this same Build Week project.
 - New OpenAI Responses API integration using GPT-5.6 and strict structured output.
 - New demo data and flows focused on schedule parsing, mutual approval, privacy, and ride recovery.
 

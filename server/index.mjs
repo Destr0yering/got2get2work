@@ -119,5 +119,5 @@ const server = http.createServer(async (request, response) => {
 });
 
 server.listen(port, "127.0.0.1", () => {
-  console.log(`CommuteKind agent listening on http://127.0.0.1:${port}`);
+  console.log(`Got2Get2Work agent listening on http://127.0.0.1:${port}`);
 });

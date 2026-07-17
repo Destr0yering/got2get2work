@@ -16,7 +16,7 @@ export function WelcomeScreen() {
         <View style={styles.hero}>
           <Pill label="Fictional coworker demo" tone="blue" />
           <Text accessibilityRole="header" style={styles.title}>A better way to get every shift covered.</Text>
-          <Text style={styles.subtitle}>CommuteKind introduces coworkers whose schedules and routes line up without asking for an exact home address.</Text>
+          <Text style={styles.subtitle}>Got2Get2Work introduces coworkers whose schedules and routes line up without asking for an exact home address.</Text>
         </View>
         <Card tone="dark" style={styles.preview}>
           <Text style={styles.previewEyebrow}>TUESDAY · 7:00 AM SHIFT</Text>

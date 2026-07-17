@@ -13,7 +13,7 @@ export function RecoveryScreen() {
   return (
     <AppScreen>
       <BackButton label="Today — keep backup ready" onPress={() => dispatch({ type: "SET_TAB", tab: "today" })} />
-      <PageHeader eyebrow="Agentic recovery" title="Your shift still has a way there" subtitle="Jordan cancelled. CommuteKind checked coworkers who had already opted in for this shift." />
+      <PageHeader eyebrow="Agentic recovery" title="Your shift still has a way there" subtitle="Jordan cancelled. Got2Get2Work checked coworkers who had already opted in for this shift." />
       <Card tone="red"><Pill label="Primary ride cancelled" tone="red" /><Text style={styles.cardTitle}>No personal data was reshared</Text><Text style={styles.body}>The agent used your existing commute window and deterministic reason codes. It did not contact or confirm anyone automatically.</Text></Card>
       <SectionTitle title="Active backup offer" />
       <Card tone="green">

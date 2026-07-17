@@ -1,6 +1,6 @@
-# CommuteKind
+# Got2Get2Work
 
-**Tagline:** Your AI commute coordinator finds a way to every shift—with a coworker from your workplace group, a private meeting area, and a backup plan.
+**Tagline:** For when you’ve got to get to work!
 
 **Category:** Apps for Your Life
 
@@ -10,11 +10,11 @@ While driving on ride-hail platforms, I kept meeting people who were paying for 
 
 ## What it does
 
-CommuteKind recommends coworkers from the same workplace group whose commute windows and routes fit in both directions. The MVP simulates work-email affiliation with fictional seed data; it does not perform a real employer or driver verification. A user can need a ride, offer one, or decide per shift. They can add a schedule manually or enter natural language such as “Mon-Thu, 7 to 3:30”; the no-billing demo structures it locally into editable shifts. A deferred server adapter can later ask GPT-5.6 to normalize only the typed weekday/time projection.
+Got2Get2Work recommends coworkers from the same workplace group whose commute windows and routes fit in both directions. The MVP simulates work-email affiliation with fictional seed data; it does not perform a real employer or driver verification. A user can need a ride, offer one, or decide per shift. They can add a schedule manually or enter natural language such as “Mon-Thu, 7 to 3:30”; the no-billing demo structures it locally into editable shifts. A deferred server adapter can later ask GPT-5.6 to normalize only the typed weekday/time projection.
 
 The pair-MVP matching core checks hard constraints in deterministic code: worksite, both commute windows, role, seats, detour, accessibility, active consent, and blocks. Eligible seeded candidates are ranked with a documented 25/25/30/10/10 arrival/departure/detour/recurrence/fairness score and receive a capped incremental/shared-cost estimate. The local demo explains supplied facts without billing; a deferred GPT-5.6 adapter can explain the same allowlisted projection when separately configured.
 
-Privacy is progressive. CommuteKind never requires a home address. Before mutual approval, coworkers see a coarsened pickup-area label and compatibility facts. After both agree, the app reveals an agreed public meeting point, vehicle description, and ride thread. If a driver cancels, the agent can surface a compatible coworker’s standing backup offer and fallback transportation—but the user must accept that offer before confirmation.
+Privacy is progressive. Got2Get2Work never requires a home address. Before mutual approval, coworkers see a coarsened pickup-area label and compatibility facts. After both agree, the app reveals an agreed public meeting point, vehicle description, and ride thread. If a driver cancels, the agent can surface a compatible coworker’s standing backup offer and fallback transportation—but the user must accept that offer before confirmation.
 
 For the last few minutes of pickup, the confirmed-ride demo adds a small approximate approach map and separate Bluetooth-proximity choices for each coworker. Maya can indicate that she is standing at the public pickup; Jordan can advance the vehicle from en route to nearby and arrived. The hackathon path simulates these states without accessing a Bluetooth radio and clearly labels them. Users can also customize an avatar, vehicle color, body style, and car nickname to make the correct person and car easier to recognize.
 
@@ -28,7 +28,7 @@ For the last few minutes of pickup, the confirmed-ride demo adds a small approxi
 - A structural optional-AI boundary that constructs schedule requests only from allowlisted weekdays/times plus an opaque workplace reference, and match requests only from allowlisted reason codes and numeric/boolean facts.
 - Unit tests for state transitions, matching, privacy filtering, fallback parsing, and grounded explanations.
 
-The client contains no OpenAI key. Raw schedule prose stays on the CommuteKind server; OpenAI receives a newly constructed weekday/time projection and opaque workplace reference, never passthrough text or unknown fields. Match explanations structurally send only allowlisted numeric/boolean facts and reason codes. Common address, cross-street, coordinate, ZIP, email, and phone patterns are also rejected early for clearer user feedback.
+The client contains no OpenAI key. Raw schedule prose stays on the Got2Get2Work server; OpenAI receives a newly constructed weekday/time projection and opaque workplace reference, never passthrough text or unknown fields. Match explanations structurally send only allowlisted numeric/boolean facts and reason codes. Common address, cross-street, coordinate, ZIP, email, and phone patterns are also rejected early for clearer user feedback.
 
 ## How we used Codex
 
