@@ -21,7 +21,7 @@ CommuteKind is a completely new application created for OpenAI Build Week. Exist
 
 1. Selected **Apps for Your Life** after reading the official rules and submission fields.
 2. Kept eligibility, route, schedule, consent, accessibility, block, and expense decisions deterministic.
-3. Used GPT-5.6 through Codex to design and audit the build; kept the judged runtime local/no-billing and limited the deferred adapter to minimized schedule normalization and fact-grounded explanations.
+3. Used `gpt-5.6-sol` in the primary Codex build task to design and audit the build; kept the judged runtime local/no-billing and limited the deferred adapter to minimized schedule normalization and fact-grounded explanations. The selected model is recorded in the task's local session metadata.
 4. Prevented exact address/cross-street/coordinate data from crossing the AI boundary.
 5. Designed a deterministic, clearly labeled demo fallback so judges can always run the complete project.
 6. Chose a separate repository-ready folder and build log because prior WWT concepts overlap the problem space.

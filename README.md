@@ -28,7 +28,7 @@ The local demo is the default and requires no backend, API key, API billing, com
 
 ## How Codex and GPT-5.6 accelerated the build
 
-CommuteKind was designed, implemented, reviewed, and tested in the primary Codex build task with GPT-5.6. The work was substantive across the project rather than a decorative runtime call:
+CommuteKind was designed, implemented, reviewed, and tested in the primary Codex build task with `gpt-5.6-sol`, as recorded in that task's local session metadata. The work was substantive across the project rather than a decorative runtime call:
 
 - **Research and product framing:** Codex reviewed the Build Week rules, benchmarked four commute and ride-coordination products, and translated the findings into explicit UX requirements.
 - **Architecture and privacy:** GPT-5.6 helped define the deterministic matching boundary, progressive location disclosure, mutual-consent state machine, cancellation recovery, and the minimized future Responses API contract.

@@ -12,7 +12,7 @@
 
 - [x] Newly created during the submission period in an isolated folder.
 - [x] Built with Codex.
-- [x] GPT-5.6 used through Codex for the build, review, and test workflow; deferred Responses API adapter included but not required for the no-billing demo.
+- [x] `gpt-5.6-sol` used in the primary Codex task for the build, review, and test workflow; selected-model evidence is present in local task metadata. The deferred Responses API adapter is included but not required for the no-billing demo.
 - [x] Testable local web build in `dist-web`.
 - [x] Android export artifact in `dist-android`.
 - [x] Deterministic demo/sample data.
