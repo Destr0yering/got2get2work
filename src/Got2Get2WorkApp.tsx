@@ -4,7 +4,7 @@ import { StatusBar } from "expo-status-bar";
 import { AppNavigator } from "./navigation/AppNavigator";
 import { AppProvider, useApp } from "./state/AppContext";
 
-export default function CommuteKindApp() {
+export default function Got2Get2WorkApp() {
   return (
     <AppProvider>
       <AppChrome />

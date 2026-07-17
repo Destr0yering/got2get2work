@@ -93,7 +93,7 @@ export function isLiveOpenAIConfigured() {
 export async function parseScheduleWithOpenAI(projection) {
   const safeProjection = sanitizeScheduleProjectionForOpenAI(projection);
   const result = await createStructuredResponse({
-    name: "commutekind_schedule",
+    name: "got2get2work_schedule",
     schema: scheduleSchema,
     instructions: [
       "You normalize a server-generated recurring schedule projection for user review.",
@@ -110,7 +110,7 @@ export async function parseScheduleWithOpenAI(projection) {
 export async function explainMatchWithOpenAI(reasonCodes, facts) {
   const safeMatch = sanitizeMatchFacts(reasonCodes, facts);
   const result = await createStructuredResponse({
-    name: "commutekind_match_explanation",
+    name: "got2get2work_match_explanation",
     schema: explanationSchema,
     instructions: [
       "You explain an already-computed coworker commute option.",

@@ -1,5 +1,5 @@
 {
-  "name": "commutekind",
+  "name": "got2get2work",
   "version": "0.1.0",
   "private": true,
   "main": "index.ts",
@@ -15,7 +15,7 @@
     "export:android": "expo export --platform android --output-dir dist-android",
     "verify": "npm run typecheck && npm run test && npm run server:test && npm run export:web && npm run export:android",
     "predeploy": "npm run export:web",
-    "deploy": "gh-pages --nojekyll -d dist-web --repo https://github.com/Destr0yering/commutekind.git"
+    "deploy": "gh-pages --nojekyll -d dist-web --repo https://github.com/Destr0yering/got2get2work.git"
   },
   "dependencies": {
     "@expo/metro-runtime": "~6.1.2",

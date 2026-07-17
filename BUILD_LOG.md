@@ -6,7 +6,7 @@ Got2Get2Work is a completely new application created for OpenAI Build Week. Exis
 
 - Changed the public product name from the working name CommuteKind to **Got2Get2Work**.
 - Changed the public tagline to **For when you’ve got to get to work!**
-- Preserved the established `commutekind` repository, Pages path, Expo slug, URL scheme, and native package identifiers so judge links and build identity remain stable.
+- Renamed the public repository and migrated the Pages path, Expo slug, URL scheme, service/schema identifiers, and native package identifiers to `got2get2work` before submission links were finalized.
 - Re-ran typecheck, all 43 automated tests, and both production exports after the rebrand; every gate passed.
 
 ## July 17, 2026 — Pickup recognition extension
@@ -35,8 +35,8 @@ Got2Get2Work is a completely new application created for OpenAI Build Week. Exis
 
 ## Required final evidence
 
-- Public repository: https://github.com/Destr0yering/commutekind
-- Deployed no-login demo: https://destr0yering.github.io/commutekind/
+- Public repository: https://github.com/Destr0yering/got2get2work
+- Deployed no-login demo: https://destr0yering.github.io/got2get2work/
 - Add the final Android artifact path if produced.
 - Codex `/feedback` Session ID: `019f6d4f-803b-78f2-977d-a07a1dae9a79`
 - Link the public under-three-minute YouTube demo.

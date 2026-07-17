@@ -98,7 +98,7 @@ const server = http.createServer(async (request, response) => {
     if (request.method === "GET" && url.pathname === "/api/health") {
       return writeJson(response, 200, {
         ok: true,
-        service: "commutekind-agent",
+        service: "got2get2work-agent",
         liveOpenAIConfigured: isLiveOpenAIConfigured(),
         model: process.env.OPENAI_MODEL || "gpt-5.6-terra",
       });

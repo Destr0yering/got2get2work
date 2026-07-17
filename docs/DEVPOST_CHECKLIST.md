@@ -18,7 +18,7 @@
 - [x] Deterministic demo/sample data.
 - [x] README setup and test instructions.
 - [x] New-work build log and architecture decisions.
-- [x] Public MIT-licensed repository: https://github.com/Destr0yering/commutekind
+- [x] Public MIT-licensed repository: https://github.com/Destr0yering/got2get2work
 - [x] `/feedback` Codex Session ID from the primary build task: `019f6d4f-803b-78f2-977d-a07a1dae9a79`
 
 ## Required submission fields
@@ -26,8 +26,8 @@
 - [ ] Submitter type.
 - [ ] Country of residence and eligibility confirmation.
 - [x] Category: Apps for Your Life.
-- [x] Repository URL: https://github.com/Destr0yering/commutekind
-- [x] Hosted-project URL and no-login judge path: https://destr0yering.github.io/commutekind/
+- [x] Repository URL: https://github.com/Destr0yering/got2get2work
+- [x] Hosted-project URL and no-login judge path: https://destr0yering.github.io/got2get2work/
 - [x] `/feedback` Session ID: `019f6d4f-803b-78f2-977d-a07a1dae9a79`
 
 ## Demo video

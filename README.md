@@ -6,8 +6,8 @@ Got2Get2Work is a standalone Expo / React Native hackathon prototype for schedul
 
 ## Judge links
 
-- **Live no-login demo:** https://destr0yering.github.io/commutekind/
-- **Public source repository:** https://github.com/Destr0yering/commutekind
+- **Live no-login demo:** https://destr0yering.github.io/got2get2work/
+- **Public source repository:** https://github.com/Destr0yering/got2get2work
 - **Primary Codex `/feedback` Session ID:** `019f6d4f-803b-78f2-977d-a07a1dae9a79`
 - **License:** MIT
 
