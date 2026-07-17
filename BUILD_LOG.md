@@ -28,8 +28,8 @@ CommuteKind is a completely new application created for OpenAI Build Week. Exist
 
 ## Required final evidence
 
-- Add the final repository URL.
-- Add the deployed demo URL.
+- Public repository: https://github.com/Destr0yering/commutekind
+- Deployed no-login demo: https://destr0yering.github.io/commutekind/
 - Add the final Android artifact path if produced.
 - Add the `/feedback` session ID.
 - Link the public under-three-minute YouTube demo.
@@ -37,10 +37,12 @@ CommuteKind is a completely new application created for OpenAI Build Week. Exist
 ## Local verification — July 17, 2026
 
 - TypeScript typecheck passed.
-- Client matcher, schedule, gateway, and state-machine tests passed: 15/15.
-- Server privacy and deterministic-fallback tests passed: 8/8.
+- Client/domain/state tests passed: 33/33.
+- Server/privacy tests passed: 10/10.
 - Production web export completed in `dist-web`.
 - Production Android export completed in `dist-android`.
+- A clean clone installed with `npm ci`, passed typecheck and all 43 tests, and produced both web and Android exports. Windows required permission to execute the local Hermes compiler for the Android export.
+- The public GitHub Pages build loaded the seeded demo successfully with zero app console warnings or errors in the in-app browser.
 - A 390 × 844 browser walkthrough completed the seeded passenger request, driver acceptance, mutual detail reveal, driver cancellation, backup review, and explicit backup approval flows.
 - `npm audit` reported 11 moderate issues and no high or critical issues. The remaining findings are Expo toolchain transitive dependencies; the automatic remediation requires a breaking Expo 57 upgrade, so the hackathon build remains on Expo 54.
 

@@ -4,6 +4,12 @@
 
 CommuteKind is a standalone Expo / React Native hackathon prototype for schedule-aware coworker carpools. It helps employees in the same workplace group find compatible trips to work and home while using approximate pickup areas instead of home addresses. All identities, workplace membership, routes, and history in the demo are fictional seed data.
 
+## Judge links
+
+- **Live no-login demo:** https://destr0yering.github.io/commutekind/
+- **Public source repository:** https://github.com/Destr0yering/commutekind
+- **License:** MIT
+
 ## What the demo proves
 
 - Privacy-first onboarding with separate Terms acceptance and optional schedule/notification permissions.
@@ -116,6 +122,8 @@ Or run the complete verification sequence:
 ```powershell
 npm run verify
 ```
+
+The release gate was also repeated from a clean local clone with `npm ci`. Typecheck, 33 client/domain/state tests, 10 server/privacy tests, and both production exports passed.
 
 Recommended visual checks:
 

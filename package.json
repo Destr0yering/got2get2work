@@ -15,7 +15,7 @@
     "export:android": "expo export --platform android --output-dir dist-android",
     "verify": "npm run typecheck && npm run test && npm run server:test && npm run export:web && npm run export:android",
     "predeploy": "npm run export:web",
-    "deploy": "gh-pages --nojekyll -d dist-web"
+    "deploy": "gh-pages --nojekyll -d dist-web --repo https://github.com/Destr0yering/commutekind.git"
   },
   "dependencies": {
     "@expo/metro-runtime": "~6.1.2",

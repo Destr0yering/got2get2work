@@ -18,7 +18,7 @@
 - [x] Deterministic demo/sample data.
 - [x] README setup and test instructions.
 - [x] New-work build log and architecture decisions.
-- [ ] Public repository with a relevant license, or private repository shared with `testing@devpost.com` and `build-week-event@openai.com`.
+- [x] Public MIT-licensed repository: https://github.com/Destr0yering/commutekind
 - [ ] `/feedback` Codex session ID from the task where most core functionality was built.
 
 ## Required submission fields
@@ -26,8 +26,8 @@
 - [ ] Submitter type.
 - [ ] Country of residence and eligibility confirmation.
 - [x] Category: Apps for Your Life.
-- [ ] Repository URL.
-- [ ] Optional hosted-project URL and judge instructions.
+- [x] Repository URL: https://github.com/Destr0yering/commutekind
+- [x] Hosted-project URL and no-login judge path: https://destr0yering.github.io/commutekind/
 - [ ] `/feedback` session ID.
 
 ## Demo video
