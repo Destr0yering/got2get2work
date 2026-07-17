@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "CommuteKind",
+    "slug": "commutekind",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "commutekind",
+    "userInterfaceStyle": "light",
+    "jsEngine": "hermes",
+    "assetBundlePatterns": ["**/*"],
+    "experiments": {
+      "baseUrl": "/commutekind"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.commutekind.app"
+    },
+    "android": {
+      "package": "com.commutekind.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#0A1830"
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single"
+    },
+    "extra": {
+      "product": "CommuteKind",
+      "tagline": "Your shift has a way there."
+    }
+  }
+}

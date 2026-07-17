@@ -1,0 +1,38 @@
+{
+  "name": "commutekind",
+  "version": "0.1.0",
+  "private": true,
+  "main": "index.ts",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "web": "expo start --web",
+    "agent": "node --env-file-if-exists=.env.local server/index.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test src/domain/*.test.ts src/services/*.test.ts src/state/*.test.ts",
+    "server:test": "node --test server/*.test.mjs",
+    "export:web": "expo export --platform web --output-dir dist-web",
+    "export:android": "expo export --platform android --output-dir dist-android",
+    "verify": "npm run typecheck && npm run test && npm run server:test && npm run export:web && npm run export:android",
+    "predeploy": "npm run export:web",
+    "deploy": "gh-pages --nojekyll -d dist-web"
+  },
+  "dependencies": {
+    "@expo/metro-runtime": "~6.1.2",
+    "expo": "~54.0.35",
+    "expo-status-bar": "~3.0.9",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-native": "0.81.4",
+    "react-native-web": "~0.21.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.2",
+    "gh-pages": "^6.3.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
