@@ -1,6 +1,7 @@
 import React, { ReactNode } from "react";
 import {
   ActivityIndicator,
+  Image,
   Pressable,
   ScrollView,
   StyleProp,
@@ -31,11 +32,12 @@ export function AppScreen({ children, wide = false, testID, backgroundColor = co
 export function Brand({ compact = false, dark = false }: { compact?: boolean; dark?: boolean }) {
   return (
     <View accessible accessibilityRole="image" style={styles.brandRow} accessibilityLabel="Got2Get2Work logo">
-      <View style={[styles.brandMark, compact && styles.brandMarkCompact]}>
-        <View style={[styles.routeStem, styles.routeStemLeft]} />
-        <View style={[styles.routeStem, styles.routeStemRight]} />
-        <View style={styles.routeDot} />
-      </View>
+      <Image
+        accessible={false}
+        resizeMode="contain"
+        source={require("../../assets/branding/g2w-app-icon.png")}
+        style={[styles.brandMark, compact && styles.brandMarkCompact]}
+      />
       <View>
         <Text style={[styles.brandName, compact && styles.brandNameCompact, dark && styles.brandNameDark]}>Got2Get2Work</Text>
         {!compact ? <Text style={[styles.brandTagline, dark && styles.brandTaglineDark]}>For when you’ve got to get to work!</Text> : null}
@@ -181,12 +183,8 @@ const styles = StyleSheet.create({
   screenContent: { flexGrow: 1, alignItems: "center", paddingHorizontal: spacing.md, paddingTop: spacing.lg, paddingBottom: 112 },
   screenInner: { width: "100%" },
   brandRow: { flexDirection: "row", alignItems: "center", gap: 12 },
-  brandMark: { width: 48, height: 48, borderRadius: 16, backgroundColor: colors.cobalt, overflow: "hidden", position: "relative" },
-  brandMarkCompact: { width: 38, height: 38, borderRadius: 13 },
-  routeStem: { position: "absolute", width: 5, height: 34, backgroundColor: colors.white, borderRadius: 4, top: 8 },
-  routeStemLeft: { left: 15, transform: [{ rotate: "-25deg" }] },
-  routeStemRight: { right: 14, transform: [{ rotate: "25deg" }] },
-  routeDot: { position: "absolute", width: 8, height: 8, borderRadius: 4, backgroundColor: "#A9C4FF", bottom: 7, left: 20 },
+  brandMark: { width: 52, height: 52, borderRadius: 16 },
+  brandMarkCompact: { width: 42, height: 42, borderRadius: 13 },
   brandName: { color: colors.white, fontSize: 24, fontWeight: "900", letterSpacing: -0.6 },
   brandNameCompact: { fontSize: 18 },
   brandNameDark: { color: colors.ink },
