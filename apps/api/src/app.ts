@@ -12,11 +12,15 @@ import {
   type ErrorEnvelope,
 } from "../../../packages/contracts/src";
 import { loadApiConfig, type ApiConfig } from "./config";
+import { MembershipError } from "./modules/membership/domain";
+import type { MembershipRouteDependencies } from "./modules/membership/routes";
+import { registerMembershipRoutes } from "./modules/membership/routes";
 
 export interface BuildApiOptions {
   config?: ApiConfig;
   logger?: boolean;
   now?: () => Date;
+  membership?: MembershipRouteDependencies;
 }
 const securityHeaders = {
   "cache-control": "no-store",
@@ -32,7 +36,7 @@ export async function buildApi(options: BuildApiOptions = {}): Promise<FastifyIn
   const now = options.now ?? (() => new Date());
   const app = Fastify({
     logger: options.logger ?? true,
-    requestIdHeader: "x-correlation-id",
+    requestIdHeader: false,
     genReqId: () => randomUUID(),
     bodyLimit: 20_000,
     trustProxy: 1,
@@ -60,6 +64,28 @@ export async function buildApi(options: BuildApiOptions = {}): Promise<FastifyIn
   });
 
   app.setErrorHandler((error, request, reply) => {
+    if (error instanceof MembershipError) {
+      const envelope: ErrorEnvelope = {
+        error: {
+          code: error.code,
+          message: error.message,
+          correlationId: request.id,
+          retryable: false,
+        },
+      };
+      return reply.status(error.statusCode).send(envelope);
+    }
+    if (typeof error === "object" && error !== null && "validation" in error && error.validation) {
+      const envelope: ErrorEnvelope = {
+        error: {
+          code: "INVALID_REQUEST",
+          message: "The request did not match the API contract.",
+          correlationId: request.id,
+          retryable: false,
+        },
+      };
+      return reply.status(400).send(envelope);
+    }
     request.log.error({ err: error, correlationId: request.id }, "request_failed");
     const envelope: ErrorEnvelope = {
       error: {
@@ -103,6 +129,8 @@ export async function buildApi(options: BuildApiOptions = {}): Promise<FastifyIn
       response: { 200: PublicConfigSchema, 500: ErrorEnvelopeSchema },
     },
   }, async () => ({ environment: config.environment, firebase: config.firebase }));
+
+  if (options.membership) await registerMembershipRoutes(app, options.membership);
 
   return app;
 }

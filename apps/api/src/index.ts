@@ -1,9 +1,10 @@
 import { buildApi } from "./app";
 import { loadApiConfig } from "./config";
+import { createMembershipDependencies } from "./firebase";
 
 async function main() {
   const config = loadApiConfig();
-  const app = await buildApi({ config });
+  const app = await buildApi({ config, membership: createMembershipDependencies(config) });
 
   const shutdown = async (signal: string) => {
     app.log.info({ signal }, "shutdown_started");

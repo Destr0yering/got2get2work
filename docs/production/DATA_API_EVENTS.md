@@ -82,8 +82,8 @@ Final periods require Florida counsel and pilot contracts. These are implementat
 |---|---|
 | Bootstrap | `GET /v1/config`, `GET /v1/me`, `GET /health/live`, `GET /health/ready` |
 | Enrollment | `POST /v1/memberships/referrals:redeem`, `GET /v1/memberships/current` |
-| Employer approvals | `GET /v1/admin/memberships`, `POST /v1/admin/memberships/{id}:approve`, `:reject` |
-| Referral codes | `POST /v1/admin/referral-codes`, `GET`, `POST /{id}:revoke` |
+| Employer approvals | `GET /v1/admin/memberships`, `POST /v1/admin/memberships/{id}/approve`, `/reject` |
+| Referral codes | `POST /v1/admin/referral-codes`, `GET`, `POST /{id}/revoke` |
 | Agreements | `GET /v1/agreements/required`, `POST /v1/agreements/{version}:accept` |
 | Profiles/vehicles | `GET/PUT /v1/profile`, `POST /v1/profile/photo`, `GET/PUT /v1/vehicle` |
 | Calendar | `POST /v1/calendar/google:authorize`, OAuth callback, `GET /calendars`, `POST /calendar:select`, `DELETE /connection` |

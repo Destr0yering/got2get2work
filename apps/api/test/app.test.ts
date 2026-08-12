@@ -10,6 +10,7 @@ const config: ApiConfig = {
   port: 4100,
   release: "test-release",
   exposeDocumentation: true,
+  referralCodePepper: "test-referral-pepper-value",
   firebase: {
     apiKey: null,
     authDomain: null,
@@ -50,6 +51,21 @@ test("OpenAPI documents the versioned system endpoints", async () => {
     assert.ok(document.paths?.["/health/live"]);
     assert.ok(document.paths?.["/health/ready"]);
     assert.ok(document.paths?.["/v1/config"]);
+  } finally {
+    await app.close();
+  }
+});
+
+test("request correlation identifiers are server-generated", async () => {
+  const app = await buildApi({ config, logger: false });
+  try {
+    const response = await app.inject({
+      method: "GET",
+      url: "/health/live",
+      headers: { "x-correlation-id": "attacker-controlled-correlation-id" },
+    });
+    assert.equal(response.statusCode, 200);
+    assert.notEqual(response.headers["x-correlation-id"], "attacker-controlled-correlation-id");
   } finally {
     await app.close();
   }
