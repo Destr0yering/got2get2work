@@ -131,10 +131,11 @@ export function Pill({ label, tone = "neutral" }: { label: string; tone?: "neutr
 }
 
 export function AgentSourceBadge({ meta }: { meta: AgentMeta }) {
-  const live = meta.source === "live_gpt";
+  const live = meta.source === "live_gpt" || meta.source === "live_gemini";
+  const label = meta.source === "live_gemini" ? "LIVE GEMINI" : "LIVE GPT";
   return (
     <View>
-      <Pill label={live ? `LIVE GPT · ${meta.model ?? "MODEL"}` : "OFFLINE DEMO · LOCAL"} tone={live ? "green" : "blue"} />
+      <Pill label={live ? `${label} · ${meta.model ?? "MODEL"}` : "OFFLINE DEMO · LOCAL"} tone={live ? "green" : "blue"} />
       {meta.fallbackReason ? (
         <View style={styles.fallbackNote} accessibilityLiveRegion="polite">
           <Text style={styles.fallbackTitle}>Demo fallback active</Text>

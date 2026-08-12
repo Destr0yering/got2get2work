@@ -1,6 +1,7 @@
 import { CommuteProfile, IdentityAppearance, MatchExplanation, PersonaId, RouteId, ScheduleParseResult, TabId } from "../domain/models";
 
 export type AppAction =
+  | { type: "HYDRATE_ACCOUNT"; state: Partial<import("../domain/models").AppState> }
   | { type: "NAVIGATE"; route: RouteId }
   | { type: "SET_TAB"; tab: TabId }
   | { type: "SET_CONSENT"; acceptedTerms: boolean; schedulePermission: boolean; notificationPermission: boolean }

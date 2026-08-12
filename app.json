@@ -20,10 +20,19 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.got2get2work.app",
+      "buildNumber": "1",
       "icon": "./assets/branding/g2w-app-icon.png"
     },
     "android": {
       "package": "com.got2get2work.app",
+      "versionCode": 1,
+      "allowBackup": false,
+      "permissions": ["android.permission.INTERNET", "android.permission.VIBRATE"],
+      "blockedPermissions": [
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.SYSTEM_ALERT_WINDOW"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/branding/g2w-app-icon.png",
         "backgroundColor": "#0A1830"
@@ -36,7 +45,8 @@
     },
     "extra": {
       "product": "Got2Get2Work",
-      "tagline": "For when you’ve got to get to work!"
+      "tagline": "For when you’ve got to get to work!",
+      "releaseChannel": "galaxy-free-beta"
     }
   }
 }

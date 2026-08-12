@@ -1,6 +1,7 @@
 import { MatchExplanation, ParsedShift, ScheduleParseResult } from "../domain/models";
 import { CommuteGateway, ExplainMatchInput, FetchLike } from "./CommuteGateway";
 import { DemoCommuteGateway } from "./DemoCommuteGateway";
+import { firebaseAuth, isFirebaseConfigured } from "./firebase";
 
 type UnknownRecord = Record<string, unknown>;
 
@@ -53,9 +54,14 @@ export class HttpCommuteGateway implements CommuteGateway {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), this.timeoutMs);
     try {
+      const user = isFirebaseConfigured() ? firebaseAuth().currentUser : null;
+      const token = user ? await user.getIdToken() : null;
       const response = await this.fetchImpl(`${this.baseUrl.replace(/\/$/, "")}${path}`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { "Authorization": `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify(body),
         signal: controller.signal
       });

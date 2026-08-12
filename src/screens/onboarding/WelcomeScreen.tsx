@@ -7,6 +7,7 @@ import { AppScreen, Brand, Button, Card, Pill } from "../../components/primitive
 
 export function WelcomeScreen() {
   const { dispatch } = useApp();
+  const demoEnabled = process.env.EXPO_PUBLIC_DEMO_MODE === "true";
   return (
     <View style={styles.shell}>
       <View style={styles.glowOne} />
@@ -14,13 +15,13 @@ export function WelcomeScreen() {
       <AppScreen backgroundColor={colors.midnight}>
         <Brand />
         <View style={styles.hero}>
-          <Pill label="Fictional coworker demo" tone="blue" />
+          <Pill label={demoEnabled ? "Fictional coworker demo" : "Galaxy Store closed beta"} tone={demoEnabled ? "blue" : "green"} />
           <Text accessibilityRole="header" style={styles.title}>A better way to get every shift covered.</Text>
           <Text style={styles.subtitle}>Got2Get2Work introduces coworkers whose schedules and routes line up without asking for an exact home address.</Text>
         </View>
         <Card tone="dark" style={styles.preview}>
           <Text style={styles.previewEyebrow}>TUESDAY · 7:00 AM SHIFT</Text>
-          <Text style={styles.previewTitle}>2 compatible coworkers found</Text>
+          <Text style={styles.previewTitle}>{demoEnabled ? "2 compatible coworkers found" : "Private, invite-only matching"}</Text>
           <View style={styles.routeRow}>
             <View style={styles.dot} /><View style={styles.line} /><View style={styles.dotBlue} /><View style={styles.line} /><View style={styles.dotGreen} />
           </View>
@@ -29,9 +30,9 @@ export function WelcomeScreen() {
         <Card>
           <Text style={styles.cardTitle}>The agent suggests. You decide.</Text>
           <Text style={styles.cardBody}>Schedule windows power local matching. You separately approve every coworker request, public meeting point, and backup offer.</Text>
-          <Button label="Review policies and start setup" onPress={() => dispatch({ type: "NAVIGATE", route: "privacy" })} />
-          <Button label="Open the seeded demo" variant="secondary" onPress={() => dispatch({ type: "SKIP_TO_DEMO" })} />
-          <Text style={styles.demoNote}>Seeded demo runs locally and does not require Wi-Fi.</Text>
+          {demoEnabled ? <Button label="Review policies and start setup" onPress={() => dispatch({ type: "NAVIGATE", route: "privacy" })} /> : <Button label="Create a beta tester account" onPress={() => dispatch({ type: "NAVIGATE", route: "sign-up" })} />}
+          <Button label={demoEnabled ? "Sign in with an employer benefit" : "Sign in to the beta"} variant="secondary" onPress={() => dispatch({ type: "NAVIGATE", route: "sign-in" })} />
+          {demoEnabled ? <><Button label="Open the seeded demo" variant="secondary" onPress={() => dispatch({ type: "SKIP_TO_DEMO" })} /><Text style={styles.demoNote}>Seeded demo runs locally and does not require Wi-Fi.</Text></> : <Text style={styles.demoNote}>Real tester accounts · production Firebase · invite-controlled access</Text>}
         </Card>
       </AppScreen>
     </View>

@@ -51,7 +51,7 @@ export function ConfirmedRideScreen({ match, status }: { match: MatchOption; sta
       <Button label="Safety & help" variant="secondary" onPress={() => dispatch({ type: "NAVIGATE", route: "safety-help" })} />
       <Button label="Demo: mark round trip complete" variant="secondary" onPress={() => dispatch({ type: "COMPLETE_RIDE" })} />
       {!recovered ? <Button label="Demo: simulate driver cancellation" variant="quiet" onPress={() => dispatch({ type: "CANCEL_RIDE" })} /> : null}
-      <Text style={styles.expenseNote}>Suggested expense share—not a fare. Got2Get2Work does not process payment or guarantee transportation.</Text>
+      <Text style={styles.expenseNote}>Suggested trip value only. Got2Get2Work does not process payment or guarantee transportation.</Text>
     </View>
   );
 }

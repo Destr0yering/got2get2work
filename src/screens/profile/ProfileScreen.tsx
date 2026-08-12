@@ -44,6 +44,14 @@ export function ProfileScreen() {
         <Setting label="Location sharing" value="Approximate until mutual acceptance" last />
       </Card>
       <Button label="Privacy and permission controls" variant="secondary" onPress={() => dispatch({ type: "NAVIGATE", route: "privacy-controls" })} />
+      <Button label="Feedback or report a problem" variant="secondary" onPress={() => dispatch({ type: "NAVIGATE", route: "feedback-help" })} />
+      <SectionTitle title="Employer-sponsored pilot" />
+      <Card tone="blue">
+        <Pill label="Aggregate view only" tone="blue" />
+        <Text style={styles.settingValue}>Northstar Shift Protection</Text>
+        <Text style={styles.disclaimer}>Open the fictional employer view used to evaluate adoption, protected shifts, recovery, and transparent pilot economics.</Text>
+      </Card>
+      <Button label="Open employer pilot dashboard" variant="secondary" onPress={() => dispatch({ type: "NAVIGATE", route: "employer-dashboard" })} />
       {state.actorId === "maya" ? <Button label="Edit commute profile" variant="secondary" onPress={() => dispatch({ type: "NAVIGATE", route: "profile-setup" })} /> : null}
       <Button label="Open demo controls" variant="quiet" onPress={() => dispatch({ type: "SET_DEMO_CONTROLS", open: true })} />
       <Text style={styles.disclaimer}>Ride coordination is not a guarantee of transportation. Driver license and insurance verification are not represented in this prototype.</Text>

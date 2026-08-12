@@ -19,6 +19,16 @@ export function TodayScreen() {
   return (
     <AppScreen testID="today-screen">
       <PageHeader eyebrow="Tuesday · July 21" title={`Good morning, ${actor.firstName}`} subtitle="Your next shift starts at 7:00 AM at North Campus." />
+      <Card tone="green">
+        <View style={styles.rowBetween}>
+          <View style={styles.flexMin}>
+            <Pill label="Employer-sponsored benefit" tone="green" />
+            <Text style={styles.cardTitle}>Your shift is protected for $0/month</Text>
+            <Text style={styles.cardBody}>Northstar funds recurring coordination, $40 in monthly ride credit, and two rescue rides in this fictional pilot.</Text>
+          </View>
+        </View>
+        <Button label="View my commute benefit" variant="secondary" onPress={() => dispatch({ type: "SET_TAB", tab: "benefit" })} />
+      </Card>
       {state.trip.status === "confirmed" || state.trip.status === "recovered" ? <ConfirmedRideScreen match={selected} status={state.trip.status} /> : null}
       {state.trip.status === "options_ready" || state.trip.status === "needs_plan" ? (
         <>

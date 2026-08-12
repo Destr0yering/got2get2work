@@ -100,6 +100,13 @@ test("ride messages persist in app state across navigation", () => {
   assert.deepEqual(state.rideMessages.map((message) => ({ matchId: message.matchId, text: message.text })), [{ matchId: "match-jordan", text: "Running five minutes late" }]);
 });
 
+test("ride messages reject personal contact details", () => {
+  let state = appReducer(createInitialState(), { type: "SKIP_TO_DEMO" });
+  state = appReducer(state, { type: "SEND_RIDE_MESSAGE", text: "Email me at rider@example.com" });
+  assert.equal(state.rideMessages.length, 0);
+  assert.match(state.notice ?? "", /privacy/i);
+});
+
 test("ride messages stay isolated when recovery switches coworkers", () => {
   let state = appReducer(createInitialState(), { type: "SKIP_TO_DEMO" });
   state = appReducer(state, { type: "SEND_REQUEST" });

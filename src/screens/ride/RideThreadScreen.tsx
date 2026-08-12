@@ -30,12 +30,17 @@ export function RideThreadScreen() {
       <Message sender="Maya" text={match.id === "match-avery" ? "Thanks for offering a backup. Tuesday works for me." : "Hi! Tuesday morning works for me. I can be ready a few minutes early."} own={state.actorId === "maya"} />
       {revealed ? <Message sender={match.personName} text={`Sounds good. I’ll meet you at ${match.meetingPoint} at ${match.pickupTime}.`} own={state.actorId === "jordan" && match.id === "match-jordan"} /> : null}
       {state.rideMessages.filter((item) => item.matchId === match.id).map((item) => <Message key={item.id} sender={personas[item.senderId].firstName} text={item.text} own={item.senderId === state.actorId} />)}
-      <Text style={styles.quickLabel}>Quick updates</Text>
+      <Text style={styles.quickLabel}>Quick updates · personal contact details stay private</Text>
       <View style={styles.quickRow}>
+        <Button label="Ready to Roll" variant="quiet" onPress={() => dispatch({ type: "SEND_RIDE_MESSAGE", text: `${actor.firstName} is Ready to Roll at the public pickup.` })} />
+        <Button label="I’m 5 minutes early" variant="quiet" onPress={() => dispatch({ type: "SEND_RIDE_MESSAGE", text: `${actor.firstName} is 5 minutes early.` })} />
+        <Button label="I’m at the pickup point" variant="quiet" onPress={() => dispatch({ type: "SEND_RIDE_MESSAGE", text: `${actor.firstName} is at the agreed public pickup point.` })} />
+        <Button label="Arriving now" variant="quiet" onPress={() => dispatch({ type: "SEND_RIDE_MESSAGE", text: `${actor.firstName} is arriving now.` })} />
         <Button label="Running 5 minutes late" variant="quiet" onPress={() => dispatch({ type: "SEND_RIDE_MESSAGE", text: "Running 5 minutes late." })} />
         <Button label="Confirm return pickup" variant="quiet" onPress={() => dispatch({ type: "SEND_RIDE_MESSAGE", text: `Confirming our ${match.departureTime} return pickup at North Campus.` })} />
       </View>
       <Field label="Message" value={message} onChangeText={setMessage} placeholder="Write an in-app message" />
+      <Text style={styles.helper}>Ride messages block phone numbers, email addresses, and private street addresses.</Text>
       <Button label="Save message in local thread" disabled={!message.trim()} onPress={() => { dispatch({ type: "SEND_RIDE_MESSAGE", text: message }); setMessage(""); }} />
       <Button label="Safety & help" variant="secondary" onPress={() => dispatch({ type: "NAVIGATE", route: "safety-help" })} />
     </AppScreen>
@@ -51,5 +56,6 @@ const styles = StyleSheet.create({
   sender: { color: colors.cobaltDark, fontSize: 10, fontWeight: "900", marginBottom: 3 }, senderOwn: { color: "#DCE6FF" },
   messageText: { color: colors.ink, fontSize: 12, lineHeight: 18 }, messageTextOwn: { color: colors.white },
   quickLabel: { color: colors.ink, fontSize: 13, fontWeight: "900", marginTop: 4 },
-  quickRow: { marginBottom: 14 }
+  quickRow: { marginBottom: 14 },
+  helper: { color: colors.muted, fontSize: 11, lineHeight: 16, marginTop: -8, marginBottom: 8 }
 });

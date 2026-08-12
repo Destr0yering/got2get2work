@@ -5,13 +5,16 @@ import { Brand, Button, Notice } from "../components/primitives";
 import { personas } from "../data/demoSeed";
 import { TabId } from "../domain/models";
 import { MatchesScreen } from "../screens/matches/MatchesScreen";
+import { BetaMatchesScreen } from "../screens/matches/BetaMatchesScreen";
 import { MatchDetailScreen } from "../screens/matches/MatchDetailScreen";
 import { CommuteProfileScreen } from "../screens/onboarding/CommuteProfileScreen";
 import { PrivacyScreen } from "../screens/onboarding/PrivacyScreen";
 import { WelcomeScreen } from "../screens/onboarding/WelcomeScreen";
 import { PrivacyControlsScreen } from "../screens/profile/PrivacyControlsScreen";
 import { ProfileScreen } from "../screens/profile/ProfileScreen";
+import { BetaProfileScreen } from "../screens/profile/BetaProfileScreen";
 import { AppearanceScreen } from "../screens/profile/AppearanceScreen";
+import { FeedbackHelpScreen } from "../screens/profile/FeedbackHelpScreen";
 import { RideThreadScreen } from "../screens/ride/RideThreadScreen";
 import { PickupTrackerScreen } from "../screens/ride/PickupTrackerScreen";
 import { SafetyHelpScreen } from "../screens/ride/SafetyHelpScreen";
@@ -21,6 +24,12 @@ import { ScheduleReviewScreen } from "../screens/schedule/ScheduleReviewScreen";
 import { ScheduleScreen } from "../screens/schedule/ScheduleScreen";
 import { RecoveryScreen } from "../screens/today/RecoveryScreen";
 import { TodayScreen } from "../screens/today/TodayScreen";
+import { BetaTodayScreen } from "../screens/today/BetaTodayScreen";
+import { BenefitScreen } from "../screens/benefit/BenefitScreen";
+import { EmployerDashboardScreen } from "../screens/employer/EmployerDashboardScreen";
+import { SignInScreen } from "../screens/auth/SignInScreen";
+import { SignUpScreen } from "../screens/auth/SignUpScreen";
+import { useAuth } from "../auth/AuthContext";
 import { useApp } from "../state/AppContext";
 import { colors, contentWidth, spacing } from "../theme/tokens";
 import { avatarChoice } from "../domain/appearance";
@@ -30,6 +39,8 @@ export function AppNavigator() {
   if (state.route === "main") return <MainShell />;
   let screen: React.ReactNode = <WelcomeScreen />;
   if (state.route === "privacy") screen = <PrivacyScreen />;
+  if (state.route === "sign-in") screen = <SignInScreen />;
+  if (state.route === "sign-up") screen = <SignUpScreen />;
   if (state.route === "profile-setup") screen = <CommuteProfileScreen />;
   if (state.route === "schedule-agent") screen = <AgentScheduleScreen />;
   if (state.route === "schedule-review") screen = <ScheduleReviewScreen />;
@@ -39,6 +50,8 @@ export function AppNavigator() {
   if (state.route === "pickup-tracker") screen = <PickupTrackerScreen />;
   if (state.route === "safety-help") screen = <SafetyHelpScreen />;
   if (state.route === "privacy-controls") screen = <PrivacyControlsScreen />;
+  if (state.route === "feedback-help") screen = <FeedbackHelpScreen />;
+  if (state.route === "employer-dashboard") screen = <EmployerDashboardScreen />;
   if (state.route === "appearance") screen = <AppearanceScreen />;
   if (state.route === "terms") screen = <LegalScreen kind="terms" />;
   if (state.route === "privacy-policy") screen = <LegalScreen kind="privacy" />;
@@ -47,27 +60,30 @@ export function AppNavigator() {
 
 function MainShell() {
   const { state, dispatch } = useApp();
+  const { user } = useAuth();
   const actor = personas[state.actorId];
+  const demoEnabled = process.env.EXPO_PUBLIC_DEMO_MODE === "true";
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.headerOuter}>
         <View style={styles.headerInner}>
           <Brand compact />
-          <Pressable accessibilityRole="button" accessibilityLabel="Open demo controls" onPress={() => dispatch({ type: "SET_DEMO_CONTROLS", open: true })} style={styles.actorButton}>
+          {demoEnabled ? <Pressable accessibilityRole="button" accessibilityLabel="Open demo controls" onPress={() => dispatch({ type: "SET_DEMO_CONTROLS", open: true })} style={styles.actorButton}>
             <View style={styles.actorAvatar}><Text style={styles.actorInitials}>{avatarChoice(state.appearances[state.actorId].avatarId).symbol}</Text></View>
             <View><Text style={styles.demoLabel}>DEMO AS</Text><Text style={styles.actorName}>{actor.firstName} · Change</Text></View>
-          </Pressable>
+          </Pressable> : <View style={styles.betaIdentity}><Text style={styles.betaLabel}>CLOSED BETA</Text><Text style={styles.betaEmail}>{user?.email ?? "Signed in"}</Text></View>}
         </View>
       </View>
       {state.notice ? <Notice message={state.notice} tone={state.trip.status === "cancelled" ? "red" : "green"} /> : null}
       <View style={styles.content}>
-        {state.activeTab === "today" ? <TodayScreen /> : null}
-        {state.activeTab === "matches" ? <MatchesScreen /> : null}
+        {state.activeTab === "today" ? (demoEnabled ? <TodayScreen /> : <BetaTodayScreen />) : null}
+        {state.activeTab === "matches" ? (demoEnabled ? <MatchesScreen /> : <BetaMatchesScreen />) : null}
         {state.activeTab === "schedule" ? <ScheduleScreen /> : null}
-        {state.activeTab === "profile" ? <ProfileScreen /> : null}
+        {state.activeTab === "benefit" ? <BenefitScreen /> : null}
+        {state.activeTab === "profile" ? (demoEnabled ? <ProfileScreen /> : <BetaProfileScreen />) : null}
       </View>
       <BottomTabs />
-      <DemoControls />
+      {demoEnabled ? <DemoControls /> : null}
     </SafeAreaView>
   );
 }
@@ -78,6 +94,7 @@ function BottomTabs() {
     { id: "today", symbol: "●", label: "Today" },
     { id: "matches", symbol: "↗", label: "Matches" },
     { id: "schedule", symbol: "▦", label: "Schedule" },
+    { id: "benefit", symbol: "✦", label: "Benefit" },
     { id: "profile", symbol: "◉", label: "Profile" }
   ];
   return (
@@ -118,6 +135,9 @@ const styles = StyleSheet.create({
   actorInitials: { color: colors.white, fontSize: 11, fontWeight: "900" },
   demoLabel: { color: "#8296B5", fontSize: 8, fontWeight: "900", letterSpacing: 0.6 },
   actorName: { color: colors.white, fontSize: 10, fontWeight: "800", marginTop: 2 },
+  betaIdentity: { alignItems: "flex-end", maxWidth: 210 },
+  betaLabel: { color: "#63D2AE", fontSize: 9, fontWeight: "900", letterSpacing: 0.7 },
+  betaEmail: { color: colors.white, fontSize: 11, fontWeight: "800", marginTop: 3 },
   content: { flex: 1 },
   tabOuter: { backgroundColor: colors.surface, borderTopWidth: 1, borderTopColor: colors.border, alignItems: "center" },
   tabs: { width: "100%", maxWidth: contentWidth.detail, minHeight: 70, flexDirection: "row" },

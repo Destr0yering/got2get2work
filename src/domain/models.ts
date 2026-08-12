@@ -1,6 +1,6 @@
 export type CommuteRole = "passenger" | "driver" | "either";
 export type PersonaId = "maya" | "jordan";
-export type TabId = "today" | "matches" | "schedule" | "profile";
+export type TabId = "today" | "matches" | "schedule" | "benefit" | "profile";
 export type AvatarId = "sun" | "leaf" | "bolt" | "star";
 export type VehicleColorId = "blue" | "green" | "red" | "silver";
 export type VehicleType = "Compact SUV" | "Sedan" | "Hatchback" | "Pickup";
@@ -8,6 +8,8 @@ export type VehicleApproachStatus = "waiting" | "en_route" | "nearby" | "arrived
 
 export type RouteId =
   | "welcome"
+  | "sign-in"
+  | "sign-up"
   | "privacy"
   | "profile-setup"
   | "schedule-agent"
@@ -19,6 +21,8 @@ export type RouteId =
   | "recovery"
   | "safety-help"
   | "privacy-controls"
+  | "feedback-help"
+  | "employer-dashboard"
   | "appearance"
   | "terms"
   | "privacy-policy";
@@ -33,7 +37,7 @@ export type TripStatus =
   | "recovered"
   | "completed";
 
-export type AgentSource = "demo" | "live_gpt";
+export type AgentSource = "demo" | "live_gpt" | "live_gemini";
 
 export interface AgentMeta {
   source: AgentSource;
@@ -60,6 +64,11 @@ export interface CommuteProfile {
   homeRole: Exclude<CommuteRole, "either">;
   maxDetourMinutes: number;
   seats: number;
+  comfortablePassengerSeats?: number;
+  centerRearSeatEnabled?: boolean;
+  earliestEmbarkmentTime?: string;
+  driverArrivalTime?: string;
+  earlyArrivalMinutes?: number;
 }
 
 export interface IdentityAppearance {
@@ -145,6 +154,31 @@ export interface ImpactSummary {
   fewerSoloTrips: number;
 }
 
+export interface BenefitEnrollment {
+  sponsorName: string;
+  siteName: string;
+  planName: string;
+  status: "eligible" | "enrolled";
+  employeeMonthlyCost: number;
+  monthlyRideCredit: number;
+  guaranteedRideHomeRemaining: number;
+  driverFuelDiscountCents?: number;
+  fuelPerkTripThreshold?: number;
+}
+
+export interface PilotMetrics {
+  eligibleEmployees: number;
+  enrolledEmployees: number;
+  activeCarpools: number;
+  protectedShifts: number;
+  successfulRecoveries: number;
+  recoveryAttempts: number;
+  estimatedAvoidedAbsences: number;
+  valuePerAvoidedAbsence: number;
+  monthlyPlatformFee: number;
+  monthlySubsidyBudget: number;
+}
+
 export interface AppState {
   route: RouteId;
   activeTab: TabId;
@@ -174,4 +208,6 @@ export interface AppState {
   passengerAtPickup: boolean;
   notice: string | null;
   demoControlsOpen: boolean;
+  benefit: BenefitEnrollment;
+  pilotMetrics: PilotMetrics;
 }

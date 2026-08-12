@@ -3,12 +3,11 @@ import { StatusBar } from "expo-status-bar";
 
 import { AppNavigator } from "./navigation/AppNavigator";
 import { AppProvider, useApp } from "./state/AppContext";
+import { AuthProvider } from "./auth/AuthContext";
 
 export default function Got2Get2WorkApp() {
   return (
-    <AppProvider>
-      <AppChrome />
-    </AppProvider>
+    <AuthProvider><AppProvider><AppChrome /></AppProvider></AuthProvider>
   );
 }
 

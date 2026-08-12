@@ -21,7 +21,12 @@ export function createInitialState(): AppState {
       toWorkRole: "passenger",
       homeRole: "passenger",
       maxDetourMinutes: 10,
-      seats: 1
+      seats: 1,
+      comfortablePassengerSeats: 1,
+      centerRearSeatEnabled: false,
+      earliestEmbarkmentTime: "6:40 AM",
+      driverArrivalTime: "6:50 AM",
+      earlyArrivalMinutes: 10
     },
     scheduleText: defaultScheduleText,
     parsedSchedule: null,
@@ -43,7 +48,30 @@ export function createInitialState(): AppState {
     vehicleApproachStatus: "waiting",
     passengerAtPickup: false,
     notice: null,
-    demoControlsOpen: false
+    demoControlsOpen: false,
+    benefit: {
+      sponsorName: "Northstar Fulfillment",
+      siteName: "North Campus",
+      planName: "Shift Protection Pilot",
+      status: "enrolled",
+      employeeMonthlyCost: 0,
+      monthlyRideCredit: 40,
+      guaranteedRideHomeRemaining: 2,
+      driverFuelDiscountCents: 10,
+      fuelPerkTripThreshold: 4
+    },
+    pilotMetrics: {
+      eligibleEmployees: 180,
+      enrolledEmployees: 72,
+      activeCarpools: 24,
+      protectedShifts: 118,
+      successfulRecoveries: 17,
+      recoveryAttempts: 20,
+      estimatedAvoidedAbsences: 18,
+      valuePerAvoidedAbsence: 300,
+      monthlyPlatformFee: 1200,
+      monthlySubsidyBudget: 1600
+    }
   };
 }
 
@@ -51,6 +79,8 @@ export const initialState = createInitialState();
 
 export function appReducer(state: AppState, action: AppAction): AppState {
   switch (action.type) {
+    case "HYDRATE_ACCOUNT":
+      return { ...createInitialState(), ...action.state, demoMode: false, notice: "Your saved account data was restored." };
     case "NAVIGATE":
       return { ...state, route: action.route, notice: null };
     case "SET_TAB":
@@ -192,6 +222,9 @@ export function appReducer(state: AppState, action: AppAction): AppState {
     case "SEND_RIDE_MESSAGE": {
       const text = action.text.trim();
       if (!text) return state;
+      if (/(\+?\d[\d\s().-]{7,}|@|\b(address|street|avenue|road|apt|apartment)\b)/i.test(text)) {
+        return { ...state, notice: "For privacy, keep phone numbers, email, and private addresses out of ride messages." };
+      }
       return {
         ...state,
         rideMessages: [...state.rideMessages, { id: `message-${state.rideMessages.length + 1}`, matchId: state.trip.activeMatchId ?? state.selectedMatchId, senderId: state.actorId, text }],
