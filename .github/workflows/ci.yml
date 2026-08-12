@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm ci --prefix website
+      - run: npm run verify
+      - name: Reject committed secrets
+        shell: bash
+        run: |
+          if git grep -nE '(AIza[0-9A-Za-z_-]{30,}|sk-[0-9A-Za-z_-]{20,}|-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----)' -- ':!package-lock.json' ':!website/package-lock.json'; then
+            echo "Potential secret detected"
+            exit 1
+          fi

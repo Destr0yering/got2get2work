@@ -1,6 +1,16 @@
-# Got2Get2Work Build Week log
+# Got2Get2Work build log
 
-Got2Get2Work is a completely new application created for OpenAI Build Week. Existing We Work Together and WorkRoute code was reviewed only for broad product lessons and visual preferences. No existing application was renamed or submitted as this project.
+Got2Get2Work began as a standalone hackathon application. Existing We Work Together and WorkRoute code was reviewed only for broad product lessons and visual preferences. Later entries record the XPRIZE product, production, and customer-development work separately from the earlier prototype phase.
+
+## August 10, 2026 — Customer #1 launch package
+
+- Added a fixed-scope `/assessment` website route for a $199 early-adopter Shift Commute Resilience Assessment.
+- Kept the offer honest about the current product boundary: aggregate analysis and human-reviewed recommendations, not live transportation operation or driver certification.
+- Added the Customer #1 sprint, prospect tracker, evidence checklist, and separate Google AI Studio/OpenRouter red-team prompts.
+- Added the assessment route to desktop, mobile, and footer navigation.
+- Extended production website tests to cover the offer, transportation disclaimer, and navigation.
+- Re-ran TypeScript validation, 34 client/domain/state tests, 23 server/privacy/auth/rate-limit tests, 2 website rendering tests, the website production build, and website lint; all passed.
+- GitHub pre-commit review found no open pull requests. No commit, push, PR, payment setup, outreach, or customer claim was made.
 
 ## July 17, 2026 — Brand refinement
 
@@ -69,3 +79,15 @@ Got2Get2Work is a completely new application created for OpenAI Build Week. Exis
 - Added readable in-app Terms and Privacy screens before consent.
 - Labeled safety/report/block controls as nonfunctional previews and made their feedback visible.
 - Softened location-filter claims to reflect pattern validation rather than an absolute guarantee.
+
+
+## July 24, 2026 — Final B2B2C positioning and deployment declaration
+
+- Declared Got2Get2Work an employer-sponsored workforce mobility benefit for fixed-shift employees.
+- Defined the buyer as an employer, workforce program, or participating worksite; employees remain the voluntary users and pay no monthly platform fee.
+- Defined the product outcome as commute reliability and protected shifts, with aggregate-only employer reporting and no standard access to home locations, exact routes, messages, or individual trip histories.
+- Preserved the coordination-service boundary: Got2Get2Work does not provide transportation, employ drivers, guarantee rides, or determine driver safety.
+- Declared `got2get2work.com` as the public website, `app.got2get2work.com` as the authenticated Cloud Run pilot and same-origin API, and `demo.got2get2work.com` as the isolated fictional demonstration.
+- Selected worker-authorized Google Calendar access as the first production schedule connector, allowing systems such as HotSchedules to remain upstream.
+- Added direct employer schedule integrations as the enterprise path, with subscribed `.ics`, uploaded `.ics`, and manual entry as fallbacks.
+- Required worker review before calendar events become matchable shifts and required re-evaluation when a confirmed shift materially changes or is cancelled.

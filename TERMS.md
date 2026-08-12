@@ -1,8 +1,8 @@
 # Got2Get2Work MVP terms
 
-Last updated: July 17, 2026
+Last updated: July 23, 2026
 
-These terms are a prototype for demonstration and are not a substitute for jurisdiction-specific legal review.
+These pilot terms are not a substitute for jurisdiction-specific legal review.
 
 ## Coordination service
 
@@ -18,19 +18,25 @@ A driver is responsible for maintaining any license, registration, insurance, ve
 
 ## Expense sharing
 
-Any amount shown is a suggested expense share, not a fare, wage, or guarantee of reimbursement. The MVP does not process payments. Users are responsible for following applicable carpool, insurance, tax, employment, and transportation rules.
+Any amount shown is an optional suggested trip value presented before agreement. The MVP does not process payments. Users are responsible for following applicable carpool, insurance, and transportation rules.
 
 ## User control
 
 The AI agent may structure schedules, explain computed options, and propose backups. It cannot accept or cancel a ride, contact another person, commit payment, or reveal personal information without explicit user approval.
 
+## Schedule sources
+
+Users may enter shifts manually, import an `.ics` file, subscribe to an available calendar feed, or connect a supported calendar account with read-only permission. Calendar and scheduling data may be delayed, incomplete, duplicated, changed, or cancelled by the upstream provider. An imported `.ics` file may be only a one-time snapshot.
+
+Users must review the shifts shown in Got2Get2Work and remain responsible for confirming their actual work schedule and commute plan. A calendar connection does not guarantee that a shift, ride, pickup, or backup will occur. Got2Get2Work may warn when a detected schedule change affects an existing plan, but users must independently confirm the change with their employer and coworker.
+
 ## Optional permissions
 
 Accepting these Terms is separate from the schedule-connection and commute-notification choices shown in onboarding. Both switches are optional, start off, and can be changed later. In this prototype they are preference flags: no external scheduling account is connected and no operating-system push notification is sent.
 
-## Safety
+## Safety and account controls
 
-Users must follow traffic laws, use seat belts, meet only at agreed locations, and avoid harassment and discrimination. The hackathon’s block, report, and trusted-contact controls are nonfunctional previews; production must enforce them before a pilot. In an emergency, contact local emergency services; do not rely on Got2Get2Work as an emergency-response service.
+Users must follow traffic laws, use seat belts, meet only at agreed locations, and avoid harassment and discrimination. Authenticated pilot safety reports and coworker blocks are stored and enforced on the server. Blocking is available only when a real coworker account is selected; fictional demo identities do not create production blocks. Trusted-contact sharing remains a preview. In an emergency, contact local emergency services; do not rely on Got2Get2Work as an emergency-response service.
 
 ## No warranty
 
@@ -38,4 +44,8 @@ The prototype and its demo data are provided “as is.” Estimates, match optio
 
 ## Final review required
 
-Before a real pilot, replace these prototype terms with counsel-reviewed terms covering privacy, workplace participation, driver screening, insurance, incident handling, accessibility, payments, taxes, local transportation rules, and dispute resolution.
+Before a real pilot, replace these prototype terms with counsel-reviewed terms covering privacy, workplace participation, driver screening, insurance, incident handling, accessibility, local transportation rules, and dispute resolution.
+
+## Contact
+
+For support or questions about these terms, email support@got2get2work.com. This inbox is not an emergency service.

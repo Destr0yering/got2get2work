@@ -1,5 +1,80 @@
 # Got2Get2Work architecture
 
+## Product and tenancy boundary
+
+Got2Get2Work is a B2B2C product: employers or workforce programs sponsor access; fixed-shift employees are the users. Each pilot account belongs to one participating workplace group. Employer administrators receive only allowlisted aggregate program measures. Worker schedules, approximate pickup areas, routes, messages, blocks, and individual trip records remain outside the standard employer view.
+
+The public demo, authenticated pilot, and marketing site are separate security and data environments. Fictional demo personas must never share persistence with authenticated pilot accounts.
+
+## Canonical deployment layout
+
+```text
+got2get2work.com
+  Public marketing site
+  Independent deployment
+
+www.got2get2work.com
+  Permanent redirect to root domain
+
+app.got2get2work.com
+  Authenticated Expo web application
+  Same-origin /api/* service
+  Google Cloud Run
+  Firebase Authentication and Firestore server access
+
+demo.got2get2work.com
+  Public fictional no-login demo
+  Static deployment; no pilot data or credentials
+
+GitHub
+  Canonical source repository and release history
+
+Google Drive
+  Product, pilot, research, legal-draft, and release documentation
+```
+
+The pilot keeps the web client and API on the same application origin to reduce CORS and cookie/token complexity. A separate `api.got2get2work.com` may be introduced later only when operational scale or independent service ownership justifies it.
+
+## Schedule ingestion architecture
+
+### Source priority
+
+1. Worker-authorized Google Calendar connection.
+2. Direct employer scheduling-system API, webhook, or authorized feed.
+3. Subscribed `.ics` feed.
+4. Uploaded `.ics` snapshot.
+5. Manual or natural-language shift entry.
+
+HotSchedules and similar systems may remain upstream by publishing a worker's schedule into Google Calendar. Got2Get2Work integrates with the worker-selected calendar rather than requiring a vendor-specific connector for the first pilot.
+
+### Calendar synchronization flow
+
+```text
+Worker grants read-only calendar access
+  -> selects one work-schedule calendar
+  -> bounded initial event synchronization
+  -> local normalization into candidate shifts
+  -> worker reviews and confirms shifts
+  -> confirmed shifts enter deterministic matching
+  -> incremental sync detects changes or cancellations
+  -> affected commute plans are re-evaluated
+  -> worker approves any consequential change
+```
+
+Store only the minimum synchronization and normalized schedule fields:
+
+- provider and selected calendar identifier;
+- external event identifier;
+- start, end, and time zone;
+- opaque workplace reference;
+- event status and last-modified marker;
+- worker confirmation state;
+- synchronization cursor/token and last successful sync time.
+
+Do not copy unrelated calendar events, raw descriptions, attendees, attachments, meeting links, or personal location text into the commute profile. Calendar event content is not sent raw to an AI provider. Webhook notifications are treated as change signals; the server retrieves and validates the changed records. Periodic incremental reconciliation remains necessary because notifications may be delayed or missed.
+
+An imported `.ics` file is a snapshot unless the source is a subscribed feed. The UI must state that distinction. Material changes to shift time, worksite, or cancellation status invalidate or warn on affected matches rather than silently preserving stale arrangements.
+
 ## Trust boundary
 
 The mobile client uses fictional, display-safe seeded facts. If the deferred live adapter is deliberately enabled, the API key and GPT calls remain server-side. Saved profile location and raw schedule prose are outside the AI boundary. The server locally converts schedule prose into an allowlisted weekday/time projection with an opaque workplace reference; common location/contact checks provide early rejection feedback but are not the outbound privacy guarantee.

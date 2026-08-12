@@ -2,7 +2,37 @@
 
 > For when you’ve got to get to work!
 
-Got2Get2Work is a standalone Expo / React Native hackathon prototype for schedule-aware coworker carpools. It helps employees in the same workplace group find compatible trips to work and home while using approximate pickup areas instead of home addresses. All identities, workplace membership, routes, and history in the demo are fictional seed data.
+Got2Get2Work is an employer-sponsored workforce mobility benefit for fixed-shift employees. Employers, workforce programs, or participating worksites fund the platform and may fund approved ride credits or rescue transportation. Employees use the product at no monthly cost to coordinate private, mutually approved coworker carpools and recover when a commute plan changes.
+
+The standard employer view is aggregate-only. Employers may see enrollment, adoption, protected-shift, recovery, and pilot-cost measures; they do not receive home locations, exact routes, personal ride messages, or individual trip histories.
+
+Got2Get2Work coordinates potential carpools. It does not provide transportation, employ drivers, guarantee rides, or determine that a participant is safe to ride with. All identities, workplace memberships, routes, pilot metrics, economics, maps, and history in the public demo are fictional seed data.
+
+## Canonical domains and deployment
+
+- **Public website:** `https://got2get2work.com`
+- **`www` redirect:** `https://www.got2get2work.com` → root domain
+- **Authenticated pilot app:** `https://app.got2get2work.com`
+- **Pilot API:** same-origin `https://app.got2get2work.com/api/*` on Google Cloud Run
+- **Public fictional demo:** `https://demo.got2get2work.com`
+- **Current demo compatibility URL:** `https://destr0yering.github.io/got2get2work/`
+- **Source repository:** `https://github.com/Destr0yering/got2get2work`
+
+The public marketing site is deployed independently from the application. The authenticated Expo web client and server API share the Cloud Run origin during the pilot to simplify authentication, CORS, and operational ownership. Mobile clients use the same `/api/*` service. The no-login demo remains isolated from pilot accounts and production records.
+
+## Schedule ingestion
+
+The first production schedule connector is worker-authorized Google Calendar access. The worker selects the calendar containing work shifts; scheduling software such as HotSchedules may publish shifts into Google Calendar upstream. Got2Get2Work reads candidate events through a read-only connection, normalizes only the fields required for commute planning, and requires worker confirmation before a shift enters matching.
+
+Schedule sources are prioritized as follows:
+
+1. worker-authorized Google Calendar connection;
+2. direct employer scheduling-system API or feed;
+3. subscribed `.ics` calendar feed;
+4. uploaded `.ics` snapshot;
+5. manual or natural-language entry.
+
+Incremental calendar changes and cancellations trigger commute-plan re-evaluation. The connector does not scan every personal calendar by default, and raw descriptions, attendees, attachments, and unrelated events are outside the commute profile and AI boundary.
 
 ## Judge links
 
@@ -24,8 +54,11 @@ Got2Get2Work is a standalone Expo / React Native hackathon prototype for schedul
 - Passenger and driver personas in one deterministic stage-ready demo.
 - Agent-assisted recovery after a driver cancellation.
 - A visible local fallback whenever the optional live GPT service is unavailable.
+- An employee benefit view that remains useful after coworkers form a regular carpool.
+- A privacy-safe employer dashboard with explicit fictional-data labels and transparent pilot economics.
+- A dedicated Gemini site-coordinator endpoint that receives only allowlisted aggregate metrics.
 
-The local demo is the default and requires no backend, API key, API billing, commercial map service, device storage, Bluetooth hardware, or network connection. This is the intended hackathon review path. The pickup map and proximity states are deterministic simulations and are labeled that way in the interface.
+The local fallback requires no backend, API key, API billing, commercial map service, device storage, Bluetooth hardware, or network connection. The XPRIZE deployment should run the dedicated Gemini coordinator on Cloud Run; the pickup map and proximity states remain labeled deterministic simulations.
 
 ## How Codex and GPT-5.6 accelerated the build
 
@@ -58,9 +91,9 @@ npm run web
 
 The project is intentionally standalone. Run commands from this directory rather than the repository root.
 
-## Deferred optional live adapter
+## Live agent configuration
 
-The hackathon demo does not use or require paid API access. Codex with GPT-5.6 was used to design, implement, review, and test the project. A server-side Responses API adapter is included for a future phase, but it stays off unless a developer deliberately configures both an endpoint and `EXPO_PUBLIC_DEMO_MODE=false`.
+The app retains deterministic fallbacks, but the XPRIZE entry uses a server-side Gemini site coordinator and Cloud Run. The existing preferred-model adapter can normalize schedules and explain deterministic match facts when explicitly enabled.
 
 Copy `.env.example` to `.env.local`, add a server-side OpenAI API key, and explicitly disable forced demo mode:
 
@@ -69,6 +102,8 @@ EXPO_PUBLIC_API_BASE_URL=http://localhost:4100
 EXPO_PUBLIC_DEMO_MODE=false
 OPENAI_API_KEY=your-server-side-key
 OPENAI_MODEL=gpt-5.6-terra
+GEMINI_API_KEY=your-server-side-key
+GEMINI_MODEL=gemini-flash-lite-latest
 PORT=4100
 ```
 
@@ -83,10 +118,25 @@ The client supports:
 
 - `POST /api/agent/parse-schedule` with `{ "text": "..." }`
 - `POST /api/agent/explain-match` with `{ "reasonCodes": [...], "facts": [...] }`
+- `POST /api/agent/site-coordinator` with an allowlisted aggregate `metrics` object
+
+Public agent routes are limited per client and return `429 RATE_LIMITED` with
+`Retry-After` when the short demo quota is exceeded. Provider calls have bounded
+timeouts and fall back to deterministic results with a visible `fallbackReason`.
+
+## Reproducible Cloud Run deployment
+
+The production posture is captured in `deploy/cloud-run.ps1`: public HTTPS
+ingress, zero minimum instances, one maximum demo instance, bounded concurrency,
+the Secret Manager binding, same-origin CORS, provider timeouts, and the agent
+rate limit. It contains secret names only, never secret values.
+
+After deployment, run `deploy/verify-live.ps1` to verify the homepage, health
+endpoint, and a privacy-safe live Gemini coordinator response.
 
 Only a response whose `source` is `openai` is labeled **Live GPT**. Local or deterministic output is labeled **Offline Demo**, with a visible fallback explanation when a live request was attempted.
 
-Never place an OpenAI key in an `EXPO_PUBLIC_*` variable. The API key belongs only in the server environment. Exact addresses and coordinates must not be sent to either agent endpoint.
+Never place an OpenAI or Gemini key in an `EXPO_PUBLIC_*` variable. Provider keys belong only in the server environment. Exact addresses and coordinates must not be sent to any agent endpoint.
 
 ## Demo path
 
@@ -100,9 +150,11 @@ The repository includes fictional, deterministic sample data for Maya, Jordan, A
 6. Accept as Jordan, then switch back to Maya.
 7. From the confirmed ride, open **Pickup map & proximity**. Let Jordan and Maya opt in separately, have Maya share that she is standing at pickup, and advance Jordan’s approach.
 8. In Profile, open **Customize avatar and vehicle** to review the pickup-identity controls.
-9. Simulate a driver cancellation from the confirmed ride or Demo Controls.
-10. Review and accept Avery’s standing backup offer.
-11. Use Profile → Demo Controls → Reset to restore the pristine state.
+9. Open **Benefit** to show the employee's recurring shift-protection value.
+10. Simulate a driver cancellation from the confirmed ride or Demo Controls.
+11. Review and accept Avery’s standing backup offer.
+12. From Profile, open the fictional employer dashboard and refresh the aggregate Gemini brief.
+13. Use Profile → Demo Controls → Reset to restore the pristine state.
 
 From Demo Controls, **Simulate no compatible matches** demonstrates the scarce-supply explanation and recovery actions without changing production data.
 
@@ -124,7 +176,7 @@ Or run the complete verification sequence:
 npm run verify
 ```
 
-The release gate was also repeated from a clean local clone with `npm ci`. Typecheck, 33 client/domain/state tests, 10 server/privacy tests, and both production exports passed.
+The current B2B2C release gate passes typecheck, 34 client/domain/state tests, 23 server/privacy/auth/rate-limit tests, 2 website rendering tests, website lint, and both production exports.
 
 Recommended visual checks:
 
@@ -157,6 +209,9 @@ The client never asks GPT to calculate routes, determine safety, approve a match
 - [Devpost checklist](docs/DEVPOST_CHECKLIST.md)
 - [Under-three-minute demo script](docs/DEMO_SCRIPT.md)
 - [Build Week new-work log](BUILD_LOG.md)
+- [B2B2C pilot and pricing hypotheses](docs/B2B2C_PILOT.md)
+- [XPRIZE Cloud Run and Gemini architecture](docs/XPRIZE_ARCHITECTURE.md)
+- [XPRIZE demo script](docs/XPRIZE_DEMO_SCRIPT.md)
 
 ## Third-party software
 

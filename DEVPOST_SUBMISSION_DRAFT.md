@@ -1,78 +1,72 @@
-# Got2Get2Work
+# Got2Get2Work — Build with Gemini XPRIZE Draft
 
-**Tagline:** For when you’ve got to get to work!
+**Tagline:** AI-coordinated, employer-sponsored commute resilience for shift workers.
 
-**Category:** Apps for Your Life
+**Recommended category:** Entrepreneurship & Job Creation
 
-## Inspiration
+**Repository:** https://github.com/Destr0yering/got2get2work
 
-While driving on ride-hail platforms, I kept meeting people who were paying for individual rides simply to get to and from work. Many were traveling to the same workplaces and the same shift windows. It raised a simple question: what if the affordable ride they needed was already passing nearby, driven by a coworker they had not met yet?
+**Judge demo:** https://destr0yering.github.io/got2get2work/
 
-## What it does
+**Built with:** Gemini API, Google Cloud Run, Firebase Authentication, Firestore, Expo, React Native, TypeScript, Node.js
 
-Got2Get2Work recommends coworkers from the same workplace group whose commute windows and routes fit in both directions. The MVP simulates work-email affiliation with fictional seed data; it does not perform a real employer or driver verification. A user can need a ride, offer one, or decide per shift. They can add a schedule manually or enter natural language such as “Mon-Thu, 7 to 3:30”; the no-billing demo structures it locally into editable shifts. A deferred server adapter can later ask GPT-5.6 to normalize only the typed weekday/time projection.
+> Evidence rule: replace every bracketed item with verified facts. Never submit brackets, estimates presented as results, fictional demo metrics, or unsupported production claims.
 
-The pair-MVP matching core checks hard constraints in deterministic code: worksite, both commute windows, role, seats, detour, accessibility, active consent, and blocks. Eligible seeded candidates are ranked with a documented 25/25/30/10/10 arrival/departure/detour/recurrence/fairness score and receive a capped incremental/shared-cost estimate. The local demo explains supplied facts without billing; a deferred GPT-5.6 adapter can explain the same allowlisted projection when separately configured.
+## 500–1000 word narrative draft
 
-Privacy is progressive. Got2Get2Work never requires a home address. Before mutual approval, coworkers see a coarsened pickup-area label and compatibility facts. After both agree, the app reveals an agreed public meeting point, vehicle description, and ride thread. If a driver cancels, the agent can surface a compatible coworker’s standing backup offer and fallback transportation—but the user must accept that offer before confirmation.
+Got2Get2Work addresses a practical barrier to economic participation: a worker can be ready and willing to work but still lose a shift when transportation fails. While driving on ride-hail platforms, I repeatedly met people paying for individual rides to the same workplaces and shift windows. Got2Get2Work turns that observation into an employer-sponsored mobility benefit that helps opted-in coworkers coordinate compatible commutes and recover when a plan changes.
 
-For the last few minutes of pickup, the confirmed-ride demo adds a small approximate approach map and separate Bluetooth-proximity choices for each coworker. Maya can indicate that she is standing at the public pickup; Jordan can advance the vehicle from en route to nearby and arrived. The hackathon path simulates these states without accessing a Bluetooth radio and clearly labels them. Users can also customize an avatar, vehicle color, body style, and car nickname to make the correct person and car easier to recognize.
+The product combines a worker-controlled coordination flow with an AI-assisted operating layer. Workers enter or approve their shift windows, commute role, accessibility constraints, seat availability, and a coarse pickup area. Deterministic policy code checks hard constraints such as workplace membership, arrival and departure windows, active consent, blocks, seats, and detour limits. It ranks only eligible candidates and explains the facts behind each suggestion. Both coworkers must approve before the product reveals a public meeting point and vehicle details. AI cannot declare a driver safe, override a block, approve a match, spend funds, or guarantee transportation.
 
-## How we built it
+Gemini operates as a privacy-limited site coordinator for the employer-sponsored program. The production service sends only allowlisted aggregate metrics such as enrolled employees, active carpools, protected shifts, recovery attempts, successful recoveries, and pilot budget assumptions. Gemini selects from a small set of server-owned operational recommendations and cites the exact metric identifiers supporting its result. The server rejects identity-like fields, small cohorts, precise locations, ride messages, and individual attendance records. A deterministic fallback keeps the service usable when Gemini is unavailable, while the interface labels whether the displayed result came from live Gemini or the fallback.
 
-- Expo 54, React Native, and TypeScript with a static web export and Android-targeted Expo/Hermes bundle.
-- A typed reducer/state machine for request, confirmation, cancellation, and recovery.
-- A privacy-scoped pickup state machine for mutual proximity consent, passenger presence, and coarse vehicle approach.
-- A deterministic match and expense layer with seeded judge-ready data.
-- A deferred Node API boundary for the OpenAI Responses API using `gpt-5.6-terra`, `store: false`, and strict JSON Schema output; it is not required or enabled for the judged no-billing flow.
-- A structural optional-AI boundary that constructs schedule requests only from allowlisted weekdays/times plus an opaque workplace reference, and match requests only from allowlisted reason codes and numeric/boolean facts.
-- Unit tests for state transitions, matching, privacy filtering, fallback parsing, and grounded explanations.
+The production AI workflow is: collect consented operational events; aggregate them above the privacy threshold; validate the projection on the server; request a structured Gemini recommendation; validate the returned action code and supporting fact identifiers; present the recommendation to an authorized employer operator; and leave expansion, eligibility, budget, and worker-contact decisions to a human. This creates a useful operating loop without turning AI into an unreviewable authority.
 
-The client contains no OpenAI key. Raw schedule prose stays on the Got2Get2Work server; OpenAI receives a newly constructed weekday/time projection and opaque workplace reference, never passthrough text or unknown fields. Match explanations structurally send only allowlisted numeric/boolean facts and reason codes. Common address, cross-street, coordinate, ZIP, email, and phone patterns are also rejected early for clearer user feedback.
+The service uses Google Cloud Run for the application and server API, Secret Manager for the Gemini credential, Firebase Authentication for identity, and Firestore for authenticated account and consent records. The public judge demonstration remains isolated from production records and uses fictional identities so judges can explore the workflow without receiving personal data. Production evidence for the submission will include Cloud Run service status, a redacted Gemini request/response trace, API usage evidence, and screenshots showing the live Gemini badge and cited aggregate facts.
 
-## How we used Codex
+The business model is employer-sponsored. Employers, workforce programs, or participating worksites pay a platform fee and may fund approved ride or recovery credits; employees pay no monthly subscription. The initial customer is a worksite where fixed-shift attendance is operationally important and transportation disruption is measurable. The product's value can be assessed through enrollment, active commute plans, protected shifts, successful recoveries, worker-reported savings, and employer retention. Submitted results must use the verified pilot figures: [CUSTOMERS], [USERS], [PAYING USERS], [REVENUE], [EXPENSES], and [MEASURED OUTCOMES].
 
-Codex helped us audit the official rules, research existing commute products, distinguish new work from the earlier WWT concept, design the product and threat model, create the cross-platform Expo implementation, write the deterministic match and privacy boundaries, add tests, and verify the complete demo flow.
+Humans remain responsible for the work that requires authority, consent, or judgment. Workers decide whether to participate, what schedule and pickup information to share, whom to request, and whether to accept a recovery option. Employer operators decide pilot scope and budget. The founder handles customer discovery, privacy review, incident escalation, financial reconciliation, and product decisions. Gemini assists with aggregate operational prioritization; deterministic services enforce policy and state transitions.
 
-The major product decision we kept human-owned was the boundary between AI and deterministic code: GPT-5.6 in Codex helped design and test the system; runtime code determines feasibility and expense facts; users approve every consequential action. The optional model adapter can later normalize and explain only minimized facts.
+The business can create and protect economic opportunity beyond the founding team in two ways. First, more reliable commutes can help workers preserve scheduled income and help employers fill shifts without treating transportation as an individual failure. Second, a scaled mobility-benefit program can create implementation, customer-success, trust-and-safety, and local transportation-partnership work. For this submission, those potential effects will be separated from the actual measured evidence gathered during the hackathon.
 
-## Challenges
+Building the company this way made AI governance part of the product rather than a disclaimer. The central lesson is that an AI-native business does not need to automate every consequential choice. It needs a continuous, auditable operating role for AI, clear data boundaries, validated outputs, reliable fallbacks, and humans who remain accountable for decisions affecting people.
 
-- Protecting a worker's routine and location while still producing useful route-overlap recommendations.
-- Avoiding false confidence from a “verified coworker” badge. This MVP’s work-email affiliation is fictional seed data; a future real affiliation check still would not prove driving safety.
-- Making an AI-forward demo reliable even when a network or API account is unavailable.
-- Differentiating from existing carpool marketplaces with a specific shift-worker and recovery workflow.
+## Evidence-backed short answers
 
-## Accomplishments
+### How does AI impact the chosen category?
 
-- A coherent, runnable path from schedule input to explainable match, mutual acceptance, cancellation, and recovery.
-- A customizable pickup identity plus an accessible approximate approach map for both passenger and driver views.
-- A privacy boundary that keeps precise location out of the model.
-- Strict structured output plus deterministic, visibly labeled fallbacks.
-- Verified static web export and Android-targeted Expo/Hermes bundle from the same accessible interface.
-- A fresh, isolated codebase and dated Build Week log.
+Gemini turns privacy-safe aggregate commute activity into grounded operational recommendations that help a small employer program identify recovery coverage gaps and focus limited resources. The intended impact is better access to dependable work, measured through verified enrollment, protected shifts, successful recoveries, and worker savings.
 
-## What we learned
+### How is impact measured?
 
-AI is most useful here as a coordinator, not an authority. This build used Codex with GPT-5.6 to implement and audit deterministic constraints, progressive disclosure, and explicit consent. A future enabled adapter can normalize a privacy-safe schedule projection and explain allowlisted match facts without owning decisions.
+Report only verified values for enrolled workers, active commute plans, protected shifts, recovery attempts, successful recoveries, paying customers, monthly revenue, worker-reported savings, and employer renewal or expansion. Keep forecasts explicitly labeled as forecasts.
 
-## What's next
+### Business model
 
-- Read-only integrations for employer schedule systems.
-- Server-side route matrices backed by encrypted location tokens.
-- Production driver-license/insurance verification through a qualified provider.
-- A native BLE adapter using encrypted rotating ride tokens, coarse RSSI states, explicit OS permission, and automatic expiry.
-- Time-limited trip sharing, masked communication, and human incident review.
-- Guaranteed-ride-home partnerships and jurisdiction-specific expense-sharing review.
-- Fairness monitoring for night shifts, low-density areas, and new users.
+Employer-sponsored B2B2C service: a worksite or workforce program pays a recurring platform fee and may maintain a separate recovery-credit budget. Workers do not pay a monthly subscription.
 
-## Built with
+### How the business operates with AI
 
-Codex with GPT-5.6, deferred OpenAI Responses API adapter, Structured Outputs, Expo, React Native, TypeScript, Node.js
+The server aggregates consented operational events, validates a privacy-minimized projection, asks Gemini for a structured recommendation from an allowlist, verifies the cited fact identifiers, and presents the result to a human operator. Gemini cannot contact workers, alter eligibility, authorize spending, or promise transportation.
 
-## Submission placeholders
+### Google Cloud and Gemini use
 
-- **Repository:** https://github.com/Destr0yering/got2get2work
-- **Live demo:** https://destr0yering.github.io/got2get2work/
-- **Video:** TODO
-- **Codex `/feedback` Session ID:** `019f6d4f-803b-78f2-977d-a07a1dae9a79`
+The implementation targets Google Cloud Run, Secret Manager, Firebase Authentication, and Firestore. The server-side Gemini API call creates an aggregate site-coordinator recommendation using structured JSON output and a bounded timeout. Final submission evidence must prove the deployed services and live call.
+
+## Required factual inserts
+
+- Project start date: `[MM-DD-YY]`
+- Submitter type: `[Individual / Team / Organization]`
+- Country/countries: `[VERIFIED]`
+- Pre-existing resources: `[VERIFIED DISCLOSURE]`
+- Total revenue: `[$ VERIFIED]`
+- Monthly revenue: `[May / June / July / August]`
+- Related-party revenue: `[$ VERIFIED]`
+- Total expenses: `[$ VERIFIED]`
+- COGS: `[$ VERIFIED]`
+- Marketing/customer acquisition: `[$ VERIFIED]`
+- Users acquired: `[VERIFIED]`
+- Paying users: `[VERIFIED]`
+- Public testimonial: `[URL OR OMIT]`
+- Video: `[PUBLIC URL]`

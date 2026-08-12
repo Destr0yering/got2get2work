@@ -1,70 +1,107 @@
 # Got2Get2Work product brief
 
-## Positioning
+## Final B2B2C positioning
 
-**Track:** Apps for Your Life
+**Product category:** Employer-sponsored workforce mobility benefit
 
-**Promise:** For when you’ve got to get to work!
+**Public promise:** For when you’ve got to get to work!
 
-Got2Get2Work is an AI commute coordinator for coworkers in the same workplace group. It turns shift schedules into private, explainable carpool options, lets both people approve the arrangement, and proposes a backup when plans change. Production would verify workplace membership; the MVP uses fictional seeded work-email affiliation.
+**Buyer and sponsor:** Employers, workforce programs, and participating worksites
 
-The product is a consumer transportation and personal-finance safety net. Workplace verification is the trust boundary, not an employer surveillance feature.
+**Primary users:** Adults working fixed, recurring, early, late, or variable shifts
+**Core outcome:** More reliable commutes and more protected shifts
+
+Got2Get2Work is an employer-sponsored commute benefit that helps fixed-shift employees coordinate recurring coworker carpools and recover when a ride falls through. Employees use the product at no monthly cost. The employer or workforce sponsor funds the platform and may separately fund ride credits or approved rescue transportation.
+
+The employee experience is worker-controlled. Got2Get2Work converts confirmed schedules, workplace membership, commute preferences, and approximate pickup areas into private, explainable options. Both coworkers approve before a ride is confirmed or more specific trip details are revealed.
+
+The employer experience is aggregate-only. Employers may receive enrollment, adoption, protected-shift, recovery, cost, and pilot-performance measures. They do not receive home locations, personal messages, exact routes, or individual trip histories through the standard product.
+
+Got2Get2Work coordinates potential carpools. It does not provide transportation, employ drivers, guarantee a ride, determine that a driver is safe, or make employment decisions.
 
 ## Problem
 
-Many employees pay for individual ride-hail trips to and from the same workplace at the same time. A compatible ride may already pass nearby, but coworkers do not know who shares their schedule or route, and they should not have to publish a home address to find out.
+Many fixed-shift employees pay for individual ride-hail trips or miss work when transportation fails, even though a compatible coworker may already travel toward the same worksite during the same arrival and departure windows. Coworkers lack a private, structured way to discover those overlaps, and employers lack a worker-respecting mechanism for supporting commute reliability.
 
-## MVP audience
+## Initial customer profile
 
-- Adults working scheduled shifts at the same verified worksite.
-- Passengers who need a reliable, less expensive commute.
-- Coworkers willing to drive with a small, transparent expense share.
-- Users with variable arrival and departure windows, not only 9-to-5 commuters.
+The first design partners should be single worksites where a missed commute can become an uncovered shift:
 
-## Core journey
+- warehouses and distribution centers;
+- manufacturing facilities;
+- hospitals and healthcare campuses;
+- hospitality and food-service operations;
+- security, facilities, and other round-the-clock operations.
 
-1. Confirm workplace membership (simulated with fictional seed data in the MVP).
-2. Accept Terms and Privacy separately from optional schedule/location permissions.
-3. Enter cross streets or a general pickup area; never require a home address.
-4. Add shifts manually or enter natural-language schedule text; the no-billing demo parses it locally. A deferred adapter can normalize only a privacy-safe weekday/time projection after API access is added.
-5. Review ranked coworkers with deterministic route, time, detour, and expense facts.
-6. Ask for a local fact-backed explanation. A future GPT-5.6 explanation is limited to validated reason codes.
-7. Request or offer a ride. Both coworkers approve before public pickup and vehicle details appear.
-8. After confirmation, optionally use a small approach map and mutual foreground proximity to recognize the arriving car or waiting passenger.
-9. Customize an avatar and vehicle identity without presenting either as formal verification.
-10. If a trip is cancelled, approve an AI-proposed backup or another transportation fallback.
+The initial pilot should focus on one site, one difficult shift cohort, and an opted-in employee population.
 
-## What is novel
+## Schedule ingestion strategy
 
-Existing commuter products already automate basic matching. Got2Get2Work differentiates through:
+Schedule accuracy is foundational to carpool matching. Got2Get2Work will support the following hierarchy:
 
-- Shift ingestion and separate arrival/departure matching.
-- Cross-street and public-meeting-point privacy.
-- Deterministic eligibility and expense rules with AI explanations grounded in fact IDs.
-- Progressive disclosure after mutual acceptance.
-- Privacy-scoped last-few-minutes pickup coordination without public stranger discovery.
-- Agentic recovery that proposes, but never commits, the next safe option.
+1. **Worker-authorized Google Calendar connection — first production connector.** A worker selects the calendar that contains work shifts. Scheduling systems such as HotSchedules can remain upstream and publish the schedule into Google Calendar.
+2. **Direct employer scheduling-system integration — preferred enterprise path.** Authorized APIs, webhooks, or workforce-management feeds can provide authoritative worksite and schedule records when a design partner supports them.
+3. **Subscribed `.ics` feed.** A worker or employer-provided calendar subscription can supply recurring updates, subject to the upstream provider’s refresh behavior.
+4. **Uploaded `.ics` file.** A one-time import is supported as a snapshot and is not represented as continuous synchronization.
+5. **Manual and natural-language entry.** These remain available as universal fallbacks.
+
+Calendar-derived events are candidate shifts, not automatically authoritative. The worker must review and confirm detected shifts before they are used for matching. Material changes to start time, end time, worksite, or cancellation status trigger re-evaluation and a worker-visible confirmation or warning.
+
+The calendar connector uses read-only access, reads only the worker-selected schedule calendar, limits the synchronization window, and stores a normalized shift projection rather than copying unrelated calendar content. Raw event descriptions, attendees, attachments, personal calendar events, and exact location text are excluded unless a later feature has a separate, explicit purpose and consent flow.
+
+## Core worker journey
+
+1. Join through a participating workplace group.
+2. Accept Terms and Privacy separately from optional calendar, schedule, location, and notification permissions.
+3. Connect a selected work calendar, import an `.ics` schedule, or enter shifts manually.
+4. Review and confirm normalized shifts before matching begins.
+5. Provide a cross-street or general pickup area rather than a required home address.
+6. Review ranked coworkers using deterministic schedule, worksite, seat, detour, accessibility, block, and consent rules.
+7. Request or offer a ride; both coworkers approve before the public meeting point and vehicle details are revealed.
+8. Coordinate the confirmed pickup with structured messages and optional, trip-scoped proximity tools.
+9. If a ride is cancelled or a schedule changes, review a standing backup, transit option, or employer-approved rescue path.
+10. Mark completion, ride-again preference, block, or safety feedback.
+
+## Differentiation
+
+Existing commuter products already automate basic matching. Got2Get2Work’s focused wedge is:
+
+- schedule ingestion designed for fixed and variable shifts;
+- separate arrival and departure compatibility;
+- worker-authorized calendar synchronization with a confirmation boundary;
+- deterministic eligibility and expense logic with grounded explanations;
+- cross-street and public-meeting-point privacy;
+- progressive disclosure after mutual acceptance;
+- recurring shift protection rather than one-time introductions;
+- agent-assisted recovery that proposes but never commits the next option;
+- employer sponsorship with aggregate-only program reporting.
 
 ## Product principles
 
-- **The agent suggests; people decide.** No acceptance, cancellation, payment, or personal-data sharing without explicit approval.
-- **Verification is specific.** “Work email verified” never becomes “safe driver” or “background checked.”
-- **Feasibility is code, not prose.** Route, schedule, cost, accessibility, block, and consent rules are deterministic.
-- **Location is minimized.** Saved profile areas never enter agent requests; schedule text is checked for common address, cross-street, coordinate, ZIP, phone, and email patterns.
-- **A working demo beats a fragile dependency.** Live GPT responses enhance the experience; a clearly labeled deterministic fallback keeps every judged flow runnable.
+- **Employers sponsor; workers control.** Sponsorship does not create access to personal trip details.
+- **The agent suggests; people decide.** No acceptance, cancellation, payment, or personal-data disclosure occurs without an authorized human action.
+- **Verification is specific.** Workplace membership does not imply identity, background, license, insurance, vehicle, or safety verification.
+- **Feasibility is code, not prose.** Schedule, worksite, seat, detour, accessibility, block, cost, and consent rules remain deterministic.
+- **Calendar access is minimized.** The worker selects the source calendar; unrelated events are not imported into the commute profile.
+- **Location is progressively disclosed.** Approximate areas precede mutually accepted public meeting details.
+- **The demo is honest.** Fictional identities, routes, metrics, economics, maps, and proximity states remain explicitly labeled.
 
 ## Success measures
 
-- Valid options that satisfy 100% of hard schedule, worksite, seat, block, and detour constraints.
-- Zero saved profile-location data in AI prompts and match-explanation facts.
-- No write action without explicit confirmation.
-- Match acceptance, completed recurring commutes, rider coverage, median detour, cancellations, and safety-report rate.
+### Worker outcomes
 
-## Competitive references
+- confirmed and completed recurring commutes;
+- rider coverage and recovery success;
+- median driver detour and worker-reported savings;
+- repeat coordination and ride-again preference;
+- cancellation, block, and safety-report rates.
 
-- [Scoop Commute](https://www.scoopcommute.com/solutions/for-employers): coworker networks, shift scheduling, routing, and backup commute patterns.
-- [Quick Ride](https://quickride.in/help.php): corporate-email verification, in-app privacy, and ratings.
-- [BlaBlaCar Daily](https://www.blablacardaily.com/): recurring daily carpooling and meeting-point patterns.
-- [Commute with Enterprise](https://www.commutewithenterprise.com/): managed commute groups and schedule coordination.
+### Employer-pilot outcomes
 
-These references inform the problem space; Got2Get2Work's source, flows, identity, and implementation are newly created for OpenAI Build Week.
+- eligible, invited, enrolled, and weekly active employees;
+- active carpools and protected shifts;
+- recovery attempts and successful recoveries;
+- subsidy usage and employer-defined uncovered-shift value;
+- retention in the program after the first confirmed ride.
+
+These measures must be presented as pilot activity, not causal absenteeism reduction, until a valid baseline and evaluation method exist.

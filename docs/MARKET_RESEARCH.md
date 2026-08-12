@@ -1,35 +1,55 @@
-# Carpool market research and positioning
+# Got2Get2Work market positioning
 
-## Submission category
+## Final category
 
-**Apps for Your Life** is the strongest and only category to select. Got2Get2Work’s direct user outcome is personal commute reliability and reduced out-of-pocket transportation cost. Workplace verification and future schedule connectors are enabling infrastructure, not an employer-product dashboard.
+Got2Get2Work is an **employer-sponsored workforce mobility benefit**. It is sold B2B to employers, workforce programs, and participating worksites, while the employee-facing experience remains voluntary, worker-controlled, and free of a monthly platform fee.
 
-## Comparable products
+The primary outcome for workers is commute reliability and lower transportation pressure. The primary outcome for employers is shift protection and a more resilient staffing operation. Employer sponsorship does not convert the product into employee surveillance: standard employer reporting is aggregate-only.
 
-| Product | Existing pattern | Got2Get2Work decision |
-| --- | --- | --- |
-| [Scoop](https://www.scoopcommute.com/solutions/for-employers) | Automated worksite networks, coworker matching, recurring commute coordination, and employer programs. | Recommendations must be automatic and workplace-scoped; “AI matching” alone is not novel. |
-| [Scoop Shortlist](https://support.scoopcommute.com/hc/en-us/articles/115014119728-Carpooling-with-the-shortlist) | A shortlist lets commuters focus on people they already prefer to ride with. | Recovery uses an opted-in backup pool and preserves explicit consent. |
-| [Quick Ride](https://quickride.in/help.php) | Work-email verification, hidden contact details, in-app coordination, and ratings. | State exactly what is verified; do not imply a background, license, or insurance check. |
-| [BlaBlaCar Daily](https://www.blablacardaily.com/) | Repeated home-to-work carpooling and meeting-point coordination. | Optimize the recurring shift journey, not a general trip marketplace. |
-| [Commute with Enterprise](https://www.commutewithenterprise.com/) | Employer-supported commute groups and shared transportation economics. | Keep employer enablement out of the primary consumer journey while leaving room for workplace partnerships. |
-| [Karos](https://www.karos-mobility.com/) | Predictive daily-carpool recommendations using commute behavior. | Explain every recommendation with deterministic facts rather than presenting an opaque AI score. |
+## Buyer, user, and beneficiary
+
+- **Buyer/sponsor:** employer, worksite, workforce-development program, or benefit administrator.
+- **Primary user:** fixed-shift employee who needs or can offer a recurring commute.
+- **Economic beneficiary:** both the employee and sponsor, subject to pilot evidence.
+- **Trust boundary:** verified workplace participation, explicit worker consent, and minimized data sharing.
+
+## Comparable patterns
+
+| Product pattern | Lesson for Got2Get2Work |
+| --- | --- |
+| Employer-supported commuter networks | Workplace density and sponsor funding can solve the cold-start problem. |
+| Corporate-email or worksite verification | State exactly what is verified; never imply a background, license, insurance, or safety check. |
+| Daily carpool and meeting-point coordination | Optimize recurring shifts and public pickup points rather than becoming a general trip marketplace. |
+| Predictive commute recommendations | Explain each recommendation with deterministic facts instead of an opaque AI score. |
+| Calendar and workforce-management integrations | Use worker-authorized Google Calendar as the first broad connector, then add direct employer scheduling integrations for authoritative pilots. |
 
 ## Defensible wedge
 
-Got2Get2Work is not “another carpool board.” Its focused wedge is:
+Got2Get2Work is not another public carpool board. Its wedge is:
 
-1. Natural-language shift ingestion with human review.
-2. Both arrival and departure windows for hourly and shift workers.
+1. Fixed-shift schedule ingestion, including worker-authorized calendar sync.
+2. Separate arrival and departure matching.
 3. Deterministic worksite, seat, schedule, detour, accessibility, consent, and block gates.
-4. A coarsened cross-street area and progressive detail reveal.
+4. Approximate pickup areas and progressive detail reveal.
 5. Transparent expense-share estimates rather than bidding or fares.
-6. Agentic cancellation recovery that surfaces an already-active backup offer but never accepts for the user.
+6. Agent-assisted cancellation and schedule-change recovery.
+7. Employer funding with worker control and aggregate-only reporting.
 
-## Product boundary for the hackathon
+## Schedule integration strategy
 
-The demo uses fictional worker, route, verification, and commute facts. It implements and tests eligibility, ranking, expense calculation, mutual-consent state transitions, privacy filtering, schedule structuring, and grounded explanations. It does not claim live routing, driver screening, guaranteed transportation, payments, production incident handling, or schedule-provider sync.
+The first production connector is Google Calendar because many employment scheduling systems can already publish shifts into it. This avoids a separate integration for every scheduling vendor during the first pilot.
 
-## Existing WWT design review
+The product should support:
 
-The prior WWT/WorkRoute work has strong worker-first visual DNA: navy and cobalt foundations, green confirmation states, warm warnings, large rounded cards, and reassuring shift-focused language. Got2Get2Work carries forward those broad preferences while simplifying the experience to four tabs—Today, Matches, Schedule, and Profile—and ranking recommendations instead of presenting a crowded ride board. The source code, identity, state machine, agent boundary, tests, demo data, and documentation in this folder were created fresh for Build Week; no prior application was renamed for submission.
+- a worker-selected, read-only schedule calendar;
+- bounded initial and incremental synchronization;
+- worker confirmation before an event becomes a matchable shift;
+- change and cancellation detection;
+- `.ics` subscription and file-import fallbacks;
+- manual entry when no connector is available.
+
+Direct employer scheduling-system integrations are strategically superior for larger deployments because they can provide authoritative worksite, eligibility, and shift identifiers. They should follow a successful design-partner pilot rather than delay the first production test.
+
+## Market claim boundary
+
+The demo and pre-pilot materials may claim that the product demonstrates schedule-aware matching, consent, privacy controls, and recovery workflows. They must not claim live routing, driver screening, guaranteed transportation, completed customer pilots, measured absenteeism reduction, payment compliance, or production incident response until those capabilities and evidence exist.
