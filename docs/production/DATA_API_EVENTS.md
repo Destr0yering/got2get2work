@@ -85,9 +85,9 @@ Final periods require Florida counsel and pilot contracts. These are implementat
 | Employer approvals | `GET /v1/admin/memberships`, `POST /v1/admin/memberships/{id}/approve`, `/reject` |
 | Referral codes | `POST /v1/admin/referral-codes`, `GET`, `POST /{id}/revoke` |
 | Agreements | `GET /v1/agreements/required`, `POST /v1/agreements/{id}/accept`, `PUT /v1/captain/attestation`, `GET /v1/captain/eligibility` |
-| Profiles/vehicles | `GET/PUT /v1/profile`, `POST /v1/profile/photo`, `GET/PUT /v1/vehicle` |
+| Profiles/vehicles | `GET/PUT /v1/profile` implemented; protected photo and vehicle vault endpoints follow in the profile hardening slice. |
 | Calendar | `POST /v1/calendar/google:authorize`, OAuth callback, `GET /calendars`, `POST /calendar:select`, `DELETE /connection` |
-| Schedules | `POST /v1/schedule/ics`, `POST /v1/shifts`, `GET`, `POST /candidates/{id}:confirm`, `:reject` |
+| Schedules | `POST /v1/schedule/ics`, `GET/POST /v1/shifts`, `POST /v1/shifts/{id}/confirm`; ICS creates minimized candidates and never persists event titles/descriptions. |
 | Matching | `POST /v1/matches:search`, `GET /v1/matches/{id}/explanation` |
 | Ride flow | `POST /v1/ride-requests`, `POST /{id}/expense-agreement`, `:accept`, `:decline`, `:cancel` |
 | Trips | `GET /v1/trips`, `GET /{id}`, `POST /{id}/status`, `:cancel`, `:complete` |

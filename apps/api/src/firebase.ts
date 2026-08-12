@@ -5,6 +5,8 @@ import { getFirestore } from "firebase-admin/firestore";
 import type { ApiConfig } from "./config";
 import { FirestoreAgreementStore } from "./modules/agreement/firestore-store";
 import { AgreementService } from "./modules/agreement/service";
+import { FirestoreCommuteStore } from "./modules/commute/firestore-store";
+import { CommuteService } from "./modules/commute/service";
 import { FirestoreMembershipStore } from "./modules/membership/firestore-store";
 import { MembershipService } from "./modules/membership/service";
 
@@ -27,8 +29,10 @@ export function createProductionDependencies(config: ApiConfig) {
     referralPepper: config.referralCodePepper,
   });
   const agreementService = new AgreementService({ store: new FirestoreAgreementStore(db) });
+  const commuteService = new CommuteService(new FirestoreCommuteStore(db));
   return {
     membership: { verifier, service: membershipService },
     agreement: { verifier, memberships: membershipService, agreements: agreementService },
+    commute: { verifier, memberships: membershipService, commutes: commuteService },
   };
 }
