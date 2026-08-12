@@ -1,0 +1,3 @@
+import type { MatchRunRecord } from "./domain"; import type { MatchingStore } from "./ports";
+const pair = (a: string, b: string) => [a, b].sort().join("_");
+export class MemoryMatchingStore implements MatchingStore { readonly restrictions = new Set<string>(); readonly runs: MatchRunRecord[] = []; restrict(a: string, b: string) { this.restrictions.add(pair(a, b)); } async isRestricted(_tenantId: string, a: string, b: string) { return this.restrictions.has(pair(a, b)); } async saveRun(run: MatchRunRecord) { this.runs.push(structuredClone(run)); } }

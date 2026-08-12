@@ -8,6 +8,14 @@
         { "fieldPath": "worksiteId", "order": "ASCENDING" },
         { "fieldPath": "status", "order": "ASCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "commuteProfiles",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "tenantId", "order": "ASCENDING" },
+        { "fieldPath": "worksiteId", "order": "ASCENDING" }
+      ]
     }
   ],
   "fieldOverrides": []

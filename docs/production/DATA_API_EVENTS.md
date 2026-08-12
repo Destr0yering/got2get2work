@@ -88,6 +88,7 @@ Final periods require Florida counsel and pilot contracts. These are implementat
 | Profiles/vehicles | `GET/PUT /v1/profile`, `GET/PUT /v1/vehicle`; plate values are owner-only through these endpoints and AES-256-GCM encrypted in the server-side vault. Signed photo handling remains deferred. |
 | Calendar | `POST /v1/calendar/google:authorize`, OAuth callback, `GET /calendars`, `POST /calendar:select`, `DELETE /connection` |
 | Schedules | `POST /v1/schedule/ics`, `GET/POST /v1/shifts`, `POST /v1/shifts/{id}/confirm`; ICS creates minimized candidates and never persists event titles/descriptions. |
+| Matching | `POST /v1/matches/search`; persists policy-versioned runs, returns opaque candidate IDs and allowlisted schedule facts, and uses conservative same-area routing until a map adapter is enabled. |
 | Matching | `POST /v1/matches:search`, `GET /v1/matches/{id}/explanation` |
 | Ride flow | `POST /v1/ride-requests`, `POST /{id}/expense-agreement`, `:accept`, `:decline`, `:cancel` |
 | Trips | `GET /v1/trips`, `GET /{id}`, `POST /{id}/status`, `:cancel`, `:complete` |

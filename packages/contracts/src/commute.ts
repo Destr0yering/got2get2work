@@ -3,12 +3,14 @@ import { Type, type Static } from "@sinclair/typebox";
 export const CommuteRoleSchema = Type.Union([Type.Literal("captain"), Type.Literal("crew"), Type.Literal("either"), Type.Literal("none")]);
 export const CommuteProfileBodySchema = Type.Object({
   displayName: Type.String({ minLength: 1, maxLength: 80 }),
+  adultConfirmed: Type.Literal(true),
   toWorkRole: CommuteRoleSchema,
   homeRole: CommuteRoleSchema,
   maximumDetourMinutes: Type.Integer({ minimum: 0, maximum: 60 }),
   seatsAvailable: Type.Integer({ minimum: 0, maximum: 8 }),
   pickupAreaId: Type.Optional(Type.String({ minLength: 1, maxLength: 80, pattern: "^[A-Za-z0-9_-]+$" })),
   accessibilityNotes: Type.Optional(Type.String({ maxLength: 500 })),
+  accessibilityRequired: Type.Optional(Type.Boolean()),
   notificationsEnabled: Type.Boolean(),
 }, { additionalProperties: false });
 export const CommuteProfileSchema = Type.Intersect([CommuteProfileBodySchema, Type.Object({
@@ -40,6 +42,7 @@ export const VehicleBodySchema = Type.Object({
   color: Type.String({ minLength: 1, maxLength: 40 }), year: Type.Integer({ minimum: 1980, maximum: 2100 }),
   plate: Type.String({ minLength: 2, maxLength: 16, pattern: "^[A-Za-z0-9 -]+$" }),
   seatsAvailable: Type.Integer({ minimum: 1, maximum: 8 }),
+  wheelchairAccessible: Type.Optional(Type.Boolean()),
 }, { additionalProperties: false });
 export const VehicleSchema = Type.Intersect([VehicleBodySchema, Type.Object({ id: Type.String(), updatedAt: Type.String({ format: "date-time" }) })]);
 export type VehicleBody = Static<typeof VehicleBodySchema>;

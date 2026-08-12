@@ -1,0 +1,6 @@
+import { Type, type Static } from "@sinclair/typebox";
+export const CommuteLegSchema = Type.Union([Type.Literal("to_work"), Type.Literal("from_work")]);
+export const MatchSearchBodySchema = Type.Object({ shiftId: Type.String({ minLength: 1, maxLength: 128 }), leg: CommuteLegSchema }, { additionalProperties: false });
+export const MatchCandidateSchema = Type.Object({ id: Type.String(), displayName: Type.String(), score: Type.Number({ minimum: 0, maximum: 100 }), sharedWeekdays: Type.Array(Type.String(), { minItems: 1, maxItems: 7 }), scheduleDifferenceMinutes: Type.Integer({ minimum: 0 }), detourMinutes: Type.Integer({ minimum: 0 }), routeMode: Type.Literal("coarse_area"), expenseEstimate: Type.Null() }, { additionalProperties: false });
+export const MatchSearchResultSchema = Type.Object({ runId: Type.String(), policyVersion: Type.String(), candidates: Type.Array(MatchCandidateSchema, { maxItems: 20 }), emptyReason: Type.Union([Type.Literal("none"), Type.Literal("no_eligible_coworkers")]) }, { additionalProperties: false });
+export type CommuteLeg = Static<typeof CommuteLegSchema>; export type MatchSearchBody = Static<typeof MatchSearchBodySchema>; export type MatchCandidate = Static<typeof MatchCandidateSchema>; export type MatchSearchResult = Static<typeof MatchSearchResultSchema>;

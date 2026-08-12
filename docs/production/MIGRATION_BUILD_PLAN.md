@@ -36,7 +36,7 @@ Autonomous plan design, with mandatory verification gates before data migration,
   Acceptance: Existing health and agent endpoints have contract-parity tests; invalid external input cannot enter application services.
   Verify: lint, strict typecheck, schema tests, OpenAPI snapshot, container health test.
 
-- [ ] **3. Implement tenant, referral, approval, role, and agreement foundations**
+- [x] **3. Implement tenant, referral, approval, role, and agreement foundations**
   Spec ref: `MVP_PRD.md > Account, consent, and approved membership`
   What to build: Scoped repositories, referral-code digest/lifecycle, pending approval, administrator decisions, agreement versions, captain attestations, and audit events.
   Acceptance: A code cannot activate access without approval; cross-tenant and stale-agreement requests fail safely.

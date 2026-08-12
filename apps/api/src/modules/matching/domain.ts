@@ -1,0 +1,2 @@
+export interface MatchRunRecord { id: string; uid: string; tenantId: string; worksiteId: string; shiftId: string; leg: "to_work" | "from_work"; policyVersion: string; candidates: Array<{ id: string; uid: string }>; createdAt: Date }
+export class MatchingError extends Error { constructor(message: string, readonly code: string, readonly statusCode: number) { super(message); this.name = "MatchingError"; } }

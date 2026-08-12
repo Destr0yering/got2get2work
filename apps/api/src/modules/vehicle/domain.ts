@@ -1,2 +1,2 @@
-export interface VehicleRecord { id: string; uid: string; tenantId: string; worksiteId: string; make: string; model: string; color: string; year: number; seatsAvailable: number; plateCiphertext: string; updatedAt: Date }
+export interface VehicleRecord { id: string; uid: string; tenantId: string; worksiteId: string; make: string; model: string; color: string; year: number; seatsAvailable: number; wheelchairAccessible?: boolean; plateCiphertext: string; updatedAt: Date }
 export class VehicleError extends Error { constructor(message: string, readonly code: string, readonly statusCode: number) { super(message); this.name = "VehicleError"; } }

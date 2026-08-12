@@ -9,6 +9,8 @@ import { FirestoreCommuteStore } from "./modules/commute/firestore-store";
 import { CommuteService } from "./modules/commute/service";
 import { FirestoreMembershipStore } from "./modules/membership/firestore-store";
 import { MembershipService } from "./modules/membership/service";
+import { FirestoreMatchingStore } from "./modules/matching/firestore-store";
+import { MatchingService } from "./modules/matching/service";
 import { FirestoreVehicleStore } from "./modules/vehicle/firestore-store";
 import { VehicleService } from "./modules/vehicle/service";
 import { PlateVault } from "./modules/vehicle/vault";
@@ -28,17 +30,22 @@ export function createProductionDependencies(config: ApiConfig) {
   const app = firebaseApp(config.firebase.projectId);
   const verifier = getAuth(app);
   const db = getFirestore(app);
+  const membershipStore = new FirestoreMembershipStore(db);
+  const commuteStore = new FirestoreCommuteStore(db);
+  const vehicleStore = new FirestoreVehicleStore(db);
   const membershipService = new MembershipService({
-    store: new FirestoreMembershipStore(db),
+    store: membershipStore,
     referralPepper: config.referralCodePepper,
   });
   const agreementService = new AgreementService({ store: new FirestoreAgreementStore(db) });
-  const commuteService = new CommuteService(new FirestoreCommuteStore(db));
-  const vehicleService = new VehicleService(new FirestoreVehicleStore(db), new PlateVault(config.vehicleVaultKey));
+  const commuteService = new CommuteService(commuteStore);
+  const vehicleService = new VehicleService(vehicleStore, new PlateVault(config.vehicleVaultKey));
+  const matchingService = new MatchingService({ matches: new FirestoreMatchingStore(db), memberships: membershipStore, commutes: commuteStore, vehicles: vehicleStore, agreements: agreementService });
   return {
     membership: { verifier, service: membershipService },
     agreement: { verifier, memberships: membershipService, agreements: agreementService },
     commute: { verifier, memberships: membershipService, commutes: commuteService },
     vehicle: { verifier, memberships: membershipService, vehicles: vehicleService },
+    matching: { verifier, memberships: membershipService, matching: matchingService },
   };
 }
