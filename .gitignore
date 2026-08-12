@@ -1,7 +1,90 @@
+# Operating systems and editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.iml
+*~
+
+# Logs, crashes, and diagnostics
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+hs_err_pid*.log
+replay_pid*.log
+*.hprof
+
+# Node, TypeScript, and tests
 node_modules/
+coverage/
+*.tsbuildinfo
+
+# Environment files (keep sanitized templates)
+.env*
+!.env.example
+!.env.*.example
+
+# Expo and generated exports
 .expo/
+.expo-shared/
 dist-web/
 dist-android/
-.env
-.env.local
-npm-debug.log*
+web-build/
+expo-env.d.ts
+
+# Android generated and machine-local files
+android/.gradle/
+android/.cxx/
+android/build/
+android/app/build/
+android/local.properties
+android/keystore.properties
+android/app/src/main/assets/*.bundle
+android/app/src/main/assets/index.android.bundle
+
+# Signing material and packaged binaries
+*.jks
+*.keystore
+*.p12
+*.pfx
+*.pem
+*.key
+*.apk
+*.aab
+*.ipa
+
+# iOS generated dependencies and artifacts
+ios/build/
+ios/Pods/
+DerivedData/
+
+# Web framework output
+website/.next/
+website/.vinext/
+website/out/
+website/dist/
+website/coverage/
+website/.vercel/
+
+# Cloudflare local state
+.wrangler/
+website/.wrangler/
+
+# Sentry local configuration
+sentry.properties
+
+# Google and Firebase machine credentials/configuration
+google-services.json
+GoogleService-Info.plist
+*service-account*.json
+*gcp-key*.json
+application_default_credentials.json
+
+# Local runtime output
+web-preview.log
+web-preview-error.log
+
+# Historical local website snapshot (not production source)
+website-backup-*/
