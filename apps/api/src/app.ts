@@ -12,6 +12,9 @@ import {
   type ErrorEnvelope,
 } from "../../../packages/contracts/src";
 import { loadApiConfig, type ApiConfig } from "./config";
+import { AgreementError } from "./modules/agreement/domain";
+import type { AgreementRouteDependencies } from "./modules/agreement/routes";
+import { registerAgreementRoutes } from "./modules/agreement/routes";
 import { MembershipError } from "./modules/membership/domain";
 import type { MembershipRouteDependencies } from "./modules/membership/routes";
 import { registerMembershipRoutes } from "./modules/membership/routes";
@@ -21,6 +24,7 @@ export interface BuildApiOptions {
   logger?: boolean;
   now?: () => Date;
   membership?: MembershipRouteDependencies;
+  agreement?: AgreementRouteDependencies;
 }
 const securityHeaders = {
   "cache-control": "no-store",
@@ -64,7 +68,7 @@ export async function buildApi(options: BuildApiOptions = {}): Promise<FastifyIn
   });
 
   app.setErrorHandler((error, request, reply) => {
-    if (error instanceof MembershipError) {
+    if (error instanceof MembershipError || error instanceof AgreementError) {
       const envelope: ErrorEnvelope = {
         error: {
           code: error.code,
@@ -131,6 +135,7 @@ export async function buildApi(options: BuildApiOptions = {}): Promise<FastifyIn
   }, async () => ({ environment: config.environment, firebase: config.firebase }));
 
   if (options.membership) await registerMembershipRoutes(app, options.membership);
+  if (options.agreement) await registerAgreementRoutes(app, options.agreement);
 
   return app;
 }
