@@ -22,7 +22,6 @@ function services({ decoded = { uid: "u1", email: "worker@example.com" }, member
 test("authentication rejects missing bearer token", async () => {
   await assert.rejects(() => authenticateRequest({ headers: {} }, services()), AuthenticationError);
 });
-
 test("identity tenant and role come from server-side membership", async () => {
   const identity = await authenticateRequest(
     { headers: { authorization: "Bearer signed-token" } },
@@ -41,4 +40,3 @@ test("inactive memberships and wrong employer roles are rejected", async () => {
   );
   assert.throws(() => requireRole({ role: "employee" }, "employer_admin"), AuthorizationError);
 });
-
