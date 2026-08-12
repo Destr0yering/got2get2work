@@ -35,4 +35,3 @@ export const PublicConfigSchema = Type.Object({
 export type LiveHealth = Static<typeof LiveHealthSchema>;
 export type ReadyHealth = Static<typeof ReadyHealthSchema>;
 export type PublicConfig = Static<typeof PublicConfigSchema>;
-

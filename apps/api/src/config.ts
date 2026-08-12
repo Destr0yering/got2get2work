@@ -13,7 +13,6 @@ export interface ApiConfig {
     appId: string | null;
   };
 }
-
 function environment(value: string | undefined): AppEnvironment {
   if (value === "production" || value === "staging" || value === "test") return value;
   return "development";
@@ -43,4 +42,3 @@ export function loadApiConfig(source: NodeJS.ProcessEnv = process.env): ApiConfi
     },
   };
 }
-

@@ -22,4 +22,3 @@ export const ErrorEnvelopeSchema = Type.Object({
 });
 
 export type ErrorEnvelope = Static<typeof ErrorEnvelopeSchema>;
-

@@ -18,7 +18,6 @@ export interface BuildApiOptions {
   logger?: boolean;
   now?: () => Date;
 }
-
 const securityHeaders = {
   "cache-control": "no-store",
   "content-security-policy": "default-src 'none'; frame-ancestors 'none'",
@@ -107,4 +106,3 @@ export async function buildApi(options: BuildApiOptions = {}): Promise<FastifyIn
 
   return app;
 }
-
