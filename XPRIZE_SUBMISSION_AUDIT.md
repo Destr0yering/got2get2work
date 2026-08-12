@@ -1,8 +1,8 @@
 # Build with Gemini XPRIZE — Submission Audit
 
-Audit date: August 9, 2026  
-Deadline: August 17, 2026 at 1:00 PM Pacific / 4:00 PM Eastern  
-Primary project audited: Got2Get2Work  
+Audit date: August 9, 2026<br>
+Deadline: August 17, 2026 at 1:00 PM Pacific / 4:00 PM Eastern<br>
+Primary project audited: Got2Get2Work<br>
 Devpost project: `1351859` (`Untitled`, `submission_pre_draft`)
 
 ## Executive verdict
