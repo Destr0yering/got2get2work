@@ -9,6 +9,9 @@ import { FirestoreCommuteStore } from "./modules/commute/firestore-store";
 import { CommuteService } from "./modules/commute/service";
 import { FirestoreMembershipStore } from "./modules/membership/firestore-store";
 import { MembershipService } from "./modules/membership/service";
+import { FirestoreVehicleStore } from "./modules/vehicle/firestore-store";
+import { VehicleService } from "./modules/vehicle/service";
+import { PlateVault } from "./modules/vehicle/vault";
 
 function firebaseApp(projectId: string | null) {
   return getApps()[0] ?? initializeApp({
@@ -21,6 +24,7 @@ export function createProductionDependencies(config: ApiConfig) {
   if (!config.referralCodePepper) {
     throw new Error("REFERRAL_CODE_PEPPER is required to enable membership routes.");
   }
+  if (!config.vehicleVaultKey) throw new Error("VEHICLE_VAULT_KEY is required to enable vehicle routes.");
   const app = firebaseApp(config.firebase.projectId);
   const verifier = getAuth(app);
   const db = getFirestore(app);
@@ -30,9 +34,11 @@ export function createProductionDependencies(config: ApiConfig) {
   });
   const agreementService = new AgreementService({ store: new FirestoreAgreementStore(db) });
   const commuteService = new CommuteService(new FirestoreCommuteStore(db));
+  const vehicleService = new VehicleService(new FirestoreVehicleStore(db), new PlateVault(config.vehicleVaultKey));
   return {
     membership: { verifier, service: membershipService },
     agreement: { verifier, memberships: membershipService, agreements: agreementService },
     commute: { verifier, memberships: membershipService, commutes: commuteService },
+    vehicle: { verifier, memberships: membershipService, vehicles: vehicleService },
   };
 }

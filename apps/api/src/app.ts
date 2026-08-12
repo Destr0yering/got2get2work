@@ -21,6 +21,9 @@ import { registerCommuteRoutes } from "./modules/commute/routes";
 import { MembershipError } from "./modules/membership/domain";
 import type { MembershipRouteDependencies } from "./modules/membership/routes";
 import { registerMembershipRoutes } from "./modules/membership/routes";
+import { VehicleError } from "./modules/vehicle/domain";
+import type { VehicleRouteDependencies } from "./modules/vehicle/routes";
+import { registerVehicleRoutes } from "./modules/vehicle/routes";
 
 export interface BuildApiOptions {
   config?: ApiConfig;
@@ -29,6 +32,7 @@ export interface BuildApiOptions {
   membership?: MembershipRouteDependencies;
   agreement?: AgreementRouteDependencies;
   commute?: CommuteRouteDependencies;
+  vehicle?: VehicleRouteDependencies;
 }
 const securityHeaders = {
   "cache-control": "no-store",
@@ -72,7 +76,7 @@ export async function buildApi(options: BuildApiOptions = {}): Promise<FastifyIn
   });
 
   app.setErrorHandler((error, request, reply) => {
-    if (error instanceof MembershipError || error instanceof AgreementError || error instanceof CommuteError) {
+    if (error instanceof MembershipError || error instanceof AgreementError || error instanceof CommuteError || error instanceof VehicleError) {
       const envelope: ErrorEnvelope = {
         error: {
           code: error.code,
@@ -141,6 +145,7 @@ export async function buildApi(options: BuildApiOptions = {}): Promise<FastifyIn
   if (options.membership) await registerMembershipRoutes(app, options.membership);
   if (options.agreement) await registerAgreementRoutes(app, options.agreement);
   if (options.commute) await registerCommuteRoutes(app, options.commute);
+  if (options.vehicle) await registerVehicleRoutes(app, options.vehicle);
 
   return app;
 }

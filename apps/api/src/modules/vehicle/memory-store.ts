@@ -1,0 +1,2 @@
+import type { VehicleRecord } from "./domain"; import type { VehicleStore } from "./ports";
+export class MemoryVehicleStore implements VehicleStore { readonly vehicles = new Map<string, VehicleRecord>(); async getByOwner(uid: string) { const v = this.vehicles.get(uid); return v ? structuredClone(v) : null; } async save(record: VehicleRecord) { this.vehicles.set(record.uid, structuredClone(record)); return structuredClone(record); } }

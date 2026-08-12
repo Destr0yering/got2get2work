@@ -5,7 +5,7 @@ import { CommuteError, type CommuteProfileRecord, type ShiftRecord } from "./dom
 import type { CommuteStore } from "./ports";
 
 const weekday = ["SU", "MO", "TU", "WE", "TH", "FR", "SA"] as const;
-const viewProfile = (v: CommuteProfileRecord): CommuteProfile => ({ displayName: v.displayName, toWorkRole: v.toWorkRole, homeRole: v.homeRole, maximumDetourMinutes: v.maximumDetourMinutes, seatsAvailable: v.seatsAvailable, ...(v.accessibilityNotes ? { accessibilityNotes: v.accessibilityNotes } : {}), notificationsEnabled: v.notificationsEnabled, updatedAt: v.updatedAt.toISOString() });
+const viewProfile = (v: CommuteProfileRecord): CommuteProfile => ({ displayName: v.displayName, toWorkRole: v.toWorkRole, homeRole: v.homeRole, maximumDetourMinutes: v.maximumDetourMinutes, seatsAvailable: v.seatsAvailable, ...(v.pickupAreaId ? { pickupAreaId: v.pickupAreaId } : {}), ...(v.accessibilityNotes ? { accessibilityNotes: v.accessibilityNotes } : {}), notificationsEnabled: v.notificationsEnabled, updatedAt: v.updatedAt.toISOString() });
 const viewShift = (v: ShiftRecord): RecurringShift => ({ id: v.id, weekdays: v.weekdays, arrivalTime: v.arrivalTime, departureTime: v.departureTime, timeZone: v.timeZone, effectiveFrom: v.effectiveFrom, ...(v.effectiveThrough ? { effectiveThrough: v.effectiveThrough } : {}), source: v.source, status: v.status, updatedAt: v.updatedAt.toISOString() });
 function validZone(zone: string) { try { new Intl.DateTimeFormat("en-US", { timeZone: zone }); return true; } catch { return false; } }
 function validateShift(input: RecurringShiftInput) {

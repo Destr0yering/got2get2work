@@ -7,6 +7,7 @@ export interface ApiConfig {
   release: string;
   exposeDocumentation: boolean;
   referralCodePepper: string | null;
+  vehicleVaultKey?: string | null;
   firebase: {
     apiKey: string | null;
     authDomain: string | null;
@@ -36,6 +37,7 @@ export function loadApiConfig(source: NodeJS.ProcessEnv = process.env): ApiConfi
     release: source.K_REVISION?.trim() || source.RELEASE_SHA?.trim() || "local",
     exposeDocumentation: appEnvironment !== "production" || source.EXPOSE_API_DOCS === "true",
     referralCodePepper: source.REFERRAL_CODE_PEPPER?.trim() || null,
+    vehicleVaultKey: source.VEHICLE_VAULT_KEY?.trim() || null,
     firebase: {
       apiKey: source.FIREBASE_WEB_API_KEY?.trim() || null,
       authDomain: source.FIREBASE_AUTH_DOMAIN?.trim() || null,

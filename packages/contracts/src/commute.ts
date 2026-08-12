@@ -7,6 +7,7 @@ export const CommuteProfileBodySchema = Type.Object({
   homeRole: CommuteRoleSchema,
   maximumDetourMinutes: Type.Integer({ minimum: 0, maximum: 60 }),
   seatsAvailable: Type.Integer({ minimum: 0, maximum: 8 }),
+  pickupAreaId: Type.Optional(Type.String({ minLength: 1, maxLength: 80, pattern: "^[A-Za-z0-9_-]+$" })),
   accessibilityNotes: Type.Optional(Type.String({ maxLength: 500 })),
   notificationsEnabled: Type.Boolean(),
 }, { additionalProperties: false });
@@ -33,3 +34,13 @@ export type CommuteProfileBody = Static<typeof CommuteProfileBodySchema>;
 export type CommuteProfile = Static<typeof CommuteProfileSchema>;
 export type RecurringShiftInput = Static<typeof RecurringShiftInputSchema>;
 export type RecurringShift = Static<typeof RecurringShiftSchema>;
+
+export const VehicleBodySchema = Type.Object({
+  make: Type.String({ minLength: 1, maxLength: 60 }), model: Type.String({ minLength: 1, maxLength: 60 }),
+  color: Type.String({ minLength: 1, maxLength: 40 }), year: Type.Integer({ minimum: 1980, maximum: 2100 }),
+  plate: Type.String({ minLength: 2, maxLength: 16, pattern: "^[A-Za-z0-9 -]+$" }),
+  seatsAvailable: Type.Integer({ minimum: 1, maximum: 8 }),
+}, { additionalProperties: false });
+export const VehicleSchema = Type.Intersect([VehicleBodySchema, Type.Object({ id: Type.String(), updatedAt: Type.String({ format: "date-time" }) })]);
+export type VehicleBody = Static<typeof VehicleBodySchema>;
+export type Vehicle = Static<typeof VehicleSchema>;

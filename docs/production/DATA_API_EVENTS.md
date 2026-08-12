@@ -85,7 +85,7 @@ Final periods require Florida counsel and pilot contracts. These are implementat
 | Employer approvals | `GET /v1/admin/memberships`, `POST /v1/admin/memberships/{id}/approve`, `/reject` |
 | Referral codes | `POST /v1/admin/referral-codes`, `GET`, `POST /{id}/revoke` |
 | Agreements | `GET /v1/agreements/required`, `POST /v1/agreements/{id}/accept`, `PUT /v1/captain/attestation`, `GET /v1/captain/eligibility` |
-| Profiles/vehicles | `GET/PUT /v1/profile` implemented; protected photo and vehicle vault endpoints follow in the profile hardening slice. |
+| Profiles/vehicles | `GET/PUT /v1/profile`, `GET/PUT /v1/vehicle`; plate values are owner-only through these endpoints and AES-256-GCM encrypted in the server-side vault. Signed photo handling remains deferred. |
 | Calendar | `POST /v1/calendar/google:authorize`, OAuth callback, `GET /calendars`, `POST /calendar:select`, `DELETE /connection` |
 | Schedules | `POST /v1/schedule/ics`, `GET/POST /v1/shifts`, `POST /v1/shifts/{id}/confirm`; ICS creates minimized candidates and never persists event titles/descriptions. |
 | Matching | `POST /v1/matches:search`, `GET /v1/matches/{id}/explanation` |
