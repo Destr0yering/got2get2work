@@ -5,22 +5,32 @@
   "main": "index.ts",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
+    "android": "expo run:android",
     "web": "expo start --web",
     "agent": "node --env-file-if-exists=.env.local server/index.mjs",
+    "start:cloud": "node server/index.mjs",
     "typecheck": "tsc --noEmit",
     "test": "tsx --test src/domain/*.test.ts src/services/*.test.ts src/state/*.test.ts",
     "server:test": "node --test server/*.test.mjs",
+    "website:test": "npm --prefix website test",
+    "website:lint": "npm --prefix website run lint",
+    "package:submission": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/package-submission.ps1",
     "export:web": "expo export --platform web --output-dir dist-web",
     "export:android": "expo export --platform android --output-dir dist-android",
-    "verify": "npm run typecheck && npm run test && npm run server:test && npm run export:web && npm run export:android",
+    "galaxy:check": "node scripts/check-galaxy-release.mjs",
+    "galaxy:bundle": "npm run galaxy:check && cd android && gradlew.bat bundleRelease",
+    "verify": "npm run typecheck && npm run test && npm run server:test && npm run website:test && npm run website:lint && npm run export:web && npm run export:android",
     "predeploy": "npm run export:web",
-    "deploy": "gh-pages --nojekyll -d dist-web --repo https://github.com/Destr0yering/got2get2work.git"
+    "deploy": "gh-pages --nojekyll -d dist-web --repo https://github.com/Destr0yering/got2get2work.git",
+    "ios": "expo run:ios"
   },
   "dependencies": {
     "@expo/metro-runtime": "~6.1.2",
+    "@google/genai": "^2.12.0",
     "expo": "~54.0.35",
     "expo-status-bar": "~3.0.9",
+    "firebase": "^12.16.0",
+    "firebase-admin": "^14.2.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-native": "0.81.4",
@@ -28,11 +38,15 @@
   },
   "devDependencies": {
     "@types/react": "^19.0.2",
+    "eas-cli": "^20.0.0",
     "gh-pages": "^6.3.0",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3"
   },
   "engines": {
     "node": ">=20"
+  },
+  "overrides": {
+    "postcss": "^8.5.12"
   }
 }

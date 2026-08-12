@@ -2,6 +2,7 @@ import { sanitizeMatchFacts, sanitizeScheduleProjectionForOpenAI } from "./priva
 
 const OPENAI_URL = "https://api.openai.com/v1/responses";
 const MODEL = process.env.OPENAI_MODEL || "gpt-5.6-terra";
+const PROVIDER_TIMEOUT_MS = Number(process.env.PROVIDER_TIMEOUT_MS || 10_000);
 
 const scheduleSchema = {
   type: "object",
@@ -76,6 +77,7 @@ async function createStructuredResponse({ instructions, input, name, schema }) {
         },
       },
     }),
+    signal: AbortSignal.timeout(PROVIDER_TIMEOUT_MS),
   });
 
   if (!response.ok) {
@@ -115,7 +117,7 @@ export async function explainMatchWithOpenAI(reasonCodes, facts) {
     instructions: [
       "You explain an already-computed coworker commute option.",
       "Use only the supplied reason codes and facts. Do not infer safety, identity, exact location, route feasibility, or guarantees.",
-      "Call the money value a suggested expense share, never a fare.",
+      "Call the displayed amount a suggested trip value.",
       "The caveat must say both coworkers decide and transportation is not guaranteed.",
       "factIdsUsed must be a subset of the supplied reason codes.",
     ].join(" "),

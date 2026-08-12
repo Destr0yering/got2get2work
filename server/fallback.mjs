@@ -63,7 +63,7 @@ const FACT_LABELS = {
   driverDetourMinutes: (value) => `The estimated driver detour is ${value} minutes.`,
   detourMiles: (value) => `The added route distance is about ${value} miles.`,
   recurringDays: (value) => `This option repeats across ${value} scheduled days.`,
-  expenseShare: (value) => `The suggested expense share is $${Number(value).toFixed(2)}, not a fare.`,
+  expenseShare: (value) => `The suggested trip value is $${Number(value).toFixed(2)}.`,
   worksiteVerified: (value) => value ? "Both coworkers belong to the same verified worksite group." : "Worksite verification is incomplete.",
   quietRidePreference: (value) => value ? "Both coworkers selected a quiet-ride preference." : "Ride-style preferences were not used.",
 };
@@ -80,5 +80,18 @@ export function fallbackExplanation(reasonCodes, facts) {
       caveat: "This is a coordination suggestion. Both coworkers decide, and transportation is not guaranteed.",
       factIdsUsed: reasonCodes,
     },
+  };
+}
+
+export function fallbackSiteBrief(projection) {
+  const { metrics } = projection;
+  const recoveryRate = metrics.recoveryAttempts > 0
+    ? Math.round(metrics.successfulRecoveries / metrics.recoveryAttempts * 100)
+    : 0;
+  return {
+    source: "fallback",
+    model: null,
+    recommendation: `Keep the pilot focused on the shifts producing the most protected commutes. Recovery is ${recoveryRate}% across ${metrics.recoveryAttempts} aggregate attempts; recruit additional opted-in backup drivers before expanding ride credits.`,
+    factIds: ["protectedShifts", "successfulRecoveries", "recoveryAttempts", "monthlySubsidyBudget"],
   };
 }

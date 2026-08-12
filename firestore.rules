@@ -1,0 +1,11 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Production data is available only through the authenticated Cloud Run API.
+    // The API derives tenant and role from a verified Firebase ID token.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

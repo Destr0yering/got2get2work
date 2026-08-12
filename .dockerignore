@@ -1,0 +1,8 @@
+node_modules
+.expo
+dist-web
+dist-android
+.git
+.env
+.env.local
+npm-debug.log*

@@ -197,3 +197,42 @@ export function containsForbiddenLocationLikeData(value) {
   const serialized = typeof value === "string" ? value : JSON.stringify(value);
   return [EMAIL, PHONE, COORDINATES, STREET_LOCATION, CROSS_STREET, ZIP_CODE].some((pattern) => pattern.test(serialized));
 }
+
+const EMPLOYER_METRIC_RULES = {
+  eligibleEmployees: { minimum: 10, maximum: 1_000_000, integer: true },
+  enrolledEmployees: { minimum: 10, maximum: 1_000_000, integer: true },
+  activeCarpools: { minimum: 0, maximum: 500_000, integer: true },
+  protectedShifts: { minimum: 0, maximum: 10_000_000, integer: true },
+  successfulRecoveries: { minimum: 0, maximum: 1_000_000, integer: true },
+  recoveryAttempts: { minimum: 0, maximum: 1_000_000, integer: true },
+  estimatedAvoidedAbsences: { minimum: 0, maximum: 1_000_000, integer: true },
+  valuePerAvoidedAbsence: { minimum: 0, maximum: 100_000 },
+  monthlyPlatformFee: { minimum: 0, maximum: 10_000_000 },
+  monthlySubsidyBudget: { minimum: 0, maximum: 100_000_000 },
+};
+
+export function sanitizeEmployerMetrics(value) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    throw new PrivacyInputError("Employer metrics must be an aggregate object.", "INVALID_EMPLOYER_METRICS");
+  }
+  const suppliedKeys = Object.keys(value);
+  if (suppliedKeys.some((key) => !Object.hasOwn(EMPLOYER_METRIC_RULES, key))) {
+    throw new PrivacyInputError("Only allowlisted aggregate employer metrics are accepted.", "DISALLOWED_EMPLOYER_FIELD");
+  }
+  const safe = {};
+  for (const [key, rule] of Object.entries(EMPLOYER_METRIC_RULES)) {
+    const metric = value[key];
+    if (typeof metric !== "number" || !Number.isFinite(metric)
+      || metric < rule.minimum || metric > rule.maximum
+      || rule.integer && !Number.isInteger(metric)) {
+      throw new PrivacyInputError(`Employer metric ${key} is missing or outside the allowed range.`, "INVALID_EMPLOYER_METRIC");
+    }
+    safe[key] = metric;
+  }
+  if (safe.enrolledEmployees > safe.eligibleEmployees
+    || safe.activeCarpools * 2 > safe.enrolledEmployees
+    || safe.successfulRecoveries > safe.recoveryAttempts) {
+    throw new PrivacyInputError("Aggregate employer metrics are internally inconsistent.", "CONTRADICTORY_EMPLOYER_METRICS");
+  }
+  return { schemaVersion: 1, reportingWindow: "illustrative_month", metrics: safe };
+}
