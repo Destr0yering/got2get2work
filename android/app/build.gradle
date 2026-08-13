@@ -2,12 +2,17 @@ apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 
+import java.nio.file.Paths
+
 def projectRoot = rootDir.getAbsoluteFile().getParentFile().getAbsolutePath()
 def releaseStoreFile = findProperty('G2W_UPLOAD_STORE_FILE') ?: System.getenv('G2W_UPLOAD_STORE_FILE')
 def releaseStorePassword = findProperty('G2W_UPLOAD_STORE_PASSWORD') ?: System.getenv('G2W_UPLOAD_STORE_PASSWORD')
 def releaseKeyAlias = findProperty('G2W_UPLOAD_KEY_ALIAS') ?: System.getenv('G2W_UPLOAD_KEY_ALIAS')
 def releaseKeyPassword = findProperty('G2W_UPLOAD_KEY_PASSWORD') ?: System.getenv('G2W_UPLOAD_KEY_PASSWORD')
 def hasReleaseSigning = releaseStoreFile && releaseStorePassword && releaseKeyAlias && releaseKeyPassword
+def easCredentialsFile = rootProject.file("../credentials.json")
+def hasEasReleaseSigning = System.getenv("EAS_BUILD") && easCredentialsFile.exists()
+def easKeystore = hasEasReleaseSigning ? new groovy.json.JsonSlurper().parse(easCredentialsFile).android.keystore : null
 
 /**
  * This is the configuration block to customize your React Native Android app.
@@ -109,12 +114,21 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
-        if (hasReleaseSigning) {
+        if (hasReleaseSigning || hasEasReleaseSigning) {
             release {
-                storeFile file(releaseStoreFile)
-                storePassword releaseStorePassword
-                keyAlias releaseKeyAlias
-                keyPassword releaseKeyPassword
+                if (hasEasReleaseSigning) {
+                    def keystorePath = Paths.get(easKeystore.keystorePath)
+                    def resolvedKeystore = keystorePath.isAbsolute() ? keystorePath : rootProject.file("..").toPath().resolve(keystorePath)
+                    storeFile resolvedKeystore.toFile()
+                    storePassword easKeystore.keystorePassword
+                    keyAlias easKeystore.keyAlias
+                    keyPassword easKeystore.keyPassword ?: easKeystore.keystorePassword
+                } else {
+                    storeFile file(releaseStoreFile)
+                    storePassword releaseStorePassword
+                    keyAlias releaseKeyAlias
+                    keyPassword releaseKeyPassword
+                }
             }
         }
     }
@@ -123,7 +137,7 @@ android {
             signingConfig signingConfigs.debug
         }
         release {
-            if (hasReleaseSigning) signingConfig signingConfigs.release
+            if (hasReleaseSigning || hasEasReleaseSigning) signingConfig signingConfigs.release
             def enableShrinkResources = findProperty('android.enableShrinkResourcesInReleaseBuilds') ?: 'false'
             shrinkResources enableShrinkResources.toBoolean()
             minifyEnabled enableMinifyInReleaseBuilds
@@ -147,8 +161,8 @@ gradle.taskGraph.whenReady { graph ->
     def requestsReleaseBinary = graph.allTasks.any { task ->
         task.path == ':app:bundleRelease' || task.path == ':app:assembleRelease' || task.path == ':app:packageRelease'
     }
-    if (requestsReleaseBinary && !hasReleaseSigning) {
-        throw new GradleException('Release signing is not configured. Set G2W_UPLOAD_STORE_FILE, G2W_UPLOAD_STORE_PASSWORD, G2W_UPLOAD_KEY_ALIAS, and G2W_UPLOAD_KEY_PASSWORD.')
+    if (requestsReleaseBinary && !hasReleaseSigning && !hasEasReleaseSigning) {
+        throw new GradleException('Release signing is not configured. Use EAS managed credentials or set G2W_UPLOAD_STORE_FILE, G2W_UPLOAD_STORE_PASSWORD, G2W_UPLOAD_KEY_ALIAS, and G2W_UPLOAD_KEY_PASSWORD.')
     }
 }
 
