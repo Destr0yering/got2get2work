@@ -86,11 +86,10 @@ Final periods require Florida counsel and pilot contracts. These are implementat
 | Referral codes | `POST /v1/admin/referral-codes`, `GET`, `POST /{id}/revoke` |
 | Agreements | `GET /v1/agreements/required`, `POST /v1/agreements/{id}/accept`, `PUT /v1/captain/attestation`, `GET /v1/captain/eligibility` |
 | Profiles/vehicles | `GET/PUT /v1/profile`, `GET/PUT /v1/vehicle`; plate values are owner-only through these endpoints and AES-256-GCM encrypted in the server-side vault. Signed photo handling remains deferred. |
-| Calendar | `POST /v1/calendar/google:authorize`, OAuth callback, `GET /calendars`, `POST /calendar:select`, `DELETE /connection` |
+| Calendar | Google OAuth is deferred for the pilot launch; manual and ICS schedules remain supported. |
 | Schedules | `POST /v1/schedule/ics`, `GET/POST /v1/shifts`, `POST /v1/shifts/{id}/confirm`; ICS creates minimized candidates and never persists event titles/descriptions. |
 | Matching | `POST /v1/matches/search`; persists policy-versioned runs, returns opaque candidate IDs and allowlisted schedule facts, and uses conservative same-area routing until a map adapter is enabled. |
-| Matching | `POST /v1/matches:search`, `GET /v1/matches/{id}/explanation` |
-| Ride flow | `POST /v1/ride-requests`, `POST /{id}/expense-agreement`, `:accept`, `:decline`, `:cancel` |
+| Ride flow | `POST /v1/ride-requests`, `GET /v1/ride-requests/{id}`, `POST /{id}/expense-agreement`, `POST /{id}/captain-decision`; crew agreement is mandatory before captain action. The launch estimate is a $3 same-coarse-zone pilot contribution (`pilot-coarse-zone-v1`), voluntary and settled outside the platform; no payment status is recorded. |
 | Trips | `GET /v1/trips`, `GET /{id}`, `POST /{id}/status`, `:cancel`, `:complete` |
 | Messaging | `GET /v1/trips/{id}/messages`, `POST /messages` |
 | Proximity | `POST /v1/trips/{id}/proximity-session`, `PUT /proximity`, `DELETE /proximity-session` |

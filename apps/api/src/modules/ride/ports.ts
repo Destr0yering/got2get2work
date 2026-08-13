@@ -1,0 +1,2 @@
+import type { RideRequestRecord } from "./domain";
+export interface RideStore { create(record: RideRequestRecord): Promise<RideRequestRecord>; get(id: string): Promise<RideRequestRecord | null>; agree(id: string, crewUid: string, now: Date): Promise<RideRequestRecord>; decide(id: string, captainUid: string, accepted: boolean, now: Date): Promise<RideRequestRecord>; }

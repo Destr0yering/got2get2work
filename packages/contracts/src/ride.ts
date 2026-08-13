@@ -1,0 +1,7 @@
+import { Type, type Static } from "@sinclair/typebox";
+export const RideRequestStatusSchema = Type.Union([Type.Literal("awaiting_crew_agreement"), Type.Literal("pending_captain"), Type.Literal("confirmed"), Type.Literal("declined"), Type.Literal("cancelled")]);
+export const CreateRideRequestBodySchema = Type.Object({ runId: Type.String({ minLength: 1, maxLength: 128 }), candidateId: Type.String({ minLength: 1, maxLength: 128 }) }, { additionalProperties: false });
+export const AgreeExpenseBodySchema = Type.Object({ agreed: Type.Literal(true), acknowledgedOutsidePlatform: Type.Literal(true) }, { additionalProperties: false });
+export const CaptainDecisionBodySchema = Type.Object({ accepted: Type.Boolean() }, { additionalProperties: false });
+export const RideRequestSchema = Type.Object({ id: Type.String(), status: RideRequestStatusSchema, crewDisplayName: Type.String(), captainDisplayName: Type.String(), estimate: Type.Object({ amount: Type.Number({ minimum: 0 }), currency: Type.Literal("USD"), formulaVersion: Type.Literal("pilot-coarse-zone-v1"), voluntary: Type.Literal(true), paymentProcessed: Type.Literal(false) }), crewAgreedAt: Type.Union([Type.String({ format: "date-time" }), Type.Null()]), captainDecidedAt: Type.Union([Type.String({ format: "date-time" }), Type.Null()]), confirmedAt: Type.Union([Type.String({ format: "date-time" }), Type.Null()]) }, { additionalProperties: false });
+export type CreateRideRequestBody = Static<typeof CreateRideRequestBodySchema>; export type RideRequestView = Static<typeof RideRequestSchema>;

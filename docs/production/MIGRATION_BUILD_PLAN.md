@@ -48,7 +48,7 @@ Autonomous plan design, with mandatory verification gates before data migration,
   Acceptance: specific vehicle/plate/pickup data is unavailable before confirmation and never available to employer endpoints.
   Verify: disclosure matrix contract tests, signed-URL expiry, upload validation/scanning, deletion tests.
 
-- [ ] **5. Add manual, ICS, and Google Calendar schedule pipeline**
+- [x] **5. Add manual and ICS schedule pipeline; Google Calendar deferred by launch decision**
   Spec ref: `SYSTEM_ARCHITECTURE.md > Calendar architecture`
   What to build: candidate/confirmed shift model, safe ICS parser, Google OAuth and selected-calendar flow, incremental sync worker, disconnect/revoke, change invalidation, and review UI.
   Acceptance: no imported event affects matching before user confirmation; minimized fields only are stored.

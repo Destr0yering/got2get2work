@@ -11,6 +11,8 @@ import { FirestoreMembershipStore } from "./modules/membership/firestore-store";
 import { MembershipService } from "./modules/membership/service";
 import { FirestoreMatchingStore } from "./modules/matching/firestore-store";
 import { MatchingService } from "./modules/matching/service";
+import { FirestoreRideStore } from "./modules/ride/firestore-store";
+import { RideService } from "./modules/ride/service";
 import { FirestoreVehicleStore } from "./modules/vehicle/firestore-store";
 import { VehicleService } from "./modules/vehicle/service";
 import { PlateVault } from "./modules/vehicle/vault";
@@ -40,12 +42,15 @@ export function createProductionDependencies(config: ApiConfig) {
   const agreementService = new AgreementService({ store: new FirestoreAgreementStore(db) });
   const commuteService = new CommuteService(commuteStore);
   const vehicleService = new VehicleService(vehicleStore, new PlateVault(config.vehicleVaultKey));
-  const matchingService = new MatchingService({ matches: new FirestoreMatchingStore(db), memberships: membershipStore, commutes: commuteStore, vehicles: vehicleStore, agreements: agreementService });
+  const matchingStore = new FirestoreMatchingStore(db);
+  const matchingService = new MatchingService({ matches: matchingStore, memberships: membershipStore, commutes: commuteStore, vehicles: vehicleStore, agreements: agreementService });
+  const rideService = new RideService(new FirestoreRideStore(db), matchingStore, commuteStore, vehicleStore);
   return {
     membership: { verifier, service: membershipService },
     agreement: { verifier, memberships: membershipService, agreements: agreementService },
     commute: { verifier, memberships: membershipService, commutes: commuteService },
     vehicle: { verifier, memberships: membershipService, vehicles: vehicleService },
     matching: { verifier, memberships: membershipService, matching: matchingService },
+    ride: { verifier, memberships: membershipService, rides: rideService },
   };
 }

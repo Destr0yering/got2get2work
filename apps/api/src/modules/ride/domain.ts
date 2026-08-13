@@ -1,0 +1,3 @@
+export type RideStatus = "awaiting_crew_agreement" | "pending_captain" | "confirmed" | "declined" | "cancelled";
+export interface RideRequestRecord { id: string; capacitySnapshot: number; tenantId: string; worksiteId: string; runId: string; candidateId: string; shiftId: string; leg: "to_work" | "from_work"; crewUid: string; captainUid: string; crewDisplayName: string; captainDisplayName: string; amount: number; formulaVersion: "pilot-coarse-zone-v1"; status: RideStatus; createdAt: Date; crewAgreedAt: Date | null; captainDecidedAt: Date | null; confirmedAt: Date | null }
+export class RideError extends Error { constructor(message: string, readonly code: string, readonly statusCode: number) { super(message); this.name = "RideError"; } }
