@@ -13,6 +13,9 @@
     "typecheck": "tsc --noEmit",
     "api:typecheck": "tsc -p tsconfig.api.json",
     "api:test": "tsx --test apps/api/test/*.test.ts",
+    "api:test:firestore": "firebase emulators:exec --only firestore --project demo-got2get2work \"tsx --test apps/api/emulator/*.test.ts\"",
+    "migration:moderation:dry-run": "tsx scripts/migrate-moderation-cases.ts",
+    "migration:moderation:apply": "tsx scripts/migrate-moderation-cases.ts --apply",
     "test": "tsx --test src/domain/*.test.ts src/services/*.test.ts src/state/*.test.ts",
     "server:test": "node --test server/*.test.mjs",
     "website:test": "npm --prefix website test",
@@ -46,6 +49,7 @@
   "devDependencies": {
     "@types/react": "^19.0.2",
     "eas-cli": "^20.0.0",
+    "firebase-tools": "^15.2.1",
     "gh-pages": "^6.3.0",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3"

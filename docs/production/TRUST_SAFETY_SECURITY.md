@@ -83,9 +83,13 @@ Terms, Privacy, Captain Agreement, location/calendar consents, community rules, 
 - Privacy export/deletion requests use a deterministic tenant/user/type queued-request key, making simultaneous retries idempotent.
 - Firestore ride creation and captain acceptance read pair and per-user restriction documents inside the same transaction as the ride write, so a restriction committed concurrently forces the ride transaction to retry and fail closed.
 
-Production verification note: unit tests exercise the equivalent memory-store conflict and idempotency semantics. Before launch, run the Firestore emulator integration suite (or staging smoke tests) with concurrent moderation decisions and privacy-request retries to verify SDK transaction retry behavior and security rules/index deployment together.
+Production verification completed 2026-08-13: the Firestore emulator suite verified concurrent moderation conflict handling, atomic audit/restriction writes, simultaneous privacy-request idempotency, composite-index query shapes, and deny-all client rules against the isolated `demo-got2get2work` project. Run `npm run api:test:firestore` to repeat this gate.
 
 Deployment migration: before enabling moderator access, delete the legacy `narrative` and `reporterUid` fields from existing `moderationCases` documents after confirming the authoritative `safetyReports` copies exist. Backfill missing case `version` values to `0`; the reader temporarily treats an absent version as `0` so this cleanup can be performed without downtime.
+
+Migration verification completed 2026-08-13: `npm run migration:moderation:dry-run` scanned the configured `got2get2work-xprize-cloud` project and found zero existing moderation-case documents. No production writes were required. The guarded migration utility remains available for future environments and refuses sensitive-field cleanup when authoritative safety evidence is missing.
+
+Dependency-audit note (2026-08-13): non-breaking lockfile remediation was applied. `npm audit --omit=dev` still reports 22 transitive findings in the Expo/Metro image-processing and Firebase Admin/Google Cloud dependency trees. npm's proposed automatic remediations are breaking framework or SDK downgrades, so `npm audit fix --force` is prohibited for this release. Resolve these through compatible upstream package upgrades and a focused reachability review before production launch.
 - Assignment and decision transitions append immutable audit evidence with actor, reason, action, and timestamp.
 - A temporary safety restriction must have a future expiry and a case subject. It immediately excludes that user from matching until expiry.
 
