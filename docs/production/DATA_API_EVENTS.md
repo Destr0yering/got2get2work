@@ -95,7 +95,8 @@ Final periods require Florida counsel and pilot contracts. These are implementat
 | Pickup/proximity | `POST /v1/trips/{id}/status`, `PUT/DELETE /v1/trips/{id}/proximity`; participant-only coarse states, 30-second update floor, ten-minute TTL, and automatic deletion on pickup/cancellation. No coordinates or BLE identifiers are stored. |
 | Recovery | `POST /v1/trips/{id}/cancel`, `GET /v1/recoveries/{id}/options`; cancellation releases capacity and crew-only recovery reruns current eligibility without automatic confirmation. |
 | Trust | `POST /v1/blocks`, `DELETE /blocks/{id}`, `POST /v1/safety-reports`, `POST /v1/ratings` |
-| Employer reporting | `GET /v1/admin/dashboard`, `GET /v1/admin/incentives`, `POST /incentive-policies` |
+| Personal history | `GET /v1/history`; participant-scoped confirmed/cancelled trip summaries without vehicle, location, message, rating, or safety content. |
+| Employer reporting | `GET /v1/admin/dashboard`, `POST /v1/admin/incentives`; 30-day metric definitions and denominators, full suppression below five active members, and incentive status `recorded_not_paid`. No individual commute data is returned. |
 | Moderation | `GET /v1/ops/cases`, `POST /{id}:assign`, `:restrict`, `:resolve`, `:appeal-decision` |
 | Privacy | `POST /v1/account/export`, `DELETE /v1/account`, `DELETE /v1/integrations/{id}` |
 

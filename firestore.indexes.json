@@ -24,6 +24,23 @@
         { "fieldPath": "tripId", "order": "ASCENDING" },
         { "fieldPath": "sentAt", "order": "ASCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "rideRequests",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "tenantId", "order": "ASCENDING" },
+        { "fieldPath": "worksiteId", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "tripCompletions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "tenantId", "order": "ASCENDING" },
+        { "fieldPath": "recordedAt", "order": "ASCENDING" }
+      ]
     }
   ],
   "fieldOverrides": []

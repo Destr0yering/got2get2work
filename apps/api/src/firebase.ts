@@ -13,6 +13,8 @@ import { FirestoreMatchingStore } from "./modules/matching/firestore-store";
 import { MatchingService } from "./modules/matching/service";
 import { FirestoreRideStore } from "./modules/ride/firestore-store";
 import { RideService } from "./modules/ride/service";
+import { FirestoreReportingStore } from "./modules/reporting/firestore-store";
+import { ReportingService } from "./modules/reporting/service";
 import { FirestoreTripStore } from "./modules/trip/firestore-store";
 import { TripService } from "./modules/trip/service";
 import { TrustService } from "./modules/trip/trust-service";
@@ -53,6 +55,7 @@ export function createProductionDependencies(config: ApiConfig) {
   const tripStore = new FirestoreTripStore(db);
   const tripService = new TripService(tripStore, rideStore, vehicleStore, plateVault, matchingService);
   const trustService = new TrustService(tripStore, rideStore, matchingStore, membershipStore);
+  const reportingService = new ReportingService(rideStore, tripStore, membershipStore, new FirestoreReportingStore(db));
   return {
     membership: { verifier, service: membershipService },
     agreement: { verifier, memberships: membershipService, agreements: agreementService },
@@ -62,5 +65,6 @@ export function createProductionDependencies(config: ApiConfig) {
     ride: { verifier, memberships: membershipService, rides: rideService },
     trip: { verifier, memberships: membershipService, trips: tripService },
     trust: { verifier, memberships: membershipService, trust: trustService },
+    reporting: { verifier, memberships: membershipService, reporting: reportingService },
   };
 }

@@ -5,5 +5,6 @@ export * from "./matching";
 export * from "./ride";
 export * from "./trip";
 export * from "./trust";
+export * from "./reporting";
 export * from "./membership";
 export * from "./system";
