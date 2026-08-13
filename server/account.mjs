@@ -24,7 +24,7 @@ export async function enrollBetaMember(services, decoded, body) {
   const expectedCode = process.env.BETA_INVITE_CODE;
   if (!expectedCode) throw new Error("Beta enrollment is temporarily unavailable.");
   if (!inviteMatches(body.inviteCode, expectedCode)) throw new AuthorizationError("That beta invite code is not valid.", "INVALID_BETA_INVITE");
-  if (!decoded.email) throw new Error("A verified email address is required.");
+  if (!decoded.email || decoded.email_verified !== true) throw new AuthorizationError("A verified email address is required.", "VERIFIED_EMAIL_REQUIRED");
 
   const tenantId = process.env.BETA_TENANT_ID || "galaxy-beta-2026";
   const membershipRef = services.db.collection("memberships").doc(decoded.uid);
@@ -121,18 +121,21 @@ export async function blockUser(services, identity, body) {
   if (!membership.exists || membership.data()?.tenantId !== identity.tenantId) {
     throw new AuthorizationError("The account is not in your employer benefit.", "CROSS_TENANT_ACCESS");
   }
-  await userRef(services, identity).collection("blocks").doc(blockedUserId).set({
-    blockedUserId,
+  const userIds = [identity.uid, blockedUserId].sort();
+  await services.db.collection("tenants").doc(identity.tenantId).collection("matchingRestrictions").doc(userIds.join("__")).set({
+    userIds,
+    kind: "user_block",
+    blockedBy: identity.uid,
     createdAt: services.serverTimestamp,
   });
   return { blockedUserId, blocked: true };
 }
 
 export async function exportAccount(services, identity) {
-  const [profile, consents, blocks, reports] = await Promise.all([
+  const [profile, consents, restrictions, reports] = await Promise.all([
     userRef(services, identity).get(),
     services.db.collection("consentRecords").where("uid", "==", identity.uid).get(),
-    userRef(services, identity).collection("blocks").get(),
+    services.db.collection("tenants").doc(identity.tenantId).collection("matchingRestrictions").where("userIds", "array-contains", identity.uid).get(),
     services.db.collection("tenants").doc(identity.tenantId).collection("safetyReports").where("reporterId", "==", identity.uid).get(),
   ]);
   const serialize = (snap) => snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
@@ -141,7 +144,7 @@ export async function exportAccount(services, identity) {
     account: { uid: identity.uid, email: identity.email, tenantId: identity.tenantId, role: identity.role },
     profile: profile.exists ? profile.data() : null,
     consents: serialize(consents),
-    blocks: serialize(blocks),
+    blocks: serialize(restrictions),
     safetyReports: serialize(reports),
   };
 }
@@ -149,13 +152,13 @@ export async function exportAccount(services, identity) {
 export async function deleteAccount(services, identity, body) {
   if (body.confirmation !== "DELETE") throw new Error('Type "DELETE" to confirm account deletion.');
   const root = userRef(services, identity);
-  const [blocks, consents, reports] = await Promise.all([
-    root.collection("blocks").get(),
+  const [restrictions, consents, reports] = await Promise.all([
+    services.db.collection("tenants").doc(identity.tenantId).collection("matchingRestrictions").where("userIds", "array-contains", identity.uid).get(),
     services.db.collection("consentRecords").where("uid", "==", identity.uid).get(),
     services.db.collection("tenants").doc(identity.tenantId).collection("safetyReports").where("reporterId", "==", identity.uid).get(),
   ]);
   const batch = services.db.batch();
-  for (const doc of blocks.docs) batch.delete(doc.ref);
+  for (const doc of restrictions.docs) batch.delete(doc.ref);
   for (const doc of consents.docs) batch.delete(doc.ref);
   for (const doc of reports.docs) batch.update(doc.ref, {
     reporterId: services.deleteField,

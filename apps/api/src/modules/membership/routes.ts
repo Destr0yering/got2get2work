@@ -27,7 +27,7 @@ export async function registerMembershipRoutes(app: FastifyInstance, dependencie
   const guards = createAuthGuards(dependencies.verifier, dependencies.service);
 
   app.post<{ Body: CreateReferralBody }>("/v1/admin/referral-codes", {
-    preHandler: guards.requireRole("employer_admin"),
+    preHandler: guards.requirePrivilegedRole("employer_admin"),
     schema: {
       tags: ["employer-admin"],
       body: CreateReferralBodySchema,
@@ -74,7 +74,7 @@ export async function registerMembershipRoutes(app: FastifyInstance, dependencie
   }));
 
   app.post<{ Params: { id: string }; Body: MembershipDecisionBody }>("/v1/admin/memberships/:id/approve", {
-    preHandler: guards.requireRole("employer_admin"),
+    preHandler: guards.requirePrivilegedRole("employer_admin"),
     schema: {
       tags: ["employer-admin"],
       params: { type: "object", required: ["id"], properties: { id: { type: "string", minLength: 1, maxLength: 128 } } },
@@ -86,7 +86,7 @@ export async function registerMembershipRoutes(app: FastifyInstance, dependencie
   ));
 
   app.post<{ Params: { id: string }; Body: MembershipDecisionBody }>("/v1/admin/memberships/:id/reject", {
-    preHandler: guards.requireRole("employer_admin"),
+    preHandler: guards.requirePrivilegedRole("employer_admin"),
     schema: {
       tags: ["employer-admin"],
       params: { type: "object", required: ["id"], properties: { id: { type: "string", minLength: 1, maxLength: 128 } } },

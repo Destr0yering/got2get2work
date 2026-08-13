@@ -24,10 +24,12 @@ test("rate limiter isolates clients", () => {
   assert.equal(limiter.check("client-b").allowed, true);
 });
 
-test("client id ignores a spoofable first proxy entry and bounds its length", () => {
+test("client id ignores all spoofable forwarding entries", () => {
   const request = {
     headers: { "x-forwarded-for": `spoofed, ${"1".repeat(200)}, 203.0.113.10` },
     socket: { remoteAddress: "127.0.0.1" },
   };
-  assert.equal(requestClientId(request).length, 128);
+  assert.equal(requestClientId(request), "127.0.0.1");
+  request.headers["x-forwarded-for"] = "198.51.100.9";
+  assert.equal(requestClientId(request), "127.0.0.1");
 });

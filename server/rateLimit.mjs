@@ -3,11 +3,7 @@ const DEFAULT_LIMIT = 20;
 const DEFAULT_MAX_CLIENTS = 10_000;
 
 export function requestClientId(request) {
-  const forwarded = request.headers["x-forwarded-for"];
-  const serialized = Array.isArray(forwarded) ? forwarded.join(",") : forwarded;
-  const addresses = serialized?.split(",").map((value) => value.trim()).filter(Boolean) ?? [];
-  const trustedClientHop = addresses.length >= 2 ? addresses.at(-2) : addresses[0];
-  const candidate = trustedClientHop || request.socket?.remoteAddress || "unknown";
+  const candidate = request.socket?.remoteAddress || "unknown";
   return candidate.slice(0, 128);
 }
 

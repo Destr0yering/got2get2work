@@ -10,18 +10,13 @@ import { createSiteBriefWithGemini, explainMatchWithGemini, geminiProvider, isLi
 import { PrivacyInputError, assertScheduleTextIsSafe, sanitizeEmployerMetrics, sanitizeMatchFacts, sanitizeScheduleProjectionForOpenAI } from "./privacy.mjs";
 import { createRateLimiter, requestClientId } from "./rateLimit.mjs";
 import { createFirebaseServices } from "./firebase.mjs";
-import { AuthenticationError, AuthorizationError, authenticateFirebaseUser, authenticateRequest, requireRole } from "./identity.mjs";
+import { AuthenticationError, AuthorizationError, authenticateFirebaseUser, authenticateRequest, requireRecentAuthentication, requireRole } from "./identity.mjs";
 import { blockUser, createSafetyReport, deleteAccount, enrollBetaMember, exportAccount, loadAppState, saveAppState, saveConsent } from "./account.mjs";
 import { acceptBetaRequest, createBetaRequest, listBetaMatches, listBetaRequests, saveBetaProfile, saveBetaSchedule } from "./beta.mjs";
 
 const port = Number(process.env.PORT || 4100);
 const allowedOrigin = process.env.ALLOWED_ORIGIN || "*";
 const requireAgentAuth = process.env.NODE_ENV === "production" || process.env.REQUIRE_AGENT_AUTH === "true";
-const agentRateLimiter = createRateLimiter({
-  limit: Number(process.env.AGENT_RATE_LIMIT || 20),
-  windowMs: Number(process.env.AGENT_RATE_WINDOW_MS || 60_000),
-});
-
 const securityHeaders = {
   "Content-Security-Policy": "default-src 'self'; base-uri 'self'; connect-src 'self'; font-src 'self' data:; frame-ancestors 'none'; img-src 'self' data: blob:; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'",
   "Permissions-Policy": "camera=(), geolocation=(), microphone=()",
@@ -198,6 +193,10 @@ async function serveWeb(requestPath, response) {
 export function createAppServer(options = {}) {
   let firebaseServices = options.firebaseServices;
   const services = () => firebaseServices ??= createFirebaseServices();
+  const agentRateLimiter = createRateLimiter({
+    limit: Number(process.env.AGENT_RATE_LIMIT || 20),
+    windowMs: Number(process.env.AGENT_RATE_WINDOW_MS || 60_000),
+  });
   return http.createServer(async (request, response) => {
   if (request.method === "OPTIONS") return writeJson(response, 204, {});
   const url = new URL(request.url || "/", `http://${request.headers.host || "localhost"}`);
@@ -287,10 +286,12 @@ export function createAppServer(options = {}) {
     }
     if (request.method === "DELETE" && url.pathname === "/api/account") {
       const identity = await authenticateRequest(request, services());
+      requireRecentAuthentication(identity);
       return writeJson(response, 200, await deleteAccount(services(), identity, await readJson(request)));
     }
     if (request.method === "POST" && url.pathname.startsWith("/api/agent/")) {
-      const rate = agentRateLimiter.check(requestClientId(request));
+      const agentIdentity = requireAgentAuth ? await authenticateRequest(request, services()) : null;
+      const rate = agentRateLimiter.check(agentIdentity ? `${agentIdentity.tenantId}:${agentIdentity.uid}` : requestClientId(request));
       if (!rate.allowed) {
         return writeJson(response, 429, {
           error: "Too many agent requests. Please retry shortly.",
@@ -300,9 +301,6 @@ export function createAppServer(options = {}) {
           "X-RateLimit-Limit": String(rate.limit),
           "X-RateLimit-Remaining": String(rate.remaining),
         });
-      }
-      if (requireAgentAuth && url.pathname !== "/api/agent/site-coordinator") {
-        await authenticateRequest(request, services());
       }
     }
     if (request.method === "POST" && url.pathname === "/api/agent/parse-schedule") {

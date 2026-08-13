@@ -19,6 +19,10 @@ function userRef(services, identity, uid = identity.uid) {
   return services.db.collection("tenants").doc(identity.tenantId).collection("users").doc(uid);
 }
 
+function restrictionRef(services, identity, otherUid) {
+  return services.db.collection("tenants").doc(identity.tenantId).collection("matchingRestrictions").doc([identity.uid, otherUid].sort().join("__"));
+}
+
 export async function saveBetaProfile(services, identity, body) {
   const profile = {
     displayName: text(body.displayName, 60, "First name"),
@@ -55,16 +59,16 @@ function compatibleLeg(mine, theirs, leg) {
 }
 
 export async function listBetaMatches(services, identity) {
-  const [meSnap, blockedSnap, usersSnap] = await Promise.all([
+  const [meSnap, restrictionsSnap, usersSnap] = await Promise.all([
     userRef(services, identity).get(),
-    userRef(services, identity).collection("blocks").get(),
+    services.db.collection("tenants").doc(identity.tenantId).collection("matchingRestrictions").where("userIds", "array-contains", identity.uid).get(),
     services.db.collection("tenants").doc(identity.tenantId).collection("users").limit(100).get(),
   ]);
   if (!meSnap.exists || !meSnap.data()?.profile || !meSnap.data()?.shifts?.length) {
     throw new AuthorizationError("Complete your profile and schedule before finding matches.", "ONBOARDING_REQUIRED");
   }
   const me = meSnap.data();
-  const blocked = new Set(blockedSnap.docs.map((doc) => doc.id));
+  const blocked = new Set(restrictionsSnap.docs.flatMap((doc) => doc.data().userIds).filter((uid) => uid !== identity.uid));
   const myDays = new Set(me.shifts.map((shift) => shift.weekday));
   const matches = usersSnap.docs.flatMap((doc) => {
     if (doc.id === identity.uid || blocked.has(doc.id)) return [];
@@ -97,29 +101,27 @@ function requestRef(services, identity, requestId) {
 export async function createBetaRequest(services, identity, body) {
   const recipientId = text(body.recipientId, 128, "Recipient");
   if (recipientId === identity.uid) throw new Error("You cannot request your own commute.");
-  const [sender, recipient] = await Promise.all([userRef(services, identity).get(), userRef(services, identity, recipientId).get()]);
-  if (!sender.exists || !sender.data()?.profile || !sender.data()?.shifts?.length) throw new AuthorizationError("Complete your onboarding first.", "ONBOARDING_REQUIRED");
-  if (!recipient.exists || recipient.data()?.betaStatus !== "discoverable" || !recipient.data()?.profile) throw new AuthorizationError("That beta member is no longer available.", "MATCH_UNAVAILABLE");
-  const mine = sender.data();
-  const theirs = recipient.data();
-  const myDays = new Set(mine.shifts.map((shift) => shift.weekday));
-  const sharedDays = [...new Set(theirs.shifts.map((shift) => shift.weekday).filter((day) => myDays.has(day)))];
-  const toWorkCompatible = compatibleLeg(mine.profile, theirs.profile, "toWork");
-  const homeCompatible = compatibleLeg(mine.profile, theirs.profile, "home");
-  if (!sharedDays.length || (!toWorkCompatible && !homeCompatible)) throw new AuthorizationError("The commute roles or schedule no longer overlap.", "MATCH_UNAVAILABLE");
   const requestId = randomUUID();
-  const record = {
-    requesterId: identity.uid,
-    requesterName: mine.profile.displayName,
-    recipientId,
-    recipientName: theirs.profile.displayName,
-    sharedDays,
-    toWorkCompatible,
-    homeCompatible,
-    status: "pending",
-    createdAt: services.serverTimestamp,
-  };
-  await requestRef(services, identity, requestId).set(record);
+  let record;
+  await services.db.runTransaction(async (transaction) => {
+    const [sender, recipient, restriction] = await Promise.all([
+      transaction.get(userRef(services, identity)),
+      transaction.get(userRef(services, identity, recipientId)),
+      transaction.get(restrictionRef(services, identity, recipientId)),
+    ]);
+    if (restriction.exists) throw new AuthorizationError("This match is unavailable.", "MATCH_RESTRICTED");
+    if (!sender.exists || !sender.data()?.profile || !sender.data()?.shifts?.length) throw new AuthorizationError("Complete your onboarding first.", "ONBOARDING_REQUIRED");
+    if (!recipient.exists || recipient.data()?.betaStatus !== "discoverable" || !recipient.data()?.profile) throw new AuthorizationError("That beta member is no longer available.", "MATCH_UNAVAILABLE");
+    const mine = sender.data();
+    const theirs = recipient.data();
+    const myDays = new Set(mine.shifts.map((shift) => shift.weekday));
+    const sharedDays = [...new Set(theirs.shifts.map((shift) => shift.weekday).filter((day) => myDays.has(day)))];
+    const toWorkCompatible = compatibleLeg(mine.profile, theirs.profile, "toWork");
+    const homeCompatible = compatibleLeg(mine.profile, theirs.profile, "home");
+    if (!sharedDays.length || (!toWorkCompatible && !homeCompatible)) throw new AuthorizationError("The commute roles or schedule no longer overlap.", "MATCH_UNAVAILABLE");
+    record = { requesterId: identity.uid, requesterName: mine.profile.displayName, recipientId, recipientName: theirs.profile.displayName, sharedDays, toWorkCompatible, homeCompatible, status: "pending", createdAt: services.serverTimestamp };
+    transaction.set(requestRef(services, identity, requestId), record);
+  });
   return { request: { id: requestId, ...record } };
 }
 
@@ -135,11 +137,17 @@ export async function listBetaRequests(services, identity) {
 
 export async function acceptBetaRequest(services, identity, requestId) {
   const ref = requestRef(services, identity, text(requestId, 128, "Request"));
-  const snap = await ref.get();
-  if (!snap.exists) throw new AuthorizationError("That request is no longer available.", "REQUEST_NOT_FOUND");
-  const request = snap.data();
-  if (request.recipientId !== identity.uid) throw new AuthorizationError("Only the requested beta member can accept.", "WRONG_RECIPIENT");
-  if (request.status !== "pending") throw new Error("That request has already been handled.");
-  await ref.update({ status: "accepted", acceptedAt: services.serverTimestamp });
-  return { request: { id: snap.id, ...request, status: "accepted" } };
+  let accepted;
+  await services.db.runTransaction(async (transaction) => {
+    const snap = await transaction.get(ref);
+    if (!snap.exists) throw new AuthorizationError("That request is no longer available.", "REQUEST_NOT_FOUND");
+    const request = snap.data();
+    if (request.recipientId !== identity.uid) throw new AuthorizationError("Only the requested beta member can accept.", "WRONG_RECIPIENT");
+    if (request.status !== "pending") throw new Error("That request has already been handled.");
+    const restriction = await transaction.get(restrictionRef(services, identity, request.requesterId));
+    if (restriction.exists) throw new AuthorizationError("This match is unavailable.", "MATCH_RESTRICTED");
+    transaction.update(ref, { status: "accepted", acceptedAt: services.serverTimestamp });
+    accepted = { id: snap.id, ...request, status: "accepted" };
+  });
+  return { request: accepted };
 }

@@ -20,7 +20,7 @@ const config: ApiConfig = {
   firebase: { apiKey: null, authDomain: null, projectId: "test", appId: null },
 };
 
-function verifier(users: Record<string, { uid: string; email: string; email_verified: boolean }>): FirebaseTokenVerifier {
+function verifier(users: Record<string, { uid: string; email: string; email_verified: boolean; auth_time?: number; mfa?: boolean }>): FirebaseTokenVerifier {
   return {
     async verifyIdToken(token) {
       const user = users[token];
@@ -68,14 +68,39 @@ async function fixture() {
   const tokenVerifier = verifier({
     worker: { uid: "worker-1", email: "worker@example.test", email_verified: true },
     pending: { uid: "worker-1", email: "worker@example.test", email_verified: true },
-    adminA: { uid: "admin-a", email: "admin-a@example.test", email_verified: true },
-    adminB: { uid: "admin-b", email: "admin-b@example.test", email_verified: true },
+    adminA: { uid: "admin-a", email: "admin-a@example.test", email_verified: true, auth_time: Math.floor(Date.now() / 1000), mfa: true },
+    adminB: { uid: "admin-b", email: "admin-b@example.test", email_verified: true, auth_time: Math.floor(Date.now() / 1000), mfa: true },
+    adminNoMfa: { uid: "admin-a", email: "admin-a@example.test", email_verified: true, auth_time: Math.floor(Date.now() / 1000) },
+    adminStale: { uid: "admin-a", email: "admin-a@example.test", email_verified: true, auth_time: Math.floor(Date.now() / 1000) - 3600, mfa: true },
     workerActive: { uid: "worker-active", email: "active@example.test", email_verified: true },
     unverified: { uid: "worker-2", email: "worker2@example.test", email_verified: false },
   });
-  const app = await buildApi({ config, logger: false, membership: { verifier: tokenVerifier, service } });
+  const reporting = {
+    history: async () => ({ trips: [] }),
+    dashboard: async () => ({ cohortSize: 0, metrics: {} }),
+    incentive: async () => ({ id: "test", status: "recorded_not_paid", amountCents: 0, reason: "test", recordedAt: now.toISOString() }),
+  };
+  const app = await buildApi({ config, logger: false, membership: { verifier: tokenVerifier, service }, reporting: { verifier: tokenVerifier, memberships: service, reporting: reporting as never } });
   return { app, store };
 }
+
+test("privileged administrator mutations require MFA and recent authentication", async () => {
+  const { app } = await fixture();
+  try {
+    for (const [token, code] of [["adminNoMfa", "MFA_REQUIRED"], ["adminStale", "RECENT_AUTH_REQUIRED"]]) {
+      const requests = [
+        { url: "/v1/admin/referral-codes", payload: { expiresAt: "2026-08-20T14:00:00.000Z", maxUses: 1 } },
+        { url: "/v1/admin/memberships/worker-1/approve", payload: { reason: "Roster confirmed" } },
+        { url: "/v1/admin/memberships/worker-1/reject", payload: { reason: "Roster rejected" } },
+        { url: "/v1/admin/incentives", payload: { amountCents: 500, reason: "Pilot fuel credit" } },
+      ];
+      for (const request of requests) {
+        const response = await app.inject({ method: "POST", ...request, headers: { authorization: `Bearer ${token}` } });
+        assert.equal(response.json().error.code, code, request.url);
+      }
+    }
+  } finally { await app.close(); }
+});
 
 test("referral redemption creates pending membership and blocks active-member routes", async () => {
   const { app, store } = await fixture();

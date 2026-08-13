@@ -32,6 +32,8 @@ export async function authenticateRequest(request, services) {
     email: decoded.email || null,
     tenantId: membership.tenantId,
     role: membership.role,
+    authenticatedAt: typeof decoded.auth_time === "number" ? decoded.auth_time * 1000 : null,
+    secondFactorVerified: decoded.mfa === true || decoded.firebase?.sign_in_second_factor != null || decoded.amr?.some((value) => ["mfa", "otp", "totp", "webauthn"].includes(value)) === true,
   };
 }
 
@@ -53,4 +55,10 @@ export async function authenticateFirebaseUser(request, services) {
 
 export function requireRole(identity, role) {
   if (identity.role !== role) throw new AuthorizationError();
+}
+
+export function requireRecentAuthentication(identity, now = Date.now, maxAgeMs = 15 * 60_000) {
+  if (!identity.authenticatedAt || now() - identity.authenticatedAt > maxAgeMs || identity.authenticatedAt > now() + 60_000) {
+    throw new AuthenticationError("Recent authentication is required.", "RECENT_AUTH_REQUIRED");
+  }
 }
