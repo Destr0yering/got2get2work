@@ -1,0 +1,11 @@
+import { Type, type Static } from "@sinclair/typebox";
+export const CompletionBodySchema = Type.Object({ completed: Type.Boolean(), shiftProtected: Type.Boolean() }, { additionalProperties: false });
+export const CompletionSchema = Type.Object({ tripId: Type.String(), participantRole: Type.Union([Type.Literal("crew"), Type.Literal("captain")]), completed: Type.Boolean(), shiftProtected: Type.Boolean(), recordedAt: Type.String({ format: "date-time" }) });
+const score = Type.Integer({ minimum: 1, maximum: 5 });
+export const RatingBodySchema = Type.Object({ punctuality: score, communication: score, safetyComfort: score, respect: score, privateNote: Type.Optional(Type.String({ maxLength: 1000 })) }, { additionalProperties: false });
+export const RatingReceiptSchema = Type.Object({ tripId: Type.String(), submitted: Type.Literal(true), recordedAt: Type.String({ format: "date-time" }) });
+export const BlockBodySchema = Type.Object({ userId: Type.String({ minLength: 1, maxLength: 128 }) }, { additionalProperties: false });
+export const BlockSchema = Type.Object({ id: Type.String(), blockedUserId: Type.String(), createdAt: Type.String({ format: "date-time" }) });
+export const SafetyReportBodySchema = Type.Object({ tripId: Type.Optional(Type.String({ maxLength: 128 })), category: Type.Union([Type.Literal("unsafe_driving"), Type.Literal("harassment"), Type.Literal("impairment"), Type.Literal("vehicle_concern"), Type.Literal("other")]), narrative: Type.String({ minLength: 1, maxLength: 4000 }), emergencyAcknowledged: Type.Literal(true) }, { additionalProperties: false });
+export const SafetyReportReceiptSchema = Type.Object({ id: Type.String(), status: Type.Literal("open"), emergencyMessage: Type.Literal("If anyone is in immediate danger, call 911."), createdAt: Type.String({ format: "date-time" }) });
+export type CompletionBody = Static<typeof CompletionBodySchema>; export type RatingBody = Static<typeof RatingBodySchema>; export type SafetyReportBody = Static<typeof SafetyReportBodySchema>;

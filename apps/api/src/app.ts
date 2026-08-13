@@ -30,6 +30,8 @@ import { registerRideRoutes } from "./modules/ride/routes";
 import { TripError } from "./modules/trip/domain";
 import type { TripRouteDependencies } from "./modules/trip/routes";
 import { registerTripRoutes } from "./modules/trip/routes";
+import type { TrustRouteDependencies } from "./modules/trip/trust-routes";
+import { registerTrustRoutes } from "./modules/trip/trust-routes";
 import { VehicleError } from "./modules/vehicle/domain";
 import type { VehicleRouteDependencies } from "./modules/vehicle/routes";
 import { registerVehicleRoutes } from "./modules/vehicle/routes";
@@ -45,6 +47,7 @@ export interface BuildApiOptions {
   matching?: MatchingRouteDependencies;
   ride?: RideRouteDependencies;
   trip?: TripRouteDependencies;
+  trust?: TrustRouteDependencies;
 }
 const securityHeaders = {
   "cache-control": "no-store",
@@ -161,6 +164,7 @@ export async function buildApi(options: BuildApiOptions = {}): Promise<FastifyIn
   if (options.matching) await registerMatchingRoutes(app, options.matching);
   if (options.ride) await registerRideRoutes(app, options.ride);
   if (options.trip) await registerTripRoutes(app, options.trip);
+  if (options.trust) await registerTrustRoutes(app, options.trust);
 
   return app;
 }
