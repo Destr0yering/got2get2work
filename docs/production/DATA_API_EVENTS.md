@@ -124,3 +124,11 @@ PostHog events intentionally differ from domain/audit events. They contain pseud
 Allowed examples: `onboarding_started`, `referral_submitted`, `membership_state_viewed`, `profile_completed`, `schedule_source_selected`, `shift_confirmed`, `match_search_completed` with count bucket, `ride_request_created`, `expense_estimate_agreed`, `trip_confirmed`, `pickup_status_used`, `recovery_started`, `recovery_succeeded`, `completion_response_submitted`, `rating_submitted`, and `safety_entry_opened`.
 
 Forbidden properties: email, name, address, coordinates/geohash, calendar/event IDs or text, employer employee ID, plate, vehicle identifier, message content, safety narrative/category tied to a person, rating values tied to another user, referral code, OAuth data, or route geometry.
+
+### Operations and privacy
+
+- `GET /v1/moderation/cases` — moderator/operator-only, tenant-scoped minimized queue.
+- `POST /v1/moderation/cases/:id/assignment` — audited ownership transition.
+- `POST /v1/moderation/cases/:id/decision` — audited close/no-action or time-bounded matching restriction.
+- `POST /v1/account/export-requests` and `POST /v1/account/deletion-requests` — idempotent asynchronous privacy requests.
+- `GET /v1/account/data-requests` — participant-owned request status only.

@@ -73,3 +73,16 @@ Terms, Privacy, Captain Agreement, location/calendar consents, community rules, 
 - Static analysis, dependency audit, secret scan, container scan, and signed build provenance in CI.
 - Pre-pilot Codex Security threat-model review followed by a standard repository scan; validate findings before fixes.
 - External legal/privacy review and a focused penetration test before expanding beyond the controlled pilot.
+
+## Moderation operations
+
+- Every safety report creates a restricted moderation case in the same tenant. Queue responses omit the reporter identity and narrative; those details remain in the restricted source record.
+- Only `moderator` and `operator` roles may list, assign, or decide cases. Employer administrators cannot use moderation endpoints.
+- Assignment and decision transitions append immutable audit evidence with actor, reason, action, and timestamp.
+- A temporary safety restriction must have a future expiry and a case subject. It immediately excludes that user from matching until expiry.
+
+## Privacy requests and retention
+
+- Signed-in participants may queue account export or deletion requests and inspect only their own requests.
+- Repeating an already queued request is idempotent.
+- Deletion is asynchronous. Safety, audit, and legally required records may remain under policy or legal hold; the API states this explicitly and does not imply immediate erasure.

@@ -6,5 +6,6 @@ export * from "./ride";
 export * from "./trip";
 export * from "./trust";
 export * from "./reporting";
+export * from "./operations";
 export * from "./membership";
 export * from "./system";

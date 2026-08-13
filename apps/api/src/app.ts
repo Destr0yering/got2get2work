@@ -19,6 +19,9 @@ import { CommuteError } from "./modules/commute/domain";
 import type { CommuteRouteDependencies } from "./modules/commute/routes";
 import { registerCommuteRoutes } from "./modules/commute/routes";
 import { MembershipError } from "./modules/membership/domain";
+import { OperationsError } from "./modules/operations/domain";
+import type { OperationsRouteDependencies } from "./modules/operations/routes";
+import { registerOperationsRoutes } from "./modules/operations/routes";
 import type { MembershipRouteDependencies } from "./modules/membership/routes";
 import { registerMembershipRoutes } from "./modules/membership/routes";
 import { MatchingError } from "./modules/matching/domain";
@@ -49,6 +52,7 @@ export interface BuildApiOptions {
   matching?: MatchingRouteDependencies;
   ride?: RideRouteDependencies;
   reporting?: ReportingRouteDependencies;
+  operations?: OperationsRouteDependencies;
   trip?: TripRouteDependencies;
   trust?: TrustRouteDependencies;
 }
@@ -94,7 +98,7 @@ export async function buildApi(options: BuildApiOptions = {}): Promise<FastifyIn
   });
 
   app.setErrorHandler((error, request, reply) => {
-    if (error instanceof MembershipError || error instanceof AgreementError || error instanceof CommuteError || error instanceof VehicleError || error instanceof MatchingError || error instanceof RideError || error instanceof TripError) {
+    if (error instanceof MembershipError || error instanceof AgreementError || error instanceof CommuteError || error instanceof VehicleError || error instanceof MatchingError || error instanceof RideError || error instanceof TripError || error instanceof OperationsError) {
       const envelope: ErrorEnvelope = {
         error: {
           code: error.code,
@@ -167,6 +171,7 @@ export async function buildApi(options: BuildApiOptions = {}): Promise<FastifyIn
   if (options.matching) await registerMatchingRoutes(app, options.matching);
   if (options.ride) await registerRideRoutes(app, options.ride);
   if (options.reporting) await registerReportingRoutes(app, options.reporting);
+  if (options.operations) await registerOperationsRoutes(app, options.operations);
   if (options.trip) await registerTripRoutes(app, options.trip);
   if (options.trust) await registerTrustRoutes(app, options.trust);
 

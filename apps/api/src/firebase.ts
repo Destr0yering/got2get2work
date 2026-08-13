@@ -9,6 +9,8 @@ import { FirestoreCommuteStore } from "./modules/commute/firestore-store";
 import { CommuteService } from "./modules/commute/service";
 import { FirestoreMembershipStore } from "./modules/membership/firestore-store";
 import { MembershipService } from "./modules/membership/service";
+import { FirestoreOperationsStore } from "./modules/operations/firestore-store";
+import { OperationsService } from "./modules/operations/service";
 import { FirestoreMatchingStore } from "./modules/matching/firestore-store";
 import { MatchingService } from "./modules/matching/service";
 import { FirestoreRideStore } from "./modules/ride/firestore-store";
@@ -53,6 +55,7 @@ export function createProductionDependencies(config: ApiConfig) {
   const rideStore = new FirestoreRideStore(db);
   const rideService = new RideService(rideStore, matchingStore, commuteStore, vehicleStore);
   const tripStore = new FirestoreTripStore(db);
+  const operationsService = new OperationsService(new FirestoreOperationsStore(db),undefined,matchingStore);
   const tripService = new TripService(tripStore, rideStore, vehicleStore, plateVault, matchingService);
   const trustService = new TrustService(tripStore, rideStore, matchingStore, membershipStore);
   const reportingService = new ReportingService(rideStore, tripStore, membershipStore, new FirestoreReportingStore(db));
@@ -66,5 +69,6 @@ export function createProductionDependencies(config: ApiConfig) {
     trip: { verifier, memberships: membershipService, trips: tripService },
     trust: { verifier, memberships: membershipService, trust: trustService },
     reporting: { verifier, memberships: membershipService, reporting: reportingService },
+    operations: { verifier, memberships: membershipService, operations: operationsService },
   };
 }
