@@ -21,7 +21,7 @@ function bearer(request: FastifyRequest): string {
   return token;
 }
 
-export function createAuthGuards(verifier: FirebaseTokenVerifier, memberships: MembershipService) {
+export function createAuthGuards(verifier: FirebaseTokenVerifier, memberships: MembershipService, now = () => new Date()) {
   const authenticateUser = async (request: FastifyRequest, _reply: FastifyReply) => {
     let decoded;
     try {
@@ -34,6 +34,8 @@ export function createAuthGuards(verifier: FirebaseTokenVerifier, memberships: M
       uid: decoded.uid,
       email: decoded.email ?? null,
       emailVerified: decoded.email_verified === true,
+      authenticatedAt: typeof decoded.auth_time === "number" ? new Date(decoded.auth_time * 1000) : null,
+      secondFactorVerified: decoded.mfa === true || decoded.firebase?.sign_in_second_factor != null || decoded.amr?.some(v => ["mfa", "otp", "totp", "webauthn"].includes(v)) === true,
     };
   };
 
@@ -47,5 +49,12 @@ export function createAuthGuards(verifier: FirebaseTokenVerifier, memberships: M
     memberships.requireRole(request.identity!, ...roles);
   };
 
-  return { authenticateUser, requireActiveMembership, requireRole };
+  const requirePrivilegedRole = (...roles: RequestIdentity["role"][]) => async (request: FastifyRequest, reply: FastifyReply) => {
+    await requireRole(...roles)(request, reply);
+    const user = request.authenticatedUser!;
+    if (!user.secondFactorVerified) throw new MembershipError("A verified second factor is required.", "MFA_REQUIRED", 403);
+    if (!user.authenticatedAt || now().getTime() - user.authenticatedAt.getTime() > 15 * 60_000) throw new MembershipError("Recent authentication is required.", "RECENT_AUTH_REQUIRED", 401);
+  };
+
+  return { authenticateUser, requireActiveMembership, requireRole, requirePrivilegedRole };
 }

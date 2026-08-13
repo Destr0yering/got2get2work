@@ -6,6 +6,8 @@ export interface AuthenticatedUser {
   uid: string;
   email: string | null;
   emailVerified: boolean;
+  authenticatedAt?: Date | null;
+  secondFactorVerified?: boolean;
 }
 
 export interface RequestIdentity extends AuthenticatedUser {

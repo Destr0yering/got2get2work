@@ -78,6 +78,14 @@ Terms, Privacy, Captain Agreement, location/calendar consents, community rules, 
 
 - Every safety report creates a restricted moderation case in the same tenant. Queue responses omit the reporter identity and narrative; those details remain in the restricted source record.
 - Only `moderator` and `operator` roles may list, assign, or decide cases. Employer administrators cannot use moderation endpoints.
+- Moderation endpoints additionally require authentication within the last 15 minutes and a verified MFA/second-factor token claim. Moderators must self-assign and cannot take over another moderator's case; operators have an explicit audited reassignment/decision override.
+- Case state, optimistic version, assignee, audit evidence, and any temporary matching restriction are validated and written in one Firestore transaction. Terminal cases cannot be reopened. Safety-report narratives and reporter identities remain only in restricted `safetyReports`; queue records contain routing metadata only.
+- Privacy export/deletion requests use a deterministic tenant/user/type queued-request key, making simultaneous retries idempotent.
+- Firestore ride creation and captain acceptance read pair and per-user restriction documents inside the same transaction as the ride write, so a restriction committed concurrently forces the ride transaction to retry and fail closed.
+
+Production verification note: unit tests exercise the equivalent memory-store conflict and idempotency semantics. Before launch, run the Firestore emulator integration suite (or staging smoke tests) with concurrent moderation decisions and privacy-request retries to verify SDK transaction retry behavior and security rules/index deployment together.
+
+Deployment migration: before enabling moderator access, delete the legacy `narrative` and `reporterUid` fields from existing `moderationCases` documents after confirming the authoritative `safetyReports` copies exist. Backfill missing case `version` values to `0`; the reader temporarily treats an absent version as `0` so this cleanup can be performed without downtime.
 - Assignment and decision transitions append immutable audit evidence with actor, reason, action, and timestamp.
 - A temporary safety restriction must have a future expiry and a case subject. It immediately excludes that user from matching until expiry.
 

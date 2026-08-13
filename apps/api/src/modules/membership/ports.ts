@@ -33,6 +33,10 @@ export interface FirebaseTokenVerifier {
     uid: string;
     email?: string;
     email_verified?: boolean;
+    auth_time?: number;
+    amr?: string[];
+    firebase?: { sign_in_second_factor?: string };
+    mfa?: boolean;
   }>;
 }
 
