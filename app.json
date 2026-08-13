@@ -1,14 +1,16 @@
 {
   "expo": {
     "name": "Got2Get2Work",
-    "slug": "got2get2work",
+    "slug": "g2g2w",
     "version": "0.1.0",
     "icon": "./assets/branding/g2w-app-icon.png",
     "orientation": "portrait",
     "scheme": "got2get2work",
     "userInterfaceStyle": "light",
     "jsEngine": "hermes",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "splash": {
       "image": "./assets/branding/g2w-app-icon.png",
       "resizeMode": "contain",
@@ -27,7 +29,10 @@
       "package": "com.got2get2work.app",
       "versionCode": 1,
       "allowBackup": false,
-      "permissions": ["android.permission.INTERNET", "android.permission.VIBRATE"],
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.VIBRATE"
+      ],
       "blockedPermissions": [
         "android.permission.READ_EXTERNAL_STORAGE",
         "android.permission.WRITE_EXTERNAL_STORAGE",
@@ -46,7 +51,11 @@
     "extra": {
       "product": "Got2Get2Work",
       "tagline": "For when you’ve got to get to work!",
-      "releaseChannel": "galaxy-free-beta"
-    }
+      "releaseChannel": "galaxy-free-beta",
+      "eas": {
+        "projectId": "dd1b43ca-626f-4fd4-81d8-130c914fb5c2"
+      }
+    },
+    "owner": "destr0yerings-team"
   }
 }
