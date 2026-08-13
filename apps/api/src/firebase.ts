@@ -13,6 +13,8 @@ import { FirestoreMatchingStore } from "./modules/matching/firestore-store";
 import { MatchingService } from "./modules/matching/service";
 import { FirestoreRideStore } from "./modules/ride/firestore-store";
 import { RideService } from "./modules/ride/service";
+import { FirestoreTripStore } from "./modules/trip/firestore-store";
+import { TripService } from "./modules/trip/service";
 import { FirestoreVehicleStore } from "./modules/vehicle/firestore-store";
 import { VehicleService } from "./modules/vehicle/service";
 import { PlateVault } from "./modules/vehicle/vault";
@@ -41,10 +43,13 @@ export function createProductionDependencies(config: ApiConfig) {
   });
   const agreementService = new AgreementService({ store: new FirestoreAgreementStore(db) });
   const commuteService = new CommuteService(commuteStore);
-  const vehicleService = new VehicleService(vehicleStore, new PlateVault(config.vehicleVaultKey));
+  const plateVault = new PlateVault(config.vehicleVaultKey);
+  const vehicleService = new VehicleService(vehicleStore, plateVault);
   const matchingStore = new FirestoreMatchingStore(db);
   const matchingService = new MatchingService({ matches: matchingStore, memberships: membershipStore, commutes: commuteStore, vehicles: vehicleStore, agreements: agreementService });
-  const rideService = new RideService(new FirestoreRideStore(db), matchingStore, commuteStore, vehicleStore);
+  const rideStore = new FirestoreRideStore(db);
+  const rideService = new RideService(rideStore, matchingStore, commuteStore, vehicleStore);
+  const tripService = new TripService(new FirestoreTripStore(db), rideStore, vehicleStore, plateVault);
   return {
     membership: { verifier, service: membershipService },
     agreement: { verifier, memberships: membershipService, agreements: agreementService },
@@ -52,5 +57,6 @@ export function createProductionDependencies(config: ApiConfig) {
     vehicle: { verifier, memberships: membershipService, vehicles: vehicleService },
     matching: { verifier, memberships: membershipService, matching: matchingService },
     ride: { verifier, memberships: membershipService, rides: rideService },
+    trip: { verifier, memberships: membershipService, trips: tripService },
   };
 }

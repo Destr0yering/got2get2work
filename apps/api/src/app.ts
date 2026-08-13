@@ -27,6 +27,9 @@ import { registerMatchingRoutes } from "./modules/matching/routes";
 import { RideError } from "./modules/ride/domain";
 import type { RideRouteDependencies } from "./modules/ride/routes";
 import { registerRideRoutes } from "./modules/ride/routes";
+import { TripError } from "./modules/trip/domain";
+import type { TripRouteDependencies } from "./modules/trip/routes";
+import { registerTripRoutes } from "./modules/trip/routes";
 import { VehicleError } from "./modules/vehicle/domain";
 import type { VehicleRouteDependencies } from "./modules/vehicle/routes";
 import { registerVehicleRoutes } from "./modules/vehicle/routes";
@@ -41,6 +44,7 @@ export interface BuildApiOptions {
   vehicle?: VehicleRouteDependencies;
   matching?: MatchingRouteDependencies;
   ride?: RideRouteDependencies;
+  trip?: TripRouteDependencies;
 }
 const securityHeaders = {
   "cache-control": "no-store",
@@ -84,7 +88,7 @@ export async function buildApi(options: BuildApiOptions = {}): Promise<FastifyIn
   });
 
   app.setErrorHandler((error, request, reply) => {
-    if (error instanceof MembershipError || error instanceof AgreementError || error instanceof CommuteError || error instanceof VehicleError || error instanceof MatchingError || error instanceof RideError) {
+    if (error instanceof MembershipError || error instanceof AgreementError || error instanceof CommuteError || error instanceof VehicleError || error instanceof MatchingError || error instanceof RideError || error instanceof TripError) {
       const envelope: ErrorEnvelope = {
         error: {
           code: error.code,
@@ -156,6 +160,7 @@ export async function buildApi(options: BuildApiOptions = {}): Promise<FastifyIn
   if (options.vehicle) await registerVehicleRoutes(app, options.vehicle);
   if (options.matching) await registerMatchingRoutes(app, options.matching);
   if (options.ride) await registerRideRoutes(app, options.ride);
+  if (options.trip) await registerTripRoutes(app, options.trip);
 
   return app;
 }

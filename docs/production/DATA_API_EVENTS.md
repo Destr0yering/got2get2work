@@ -90,8 +90,8 @@ Final periods require Florida counsel and pilot contracts. These are implementat
 | Schedules | `POST /v1/schedule/ics`, `GET/POST /v1/shifts`, `POST /v1/shifts/{id}/confirm`; ICS creates minimized candidates and never persists event titles/descriptions. |
 | Matching | `POST /v1/matches/search`; persists policy-versioned runs, returns opaque candidate IDs and allowlisted schedule facts, and uses conservative same-area routing until a map adapter is enabled. |
 | Ride flow | `POST /v1/ride-requests`, `GET /v1/ride-requests/{id}`, `POST /{id}/expense-agreement`, `POST /{id}/captain-decision`; crew agreement is mandatory before captain action. The launch estimate is a $3 same-coarse-zone pilot contribution (`pilot-coarse-zone-v1`), voluntary and settled outside the platform; no payment status is recorded. |
-| Trips | `GET /v1/trips`, `GET /{id}`, `POST /{id}/status`, `:cancel`, `:complete` |
-| Messaging | `GET /v1/trips/{id}/messages`, `POST /messages` |
+| Trips | `GET /v1/trips/{id}` reveals the confirmed captain's make/model/color/plate only to active trip participants. Status, cancellation, and completion transitions follow in the recovery slice. |
+| Messaging | `GET/POST /v1/trips/{id}/messages`; confirmed participants only, 500-character limit, contact/link filtering, and generic `new_message` notification outbox records without message content. |
 | Proximity | `POST /v1/trips/{id}/proximity-session`, `PUT /proximity`, `DELETE /proximity-session` |
 | Recovery | `GET /v1/recoveries/{id}/options`, `POST /options/{id}:request` |
 | Trust | `POST /v1/blocks`, `DELETE /blocks/{id}`, `POST /v1/safety-reports`, `POST /v1/ratings` |

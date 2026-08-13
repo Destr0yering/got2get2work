@@ -16,6 +16,14 @@
         { "fieldPath": "tenantId", "order": "ASCENDING" },
         { "fieldPath": "worksiteId", "order": "ASCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "tripMessages",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "tripId", "order": "ASCENDING" },
+        { "fieldPath": "sentAt", "order": "ASCENDING" }
+      ]
     }
   ],
   "fieldOverrides": []
