@@ -49,7 +49,7 @@ export function createProductionDependencies(config: ApiConfig) {
   const matchingService = new MatchingService({ matches: matchingStore, memberships: membershipStore, commutes: commuteStore, vehicles: vehicleStore, agreements: agreementService });
   const rideStore = new FirestoreRideStore(db);
   const rideService = new RideService(rideStore, matchingStore, commuteStore, vehicleStore);
-  const tripService = new TripService(new FirestoreTripStore(db), rideStore, vehicleStore, plateVault);
+  const tripService = new TripService(new FirestoreTripStore(db), rideStore, vehicleStore, plateVault, matchingService);
   return {
     membership: { verifier, service: membershipService },
     agreement: { verifier, memberships: membershipService, agreements: agreementService },

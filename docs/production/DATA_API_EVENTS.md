@@ -92,8 +92,8 @@ Final periods require Florida counsel and pilot contracts. These are implementat
 | Ride flow | `POST /v1/ride-requests`, `GET /v1/ride-requests/{id}`, `POST /{id}/expense-agreement`, `POST /{id}/captain-decision`; crew agreement is mandatory before captain action. The launch estimate is a $3 same-coarse-zone pilot contribution (`pilot-coarse-zone-v1`), voluntary and settled outside the platform; no payment status is recorded. |
 | Trips | `GET /v1/trips/{id}` reveals the confirmed captain's make/model/color/plate only to active trip participants. Status, cancellation, and completion transitions follow in the recovery slice. |
 | Messaging | `GET/POST /v1/trips/{id}/messages`; confirmed participants only, 500-character limit, contact/link filtering, and generic `new_message` notification outbox records without message content. |
-| Proximity | `POST /v1/trips/{id}/proximity-session`, `PUT /proximity`, `DELETE /proximity-session` |
-| Recovery | `GET /v1/recoveries/{id}/options`, `POST /options/{id}:request` |
+| Pickup/proximity | `POST /v1/trips/{id}/status`, `PUT/DELETE /v1/trips/{id}/proximity`; participant-only coarse states, 30-second update floor, ten-minute TTL, and automatic deletion on pickup/cancellation. No coordinates or BLE identifiers are stored. |
+| Recovery | `POST /v1/trips/{id}/cancel`, `GET /v1/recoveries/{id}/options`; cancellation releases capacity and crew-only recovery reruns current eligibility without automatic confirmation. |
 | Trust | `POST /v1/blocks`, `DELETE /blocks/{id}`, `POST /v1/safety-reports`, `POST /v1/ratings` |
 | Employer reporting | `GET /v1/admin/dashboard`, `GET /v1/admin/incentives`, `POST /incentive-policies` |
 | Moderation | `GET /v1/ops/cases`, `POST /{id}:assign`, `:restrict`, `:resolve`, `:appeal-decision` |

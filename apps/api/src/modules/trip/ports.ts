@@ -1,2 +1,2 @@
-import type { MessageRecord, NotificationRecord } from "./domain";
-export interface TripStore { listMessages(tripId: string, limit: number): Promise<MessageRecord[]>; saveMessage(message: MessageRecord, notification: NotificationRecord): Promise<MessageRecord>; }
+import type { MessageRecord, NotificationRecord, PickupStateRecord, ProximityRecord } from "./domain";
+export interface TripStore { listMessages(tripId: string, limit: number): Promise<MessageRecord[]>; saveMessage(message: MessageRecord, notification: NotificationRecord): Promise<MessageRecord>; getPickupState(tripId: string): Promise<PickupStateRecord | null>; savePickupState(state: PickupStateRecord): Promise<PickupStateRecord>; getProximity(tripId: string): Promise<ProximityRecord | null>; saveProximity(record: ProximityRecord): Promise<ProximityRecord>; deleteProximity(tripId: string): Promise<void>; }

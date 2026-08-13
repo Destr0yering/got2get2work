@@ -4,3 +4,10 @@ export const MessageBodySchema = Type.Object({ text: Type.String({ minLength: 1,
 export const MessageSchema = Type.Object({ id: Type.String(), sender: Type.Union([Type.Literal("crew"), Type.Literal("captain")]), text: Type.String(), sentAt: Type.String({ format: "date-time" }) }, { additionalProperties: false });
 export const MessageListSchema = Type.Object({ messages: Type.Array(MessageSchema, { maxItems: 100 }) });
 export type TripDetail = Static<typeof TripDetailSchema>; export type MessageView = Static<typeof MessageSchema>;
+export const PickupStatusSchema = Type.Union([Type.Literal("confirmed"), Type.Literal("leaving"), Type.Literal("en_route"), Type.Literal("nearby"), Type.Literal("arrived"), Type.Literal("passenger_ready"), Type.Literal("picked_up"), Type.Literal("cancelled")]);
+export const PickupStatusBodySchema = Type.Object({ status: Type.Union([Type.Literal("leaving"), Type.Literal("en_route"), Type.Literal("arrived"), Type.Literal("passenger_ready"), Type.Literal("picked_up")]) }, { additionalProperties: false });
+export const PickupStateSchema = Type.Object({ tripId: Type.String(), status: PickupStatusSchema, updatedAt: Type.String({ format: "date-time" }) });
+export const ProximityBodySchema = Type.Object({ state: Type.Union([Type.Literal("nearby"), Type.Literal("not_nearby")]) }, { additionalProperties: false });
+export const ProximitySchema = Type.Object({ tripId: Type.String(), state: Type.Union([Type.Literal("nearby"), Type.Literal("not_nearby")]), expiresAt: Type.String({ format: "date-time" }) });
+export const CancellationBodySchema = Type.Object({ reason: Type.Union([Type.Literal("schedule_change"), Type.Literal("illness"), Type.Literal("vehicle_issue"), Type.Literal("other")]) }, { additionalProperties: false });
+export const CancellationSchema = Type.Object({ tripId: Type.String(), status: Type.Literal("cancelled"), reason: Type.String(), cancelledAt: Type.String({ format: "date-time" }), recoveryAvailable: Type.Boolean() });
