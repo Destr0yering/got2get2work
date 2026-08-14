@@ -16,7 +16,7 @@
     "api:test:firestore": "firebase emulators:exec --only firestore --project demo-got2get2work \"tsx --test apps/api/emulator/*.test.ts\"",
     "migration:moderation:dry-run": "tsx scripts/migrate-moderation-cases.ts",
     "migration:moderation:apply": "tsx scripts/migrate-moderation-cases.ts --apply",
-    "test": "tsx --test src/domain/*.test.ts src/services/*.test.ts src/state/*.test.ts",
+    "test": "tsx --test src/auth/*.test.ts src/domain/*.test.ts src/services/*.test.ts src/state/*.test.ts",
     "server:test": "node --test server/*.test.mjs",
     "website:test": "npm --prefix website test",
     "website:lint": "npm --prefix website run lint",

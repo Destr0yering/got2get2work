@@ -1,7 +1,8 @@
 import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
-import { User, createUserWithEmailAndPassword, deleteUser, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { User, createUserWithEmailAndPassword, deleteUser, onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, signOut } from "firebase/auth";
 
 import { firebaseAuth, isFirebaseConfigured, loadFirebaseConfig } from "../services/firebase";
+import { isPrivatePasswordResetError, normalizePasswordResetEmail } from "./passwordReset";
 
 interface AuthValue {
   user: User | null;
@@ -9,6 +10,7 @@ interface AuthValue {
   configured: boolean;
   signIn(email: string, password: string): Promise<void>;
   signUp(email: string, password: string): Promise<void>;
+  requestPasswordReset(email: string): Promise<void>;
   deleteNewAccount(): Promise<void>;
   signOutUser(): Promise<void>;
 }
@@ -45,6 +47,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       configured,
       signIn: async (email, password) => { await signInWithEmailAndPassword(firebaseAuth(), email.trim(), password); },
       signUp: async (email, password) => { await createUserWithEmailAndPassword(firebaseAuth(), email.trim(), password); },
+      requestPasswordReset: async (email) => {
+        try {
+          await sendPasswordResetEmail(firebaseAuth(), normalizePasswordResetEmail(email));
+        } catch (reason) {
+          if (!isPrivatePasswordResetError(reason)) throw reason;
+        }
+      },
       deleteNewAccount: async () => { const current = firebaseAuth().currentUser; if (current) await deleteUser(current); },
       signOutUser: async () => { await signOut(firebaseAuth()); },
     }}>
