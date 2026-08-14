@@ -16,6 +16,7 @@ const config: ApiConfig = {
   port: 4100,
   release: "membership-test",
   exposeDocumentation: false,
+  allowedOrigins: ["https://admin.example.test"],
   referralCodePepper: pepper,
   firebase: { apiKey: null, authDomain: null, projectId: "test", appId: null },
 };
@@ -29,6 +30,16 @@ function verifier(users: Record<string, { uid: string; email: string; email_veri
     },
   };
 }
+
+test("CORS permits only configured employer console origins", async () => {
+  const { app } = await fixture();
+  try {
+    const allowed = await app.inject({ method: "OPTIONS", url: "/v1/admin/memberships", headers: { origin: "https://admin.example.test", "access-control-request-method": "GET" } });
+    assert.equal(allowed.headers["access-control-allow-origin"], "https://admin.example.test");
+    const denied = await app.inject({ method: "OPTIONS", url: "/v1/admin/memberships", headers: { origin: "https://attacker.example", "access-control-request-method": "GET" } });
+    assert.equal(denied.headers["access-control-allow-origin"], undefined);
+  } finally { await app.close(); }
+});
 
 async function fixture() {
   const store = new MemoryMembershipStore();

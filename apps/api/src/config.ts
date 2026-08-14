@@ -6,6 +6,7 @@ export interface ApiConfig {
   port: number;
   release: string;
   exposeDocumentation: boolean;
+  allowedOrigins?: string[];
   referralCodePepper: string | null;
   vehicleVaultKey?: string | null;
   firebase: {
@@ -36,6 +37,7 @@ export function loadApiConfig(source: NodeJS.ProcessEnv = process.env): ApiConfi
     port: port(source.PORT),
     release: source.K_REVISION?.trim() || source.RELEASE_SHA?.trim() || "local",
     exposeDocumentation: appEnvironment !== "production" || source.EXPOSE_API_DOCS === "true",
+    allowedOrigins: (source.ALLOWED_ORIGINS ?? "").split(",").map((value) => value.trim().replace(/\/$/, "")).filter(Boolean),
     referralCodePepper: source.REFERRAL_CODE_PEPPER?.trim() || null,
     vehicleVaultKey: source.VEHICLE_VAULT_KEY?.trim() || null,
     firebase: {

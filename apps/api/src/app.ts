@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 
 import swagger from "@fastify/swagger";
 import swaggerUi from "@fastify/swagger-ui";
+import cors from "@fastify/cors";
 import Fastify, { type FastifyInstance } from "fastify";
 
 import {
@@ -74,6 +75,18 @@ export async function buildApi(options: BuildApiOptions = {}): Promise<FastifyIn
     genReqId: () => randomUUID(),
     bodyLimit: 20_000,
     trustProxy: 1,
+  });
+
+  await app.register(cors, {
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      const normalized = origin.replace(/\/$/, "");
+      callback(null, (config.allowedOrigins ?? []).includes(normalized));
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Authorization", "Content-Type"],
+    credentials: false,
+    maxAge: 600,
   });
 
   await app.register(swagger, {

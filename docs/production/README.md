@@ -9,6 +9,7 @@ Status: approved discovery baseline, 2026-08-12. This package defines the Androi
 - [Data, API, and event contracts](./DATA_API_EVENTS.md)
 - [Privacy, safety, and threat model](./TRUST_SAFETY_SECURITY.md)
 - [Migration and build plan](./MIGRATION_BUILD_PLAN.md)
+- [Employer console launch runbook](./EMPLOYER_CONSOLE_RUNBOOK.md)
 
 ## Approved product boundary
 

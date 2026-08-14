@@ -6,6 +6,7 @@ import { useAuth } from "../../auth/AuthContext";
 import { PASSWORD_RESET_CONFIRMATION } from "../../auth/passwordReset";
 import { useApp } from "../../state/AppContext";
 import { colors } from "../../theme/tokens";
+import { adminApiConfigured, ProductionApiError, productionApi } from "../../services/ProductionApi";
 
 export function SignInScreen() {
   const { dispatch } = useApp();
@@ -22,6 +23,17 @@ export function SignInScreen() {
     setError(null);
     try {
       await signIn(email, password);
+      if (adminApiConfigured()) {
+        try {
+          const membership = await productionApi.currentAdminMembership();
+          if (membership.role === "employer_admin" && membership.status === "active") {
+            dispatch({ type: "NAVIGATE", route: "employer-dashboard" });
+            return;
+          }
+        } catch (reason) {
+          if (!(reason instanceof ProductionApiError) || !["MEMBERSHIP_INACTIVE", "MEMBERSHIP_NOT_FOUND", "FORBIDDEN"].includes(reason.code)) throw reason;
+        }
+      }
       dispatch({ type: "NAVIGATE", route: "privacy" });
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : "Sign-in failed.");

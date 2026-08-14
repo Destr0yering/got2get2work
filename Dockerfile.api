@@ -1,0 +1,17 @@
+FROM node:22-alpine AS build
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci
+COPY apps/api ./apps/api
+COPY packages/contracts ./packages/contracts
+COPY tsconfig.api.json ./
+COPY tsconfig.api.build.json ./
+RUN npm run api:build
+
+FROM node:22-alpine AS runtime
+ENV NODE_ENV=production
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev
+COPY --from=build /app/dist-api ./dist-api
+CMD ["node", "dist-api/apps/api/src/index.js"]
