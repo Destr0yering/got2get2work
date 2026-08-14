@@ -4,7 +4,8 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useAuth } from "../../auth/AuthContext";
 import { AppScreen, BackButton, Button, Card, Field, Notice, PageHeader, Pill, SectionTitle } from "../../components/primitives";
 import { calculatePilotEconomics } from "../../domain/benefit";
-import { AggregateMetric, CreatedReferral, EmployerDashboard, MembershipView, ProductionApiError, productionApi } from "../../services/ProductionApi";
+import { AggregateMetric, CreatedReferral, EmployerDashboard, MembershipView, productionApi } from "../../services/ProductionApi";
+import { adminErrorMessage, defaultReferralExpiry, formatConsoleDate as formatDate, shortId, validateReferralInput } from "../../services/employerConsole";
 import { useApp } from "../../state/AppContext";
 import { colors } from "../../theme/tokens";
 
@@ -66,17 +67,16 @@ function ProductionEmployerConsole() {
   }
 
   async function createReferral() {
-    const uses = Number(maxUses);
-    const expiry = new Date(expiresAt);
-    if (!Number.isInteger(uses) || uses < 1 || uses > 500 || !Number.isFinite(expiry.getTime())) {
-      setError("Enter a valid expiration date and a use limit from 1 to 500.");
+    const input = validateReferralInput(expiresAt, maxUses);
+    if (!input.ok) {
+      setError(input.message);
       return;
     }
     setBusy(true);
     setError(null);
     setNotice(null);
     try {
-      const referral = await productionApi.createAdminReferral(expiry.toISOString(), uses);
+      const referral = await productionApi.createAdminReferral(input.expiresAt, input.maxUses);
       setCreatedReferral(referral);
       setNotice("Referral code created. Copy it now; the plaintext code is returned only once.");
     } catch (reason) {
@@ -142,11 +142,6 @@ function DemoEmployerDashboard() {
 }
 
 function DemoMetric({ value, label }: { value: string; label: string }) { return <Card style={styles.metric}><Text style={styles.metricValue}>{value}</Text><Text style={styles.metricLabel}>{label}</Text></Card>; }
-function shortId(value: string) { return value.length <= 8 ? value : `${value.slice(0, 8)}…`; }
-function formatDate(value: string) { const date = new Date(value); return Number.isFinite(date.getTime()) ? date.toLocaleDateString() : "Unknown date"; }
-function defaultReferralExpiry() { const date = new Date(Date.now() + 7 * 86_400_000); return date.toISOString().slice(0, 10); }
-function adminErrorMessage(reason: unknown) { if (reason instanceof ProductionApiError && reason.code === "MFA_REQUIRED") return "A verified second factor is required before this administrative action."; if (reason instanceof ProductionApiError && reason.code === "RECENT_AUTH_REQUIRED") return "Sign out and sign in again, then retry this administrative action within 15 minutes."; return reason instanceof Error ? reason.message : "The employer request could not be completed."; }
-
 const styles = StyleSheet.create({
   topRow: { flexDirection: "row", flexWrap: "wrap", alignItems: "flex-start", gap: 16 }, flex: { flex: 1, minWidth: 280 }, tabs: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginVertical: 16 }, tab: { minHeight: 44, paddingHorizontal: 16, borderRadius: 12, borderWidth: 1, borderColor: colors.borderStrong, justifyContent: "center", backgroundColor: colors.surface }, tabActive: { backgroundColor: colors.cobalt, borderColor: colors.cobalt }, tabText: { color: colors.ink, fontWeight: "800" }, tabTextActive: { color: colors.white }, pressed: { opacity: 0.72 },
   grid: { flexDirection: "row", flexWrap: "wrap", gap: 10 }, metric: { minWidth: 190, flex: 1 }, metricValue: { color: colors.cobaltDark, fontSize: 28, fontWeight: "900" }, metricLabel: { color: colors.ink, fontSize: 13, fontWeight: "800", marginTop: 5 }, definition: { color: colors.muted, fontSize: 11, lineHeight: 16, marginTop: 8 }, cardTitle: { color: colors.ink, fontSize: 16, fontWeight: "900" }, cardBody: { color: colors.muted, fontSize: 13, lineHeight: 19, marginTop: 7 }, empty: { color: colors.muted, fontSize: 14, textAlign: "center", paddingVertical: 12 }, requestTitle: { color: colors.ink, fontSize: 16, fontWeight: "900", marginTop: 12 }, requestMeta: { color: colors.muted, fontSize: 11, lineHeight: 16, marginTop: 5 }, actions: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 10 }, code: { color: colors.ink, fontSize: 20, fontWeight: "900", letterSpacing: 0.8, marginTop: 16 }, brief: { color: colors.ink, fontSize: 16, lineHeight: 24, fontWeight: "700", marginBottom: 8 },

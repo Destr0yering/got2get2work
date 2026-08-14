@@ -6,6 +6,14 @@ The employer console uses the existing Expo web client and a separately deployed
 
 Build `Dockerfile.api` as a separate Cloud Run service. Configure the existing Firebase project, `REFERRAL_CODE_PEPPER`, `VEHICLE_VAULT_KEY`, and an exact comma-separated `ALLOWED_ORIGINS` value containing the deployed web origin. Do not use `*` for the production employer console.
 
+Preview the guarded deployment command first. It builds through `cloudbuild.admin-api.yaml`, reads secrets from Secret Manager at runtime, and deliberately does not create or change IAM grants:
+
+```powershell
+.\scripts\deploy-employer-api.ps1 -ProjectId YOUR_PROJECT -Region us-east1 -ImageTag GIT_SHA -AllowedOrigin https://YOUR_CONSOLE_ORIGIN -WhatIf
+```
+
+Remove `-WhatIf` only after reviewing the resolved project, region, image, secrets, and origin. Browser access requires the Cloud Run invoker policy to be configured separately and intentionally; Firebase bearer-token authorization remains enforced by the application.
+
 The service must pass `/health/live` and `/health/ready` before it is placed in the web build's `EXPO_PUBLIC_ADMIN_API_BASE_URL`.
 
 ## 2. Bootstrap the first employer administrator
@@ -33,3 +41,16 @@ Set `EXPO_PUBLIC_ADMIN_API_BASE_URL` to the typed API HTTPS URL and keep `EXPO_P
 - Cross-tenant membership decisions return not found.
 - The dashboard suppresses small cohorts and contains no location, message, schedule, vehicle, safety, rating, or individual-attendance data.
 - Referral plaintext is displayed only in the creation response; Firestore stores only its digest.
+
+Run the Android checklist in `docs/production/ANDROID_CLOSED_BETA_QA.md` against the signed release artifact and retain sanitized evidence with the release record.
+
+## 6. Roll back a bad revision
+
+Select a known-good immutable revision from Cloud Run, preview the traffic change, then execute it:
+
+```powershell
+.\scripts\rollback-employer-api.ps1 -ProjectId YOUR_PROJECT -Region us-east1 -Revision got2get2work-admin-api-KNOWN_GOOD -WhatIf
+.\scripts\rollback-employer-api.ps1 -ProjectId YOUR_PROJECT -Region us-east1 -Revision got2get2work-admin-api-KNOWN_GOOD
+```
+
+Re-run health probes and employer-console authentication, authorization, referral, approval, and privacy smoke tests after rollback.
