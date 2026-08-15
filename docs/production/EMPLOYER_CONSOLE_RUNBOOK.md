@@ -54,3 +54,7 @@ Select a known-good immutable revision from Cloud Run, preview the traffic chang
 ```
 
 Re-run health probes and employer-console authentication, authorization, referral, approval, and privacy smoke tests after rollback.
+
+## Staging deployment record
+
+Private staging verification completed 2026-08-15 in `got2get2work-xprize-cloud`, region `us-east1`. Cloud Build `6109e2f5-1af7-442f-9932-f5ba84d632ad` published image tag `12b7ed1`; Cloud Run revision `got2get2work-admin-api-00002-c47` reported healthy liveness and `configuration: ready`. The service uses the dedicated `got2get2work-admin-api` runtime identity, references Secret Manager values, and has no `allUsers` or `allAuthenticatedUsers` invoker binding. Anonymous health requests returned 403.
