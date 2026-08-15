@@ -89,7 +89,7 @@ Security-scan remediation completed 2026-08-13: employer membership decisions, r
 
 Deployment migration: before enabling moderator access, delete the legacy `narrative` and `reporterUid` fields from existing `moderationCases` documents after confirming the authoritative `safetyReports` copies exist. Backfill missing case `version` values to `0`; the reader temporarily treats an absent version as `0` so this cleanup can be performed without downtime.
 
-Migration verification completed 2026-08-13: `npm run migration:moderation:dry-run` scanned the configured `got2get2work-xprize-cloud` project and found zero existing moderation-case documents. No production writes were required. The guarded migration utility remains available for future environments and refuses sensitive-field cleanup when authoritative safety evidence is missing.
+Migration verification completed 2026-08-13 and was repeated 2026-08-14: `npm run migration:moderation:dry-run` scanned the configured `got2get2work-xprize-cloud` project and found zero existing moderation-case documents. No production writes were required. The guarded migration utility remains available for future environments and refuses sensitive-field cleanup when authoritative safety evidence is missing.
 
 Dependency-audit note (2026-08-13): non-breaking lockfile remediation was applied. `npm audit --omit=dev` still reports 22 transitive findings in the Expo/Metro image-processing and Firebase Admin/Google Cloud dependency trees. npm's proposed automatic remediations are breaking framework or SDK downgrades, so `npm audit fix --force` is prohibited for this release. Resolve these through compatible upstream package upgrades and a focused reachability review before production launch.
 
