@@ -1,5 +1,5 @@
 import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
-import { User, createUserWithEmailAndPassword, deleteUser, onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { User, createUserWithEmailAndPassword, deleteUser, onAuthStateChanged, reload, sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, signOut } from "firebase/auth";
 
 import { firebaseAuth, isFirebaseConfigured, loadFirebaseConfig } from "../services/firebase";
 import { isPrivatePasswordResetError, normalizePasswordResetEmail } from "./passwordReset";
@@ -10,6 +10,8 @@ interface AuthValue {
   configured: boolean;
   signIn(email: string, password: string): Promise<void>;
   signUp(email: string, password: string): Promise<void>;
+  resendEmailVerification(): Promise<void>;
+  refreshEmailVerification(): Promise<boolean>;
   requestPasswordReset(email: string): Promise<void>;
   deleteNewAccount(): Promise<void>;
   signOutUser(): Promise<void>;
@@ -46,7 +48,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       loading,
       configured,
       signIn: async (email, password) => { await signInWithEmailAndPassword(firebaseAuth(), email.trim(), password); },
-      signUp: async (email, password) => { await createUserWithEmailAndPassword(firebaseAuth(), email.trim(), password); },
+      signUp: async (email, password) => {
+        const credential = await createUserWithEmailAndPassword(firebaseAuth(), email.trim(), password);
+        await sendEmailVerification(credential.user);
+      },
+      resendEmailVerification: async () => {
+        const current = firebaseAuth().currentUser;
+        if (!current) throw new Error("Create or sign in to your account before requesting verification.");
+        await sendEmailVerification(current);
+      },
+      refreshEmailVerification: async () => {
+        const current = firebaseAuth().currentUser;
+        if (!current) return false;
+        await reload(current);
+        if (current.emailVerified) await current.getIdToken(true);
+        return current.emailVerified;
+      },
       requestPasswordReset: async (email) => {
         try {
           await sendPasswordResetEmail(firebaseAuth(), normalizePasswordResetEmail(email));

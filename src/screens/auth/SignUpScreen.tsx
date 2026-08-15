@@ -9,11 +9,13 @@ import { colors } from "../../theme/tokens";
 
 export function SignUpScreen() {
   const { dispatch } = useApp();
-  const { signUp, deleteNewAccount, configured } = useAuth();
+  const { signUp, deleteNewAccount, resendEmailVerification, refreshEmailVerification, configured } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [inviteCode, setInviteCode] = useState("");
   const [busy, setBusy] = useState(false);
+  const [verificationSent, setVerificationSent] = useState(false);
+  const [resendBusy, setResendBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   async function submit() {
@@ -21,13 +23,41 @@ export function SignUpScreen() {
     setError(null);
     try {
       await signUp(email, password);
-      await productionApi.enrollBeta(inviteCode);
-      dispatch({ type: "NAVIGATE", route: "privacy" });
+      setVerificationSent(true);
     } catch (reason) {
       await deleteNewAccount().catch(() => undefined);
       setError(reason instanceof Error ? reason.message : "Beta enrollment failed.");
     } finally {
       setBusy(false);
+    }
+  }
+
+  async function finishVerification() {
+    setBusy(true);
+    setError(null);
+    try {
+      if (!(await refreshEmailVerification())) {
+        setError("Your email is not verified yet. Open the verification link, then return here and try again.");
+        return;
+      }
+      await productionApi.enrollBeta(inviteCode);
+      dispatch({ type: "NAVIGATE", route: "privacy" });
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : "Beta enrollment failed.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function resendVerification() {
+    setResendBusy(true);
+    setError(null);
+    try {
+      await resendEmailVerification();
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : "Unable to resend the verification email.");
+    } finally {
+      setResendBusy(false);
     }
   }
 
@@ -43,13 +73,19 @@ export function SignUpScreen() {
         <Text style={styles.title}>Join the real multi-user beta</Text>
         <Text style={styles.body}>Use an email you control. You will verify policies, choose Driver or Passenger for each direction, and add your own schedule.</Text>
       </Card>
-      <Card>
+      {!verificationSent ? <Card>
         <Field label="Email" value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" autoComplete="email" />
         <Field label="Create password" value={password} onChangeText={setPassword} secureTextEntry autoComplete="new-password" hint="Use at least 8 characters." />
         <Field label="Beta invite code" value={inviteCode} onChangeText={setInviteCode} autoCapitalize="characters" autoCorrect={false} />
         <Button label="Create beta account" busy={busy} disabled={!configured || !email.trim() || password.length < 8 || !inviteCode.trim()} onPress={submit} />
-      </Card>
-      <Button label="I already have an account" variant="secondary" onPress={() => dispatch({ type: "NAVIGATE", route: "sign-in" })} />
+      </Card> : <Card tone="blue">
+        <Pill label="Verification required" tone="blue" />
+        <Text style={styles.title}>Check {email.trim()}</Text>
+        <Text style={styles.body}>We sent a Firebase verification email. Open its link, return to this tab, then continue. Your beta invite will not be used until verification succeeds.</Text>
+        <Button label="I've verified my email" busy={busy} onPress={() => void finishVerification()} />
+        <Button label="Resend verification email" variant="secondary" busy={resendBusy} disabled={busy} onPress={() => void resendVerification()} />
+      </Card>}
+      {!verificationSent ? <Button label="I already have an account" variant="secondary" onPress={() => dispatch({ type: "NAVIGATE", route: "sign-in" })} /> : null}
     </AppScreen>
   );
 }
