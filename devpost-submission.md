@@ -155,6 +155,7 @@ Outline:
 - Users acquired and paying users: **verified counts required**
 - Public testimonial: **URL or omit**
 - Project-running evidence upload: **required PDF/PNG/JPG/JPEG**
+- Supporting production evidence pack prepared locally: `output/pdf/got2get2work-xprize-production-evidence.pdf`; manually attach it together with the required Cloud invoices and Gemini observability evidence.
 - P&L upload: **required PDF/PNG/JPG/JPEG**
 - Shared-repository confirmation: **do not check until access is verified**
 - Demo video URL: **required**
