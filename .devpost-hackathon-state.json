@@ -1,0 +1,40 @@
+{
+  "plugin": "devpost-hackathon",
+  "version": 2,
+  "hackathon": {
+    "slug": "xprize",
+    "name": "Build with Gemini XPRIZE",
+    "url": "https://xprize.devpost.com/",
+    "selected": true,
+    "source": "known"
+  },
+  "participant": {
+    "name": "Thomas Ohmstead",
+    "display_name": "Thomas Ohmstead"
+  },
+  "project": {
+    "name": "Got2Get2Work",
+    "summary": "Employer-sponsored carpool coordination for shift workers.",
+    "ai_usage": "Gemini produces bounded, aggregate site-coordination recommendations with deterministic safety controls.",
+    "codex_usage": "Codex supported architecture, implementation, testing, security review, deployment, and submission preparation."
+  },
+  "current_stage": "prepare-submission",
+  "completed_stages": [
+    "start-hackathon",
+    "review",
+    "resources"
+  ],
+  "rules_acknowledged": true,
+  "learning": {
+    "status": "not-started",
+    "current_step": "",
+    "completed_steps": [],
+    "plan_file": "",
+    "checklist_file": ""
+  },
+  "submission": {
+    "draft_file": "devpost-submission.md",
+    "status": "drafting"
+  },
+  "next_command": "prepare-submission"
+}
