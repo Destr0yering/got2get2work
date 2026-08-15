@@ -9,7 +9,7 @@ Build `Dockerfile.api` as a separate Cloud Run service. Configure the existing F
 Preview the guarded deployment command first. It builds through `cloudbuild.admin-api.yaml`, reads secrets from Secret Manager at runtime, and deliberately does not create or change IAM grants:
 
 ```powershell
-.\scripts\deploy-employer-api.ps1 -ProjectId YOUR_PROJECT -Region us-east1 -ImageTag GIT_SHA -AllowedOrigin https://YOUR_CONSOLE_ORIGIN -WhatIf
+.\scripts\deploy-employer-api.ps1 -ProjectId YOUR_PROJECT -Region us-east1 -RuntimeServiceAccount got2get2work-admin-api@YOUR_PROJECT.iam.gserviceaccount.com -ImageTag GIT_SHA -AllowedOrigin https://YOUR_CONSOLE_ORIGIN -WhatIf
 ```
 
 Remove `-WhatIf` only after reviewing the resolved project, region, image, secrets, and origin. Browser access requires the Cloud Run invoker policy to be configured separately and intentionally; Firebase bearer-token authorization remains enforced by the application.

@@ -4,6 +4,7 @@ param(
   [Parameter(Mandatory)][ValidatePattern('^[a-z]+-[a-z]+[0-9]+$')][string]$Region,
   [string]$ServiceName = "got2get2work-admin-api",
   [string]$Repository = "got2get2work",
+  [Parameter(Mandatory)][ValidatePattern('^[a-z][a-z0-9-]+@[a-z][a-z0-9-]+\.iam\.gserviceaccount\.com$')][string]$RuntimeServiceAccount,
   [Parameter(Mandatory)][ValidatePattern('^[A-Za-z0-9._-]+$')][string]$ImageTag,
   [Parameter(Mandatory)][ValidatePattern('^https://')][string]$AllowedOrigin,
   [string]$ReferralPepperSecret = "referral-code-pepper",
@@ -21,7 +22,7 @@ if ($PSCmdlet.ShouldProcess($image, "Build and publish API container")) {
 }
 
 if ($PSCmdlet.ShouldProcess($ServiceName, "Deploy API revision without changing IAM policy")) {
-  & gcloud run deploy $ServiceName --project $ProjectId --region $Region --platform managed --image $image --set-env-vars "APP_ENV=production,ALLOWED_ORIGINS=$AllowedOrigin" --set-secrets "REFERRAL_CODE_PEPPER=${ReferralPepperSecret}:latest,VEHICLE_VAULT_KEY=${VehicleVaultKeySecret}:latest" --quiet
+  & gcloud run deploy $ServiceName --project $ProjectId --region $Region --platform managed --image $image --service-account $RuntimeServiceAccount --set-env-vars "APP_ENV=production,ALLOWED_ORIGINS=$AllowedOrigin" --set-secrets "REFERRAL_CODE_PEPPER=${ReferralPepperSecret}:latest,VEHICLE_VAULT_KEY=${VehicleVaultKeySecret}:latest" --quiet
   if ($LASTEXITCODE -ne 0) { throw "Cloud Run deployment failed with exit code $LASTEXITCODE." }
 }
 
