@@ -22,7 +22,7 @@ if ($PSCmdlet.ShouldProcess($image, "Build and publish API container")) {
 }
 
 if ($PSCmdlet.ShouldProcess($ServiceName, "Deploy API revision without changing IAM policy")) {
-  & gcloud run deploy $ServiceName --project $ProjectId --region $Region --platform managed --image $image --service-account $RuntimeServiceAccount --set-env-vars "APP_ENV=production,ALLOWED_ORIGINS=$AllowedOrigin" --set-secrets "REFERRAL_CODE_PEPPER=${ReferralPepperSecret}:latest,VEHICLE_VAULT_KEY=${VehicleVaultKeySecret}:latest" --quiet
+  & gcloud run deploy $ServiceName --project $ProjectId --region $Region --platform managed --image $image --service-account $RuntimeServiceAccount --set-env-vars "APP_ENV=production,GOOGLE_CLOUD_PROJECT=$ProjectId,ALLOWED_ORIGINS=$AllowedOrigin" --set-secrets "REFERRAL_CODE_PEPPER=${ReferralPepperSecret}:latest,VEHICLE_VAULT_KEY=${VehicleVaultKeySecret}:latest" --quiet
   if ($LASTEXITCODE -ne 0) { throw "Cloud Run deployment failed with exit code $LASTEXITCODE." }
 }
 
