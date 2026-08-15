@@ -1,5 +1,6 @@
 import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
-import { User, createUserWithEmailAndPassword, deleteUser, onAuthStateChanged, reload, sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { FirebaseError } from "firebase/app";
+import { User, createUserWithEmailAndPassword, onAuthStateChanged, reload, sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, signOut } from "firebase/auth";
 
 import { firebaseAuth, isFirebaseConfigured, loadFirebaseConfig } from "../services/firebase";
 import { isPrivatePasswordResetError, normalizePasswordResetEmail } from "./passwordReset";
@@ -9,11 +10,10 @@ interface AuthValue {
   loading: boolean;
   configured: boolean;
   signIn(email: string, password: string): Promise<void>;
-  signUp(email: string, password: string): Promise<void>;
+  signUp(email: string, password: string): Promise<boolean>;
   resendEmailVerification(): Promise<void>;
   refreshEmailVerification(): Promise<boolean>;
   requestPasswordReset(email: string): Promise<void>;
-  deleteNewAccount(): Promise<void>;
   signOutUser(): Promise<void>;
 }
 
@@ -49,8 +49,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       configured,
       signIn: async (email, password) => { await signInWithEmailAndPassword(firebaseAuth(), email.trim(), password); },
       signUp: async (email, password) => {
-        const credential = await createUserWithEmailAndPassword(firebaseAuth(), email.trim(), password);
-        await sendEmailVerification(credential.user);
+        const auth = firebaseAuth();
+        const normalizedEmail = email.trim().toLowerCase();
+        let account = auth.currentUser;
+
+        if (account?.email?.toLowerCase() !== normalizedEmail || account.emailVerified) {
+          try {
+            account = (await createUserWithEmailAndPassword(auth, normalizedEmail, password)).user;
+          } catch (reason) {
+            if (!(reason instanceof FirebaseError) || reason.code !== "auth/email-already-in-use") throw reason;
+            account = (await signInWithEmailAndPassword(auth, normalizedEmail, password)).user;
+            if (account.emailVerified) throw new Error("This account is already verified. Sign in instead.");
+          }
+        }
+
+        try {
+          await sendEmailVerification(account);
+          return true;
+        } catch {
+          // Account creation succeeded. Keep the signed-in, unverified account so
+          // the verification screen can offer a retry without orphaning the user.
+          return false;
+        }
       },
       resendEmailVerification: async () => {
         const current = firebaseAuth().currentUser;
@@ -71,7 +91,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           if (!isPrivatePasswordResetError(reason)) throw reason;
         }
       },
-      deleteNewAccount: async () => { const current = firebaseAuth().currentUser; if (current) await deleteUser(current); },
       signOutUser: async () => { await signOut(firebaseAuth()); },
     }}>
       {children}

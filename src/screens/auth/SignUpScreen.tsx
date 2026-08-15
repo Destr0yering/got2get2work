@@ -9,7 +9,7 @@ import { colors } from "../../theme/tokens";
 
 export function SignUpScreen() {
   const { dispatch } = useApp();
-  const { signUp, deleteNewAccount, resendEmailVerification, refreshEmailVerification, configured } = useAuth();
+  const { signUp, resendEmailVerification, refreshEmailVerification, configured } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [inviteCode, setInviteCode] = useState("");
@@ -22,11 +22,11 @@ export function SignUpScreen() {
     setBusy(true);
     setError(null);
     try {
-      await signUp(email, password);
+      const emailSent = await signUp(email, password);
       setVerificationSent(true);
+      if (!emailSent) setError("Your account was created, but Firebase could not deliver the verification email. Select Resend verification email to try again.");
     } catch (reason) {
-      await deleteNewAccount().catch(() => undefined);
-      setError(reason instanceof Error ? reason.message : "Beta enrollment failed.");
+      setError(reason instanceof Error ? reason.message : "Account creation failed.");
     } finally {
       setBusy(false);
     }
